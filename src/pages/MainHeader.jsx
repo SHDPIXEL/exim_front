@@ -6,6 +6,7 @@ import MyNavbar from './MyNavbar';
 import { Dropdown } from 'react-bootstrap';
 import playStore from "../assets/images/playstore.png"
 import AppStore from "../assets/images/appstore.png"
+import { useAuth } from '../context/AuthContext';
 
 const MainHeader = () => {
   const navigate = useNavigate();
@@ -14,6 +15,8 @@ const MainHeader = () => {
   const subscribeClick = () => {
     navigate('/subscribePage');
   }
+
+  const {logout} = useAuth();
 
   return (
     <>
@@ -91,7 +94,7 @@ const MainHeader = () => {
                       <Dropdown.Item as={Link} to="/mydevice" ><i className="bi bi-phone"></i> My Device</Dropdown.Item>
                       <Dropdown.Item as={Link} to="/paymentHistory"><i className="bi bi-receipt"></i> Billing</Dropdown.Item>
                       <Dropdown.Item as={Link} to="/profile"><i className="bi bi-person-badge"></i> My Profile</Dropdown.Item>
-                      <Dropdown.Item as={Link} to="/"><i className="bi bi-power"></i> Logout</Dropdown.Item>
+                      <Dropdown.Item onClick={logout} to="/"><i className="bi bi-power"></i> Logout</Dropdown.Item>
                     </Dropdown.Menu>
                   </Dropdown>)}
 

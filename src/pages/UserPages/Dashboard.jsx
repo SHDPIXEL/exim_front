@@ -9,9 +9,12 @@ import demoimg from "../../assets/images/demo.jpg"
 import { useNavigate } from "react-router-dom";
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+import { useAuth } from "../../context/AuthContext";
 
 const Dashboard = () => {
     const navigate = useNavigate();
+
+    const { logout } = useAuth();
 
     const pastdata = [
         { id: 1, dateU: "31 Dec 2024" },

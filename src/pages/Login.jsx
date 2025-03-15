@@ -1,114 +1,148 @@
-import React, { useState } from 'react';
-import { Form, Row, Col, Modal, Button } from 'react-bootstrap';
+import React from 'react';
+import { Form, Row, Col, Button } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Link, useNavigate } from 'react-router-dom';
-import gicon from "../assets/images/gicon.png";
+import { Link, useNavigate, useLocation } from 'react-router-dom';
+import gicon from '../assets/images/gicon.png';
+import API from '../api';
+import { useAuth } from '../context/AuthContext';
+import { useForm } from 'react-hook-form';
 
 const Login = () => {
-    const navigate = useNavigate();
-    const [formData, setFormData] = useState({
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { login } = useAuth();
 
-        username: '',
-        password: '',
-    });
+  // Initialize react-hook-form
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    defaultValues: {
+      username: '',
+      password: '',
+    },
+  });
 
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFormData({ ...formData, [name]: value });
-    };
+  const onSubmit = async (data) => {
+    try {
+      const response = await API.post('/services/login', {
+        email: data.username,
+        password: data.password,
+      });
+      const { token } = response.data;
+      if (token) {
+        login(token);
+        // Check if there's state from SubscribePage
+        if (location.state?.from === '/subscribePage' && location.state?.subscriptionType && location.state?.packages) {
+          navigate('/paymentSummary', {
+            state: {
+              subscriptionType: location.state.subscriptionType,
+              packages: location.state.packages,
+            },
+          });
+        } else {
+          // Default redirect to dashboard if no subscription data
+          navigate('/dashboard');
+        }
+      } else {
+        console.warn('No token received from backend');
+      }
+    } catch (error) {
+      console.error('Error logging in:', error.response?.data || error.message);
+      alert(error.response?.data?.message || 'Login failed. Please check your credentials.');
+    }
+  };
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        console.log('Form Submitted:', formData);
-        navigate('/dashboard');
-
-    };
-
-
-    return (
-        <>
-            <div className="container">
-                <div className="row mt-5 mb-5">
-
-                    <div className="col-md-6 offset-md-3">
-                        <h2 className='text-center mb-3 fw-bold'>Login</h2>
-                       
-                        <div className="RegistrationForm border p-md-5 py-md-4  p-3 pt-3 rounded-4 bg-light mt-2">
-                            <Row className="justify-content-md-center">
-                                <Col md={12}>
-                                    <Form onSubmit={handleSubmit}>
-                                        <Row>
-
-
-                                            <Col md={12}>
-                                                <Form.Group controlId="formEmail" className="mt-3">
-                                                    <Form.Label>Username *</Form.Label>
-                                                    <Form.Control
-                                                        type="username"
-                                                        placeholder="Enter username"
-                                                        name="username"
-                                                        value={formData.email}
-                                                        onChange={handleChange}
-
-                                                        className='webinput'
-                                                    />
-                                                </Form.Group>
-                                            </Col>
-                                            <Col md={12}>
-                                                <Form.Group controlId="formPassword" className="mt-3">
-                                                    <Form.Label>Password *</Form.Label>
-                                                    <Form.Control
-                                                        type="password"
-                                                        placeholder="Password"
-                                                        name="password"
-                                                        value={formData.password}
-                                                        onChange={handleChange}
-
-                                                        className='webinput'
-                                                    />
-                                                </Form.Group>
-                                            </Col>
-
-                                            
-                                        </Row>
-                                        <Row className='align-items-center d-flex'>
-                                        <Col md={6}>
-                                                <Form.Group controlId="formBasicCheckbox" className="d-flex mt-4 align-items-center">
-                                                    <Form.Check size="lg" type="checkbox" /><span className='mt-1'>Remember me  </span>
-                                                </Form.Group>
-                                            </Col>
-                                            <Col md={6} className='justify-content-end d-md-flex'>
-                                               <Link to="/Forgotpass" className="d-flex forgotPass mt-4" >Forgot Password</Link>
-                                            </Col>
-
-                                        </Row>
-
-                                        <Row>
-                                            <Col md={12} >
-                                                <div className='text-center row justify-content-center'>
-                                                    <div className='col-md-6'>
-                                                        <button type="submit" className="mt-5 mb-3 dailySubscribebtn p-2 " style={{ height: "50px" }}>
-                                                            LOGIN
-                                                        </button>
-                                                    </div>
-                                                </div>
-
-                                            </Col>
-                                        </Row>
-                                    </Form>
-                                  
-                                </Col>
-                            </Row>
-                            <div class="Orbtn"><p>OR</p></div>
-                            <div class="loginGoogleBtn mb-3 mt-5 p-3 fw-normal " > <img alt="" class="me-2" src={gicon} /> Login with Gmail</div>
-                            <p className='text-center mt-1'>Doesn't have an account yet ? <Link to="/registrationPage">Sign Up</Link></p>
+  return (
+    <>
+      <div className="container">
+        <div className="row mt-5 mb-5">
+          <div className="col-md-6 offset-md-3">
+            <h2 className="text-center mb-3 fw-bold">Login</h2>
+            <div className="RegistrationForm border p-md-5 py-md-4 p-3 pt-3 rounded-4 bg-light mt-2">
+              <Row className="justify-content-md-center">
+                <Col md={12}>
+                  <Form onSubmit={handleSubmit(onSubmit)}>
+                    <Row>
+                      <Col md={12}>
+                        <Form.Group controlId="formEmail" className="mt-3">
+                          <Form.Label>Username *</Form.Label>
+                          <Form.Control
+                            type="email"
+                            placeholder="Enter username"
+                            {...register('username', {
+                              required: 'Username (email) is required',
+                              pattern: {
+                                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                                message: 'Please enter a valid email address',
+                              },
+                            })}
+                            className={`webinput ${errors.username ? 'is-invalid' : ''}`} // Fixed template literal syntax
+                          />
+                          {errors.username && (
+                            <div className="invalid-feedback">{errors.username.message}</div>
+                          )}
+                        </Form.Group>
+                      </Col>
+                      <Col md={12}>
+                        <Form.Group controlId="formPassword" className="mt-3">
+                          <Form.Label>Password *</Form.Label>
+                          <Form.Control
+                            type="password"
+                            placeholder="Password"
+                            {...register('password', {
+                              required: 'Password is required',
+                              minLength: {
+                                value: 6,
+                                message: 'Password must be at least 6 characters long',
+                              },
+                            })}
+                            className={`webinput ${errors.password ? 'is-invalid' : ''}`} // Fixed template literal syntax
+                          />
+                          {errors.password && (
+                            <div className="invalid-feedback">{errors.password.message}</div>
+                          )}
+                        </Form.Group>
+                      </Col>
+                    </Row>
+                    <Row className="align-items-center d-flex">
+                      <Col md={6}>
+                        <Form.Group controlId="formBasicCheckbox" className="d-flex mt-4 align-items-center">
+                          <Form.Check size="lg" type="checkbox" />
+                          <span className="mt-1">Remember me</span>
+                        </Form.Group>
+                      </Col>
+                      <Col md={6} className="justify-content-end d-md-flex">
+                        <Link to="/Forgotpass" className="d-flex forgotPass mt-4">
+                          Forgot Password
+                        </Link>
+                      </Col>
+                    </Row>
+                    <Row>
+                      <Col md={12}>
+                        <div className="text-center row justify-content-center">
+                          <div className="col-md-6">
+                            <Button
+                              type="submit"
+                              className="mt-5 mb-3 dailySubscribebtn p-2"
+                              style={{ height: '50px' }}
+                            >
+                              LOGIN
+                            </Button>
+                          </div>
                         </div>
-                    </div>
-                </div>
+                      </Col>
+                    </Row>
+                  </Form>
+                </Col>
+              </Row>
             </div>
-
-        </>
-    );
+          </div>
+        </div>
+      </div>
+    </>
+  );
 };
 
 export default Login;

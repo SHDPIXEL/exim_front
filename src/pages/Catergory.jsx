@@ -9,6 +9,8 @@ import Tabs from 'react-bootstrap/Tabs';
 import API from '../api';
 import banner4 from "../assets/images/banner4.png"
 import dataFormatter from '../helper/DateFormatter';
+import { useLocation } from "react-router-dom";
+
 
 const Catergory = () => {
     const navigate = useNavigate();
@@ -31,6 +33,11 @@ const Catergory = () => {
     const [loading, setLoading] = useState(false);
     const [page, setPage] = useState(1);
     const [totalPages, setTotalPages] = useState(0);
+    const { pathname } = useLocation();
+
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, [pathname]);
 
     const fetchNews = async (categoryId, pageNumber) => {
         if (pageNumber > totalPages && totalPages !== 0) return;

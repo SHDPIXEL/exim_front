@@ -1,125 +1,56 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
-
+import API from "../../api";
 
 const PaymentHistory = () => {
-  const payments = [
-    {
-      id: 'TXN12345',
-      invoiceid: 'EXIM-1234',
-      date: '2025-01-15',
-      amount: '₹ 7,000',
-      Service: 'Mumbai-Both for 1 year, Gujrat-Digital copy for 1 year' ,
-      Expire:"2026-01-14",
-      type:"Both",
-      status: 'Completed',
-    },
-    {
-      id: 'TXN13456',
-      invoiceid: 'EXIM-2345',
-      date: '2025-01-15',
-      amount: '₹ 3,500',
-      Service: 'Mumbai-Both for 1 year' ,
-      Expire:"2026-01-14",
-      type:"Hard copy",
-      status: 'Failed',
-    },
-    {
-      id: 'TXN12567',
-      invoiceid: 'EXIM-4567',
-      date: '2024-07-15',
-      amount: '₹ 2,500',
-      Service: 'Gujrat-Digital copy for 1 year' ,
-      Expire:"2026-01-14",
-      type:"Digital copy",
-      status: 'Failed',
-    },
-    {
-      id: 'TXN12666',
-      invoiceid: 'EXIM-6789',
-      date: '2024-09-05',
-      amount: '₹ 4,000',
-      Service: 'Chennai-Digital copy for 2 year' ,
-      Expire:"2026-01-14",
-      type:"Digital copy",
-      status: 'Pending',
-    },
-    {
-      id: 'TXN124454',
-      invoiceid: 'EXIM-1234',
-      date: '2023-01-15',
-      amount: '₹ 4,900',
-      Service: 'Chennai-Both , Gujrat-Digital copy for 1 year' ,
-      Expire:"2026-01-14",
-      type:"Digital copy",
-      status: 'Completed',
-    },
-    
-    
-  ];
+  const [payments, setPayments] = useState([]);
+  const [refundhistory, setRefundHistory] = useState([]); // Placeholder for future refund logic
 
-  const refundhistory = [
-    {
-      id: 'TXN12345',
-      invoiceid: 'EXIM-1234',
-      date: '2025-01-15',
-      amount: '₹ 7,000',
-      Service: 'Mumbai-Both for 1 year, Gujrat-Digital copy for 1 year' ,
-      status: 'Completed',
-      type:"both",
-    },
-    {
-      id: 'TXN13456',
-      invoiceid: 'EXIM-2345',
-      date: '2025-01-15',
-      amount: '₹ 3,500',
-      Service: 'Mumbai-Both for 1 year' ,
-      status: 'Failed',
-      type:"Hard copy",
-    },
-    {
-      id: 'TXN12567',
-      invoiceid: 'EXIM-4567',
-      date: '2024-07-15',
-      amount: '₹ 2,500',
-      Service: 'Gujrat-Digital copy for 1 year' ,
-      status: 'Failed',
-      type:"Digital copy",
-    },
-    {
-      id: 'TXN12666',
-      invoiceid: 'EXIM-6789',
-      date: '2024-09-05',
-      amount: '₹ 4,000',
-      Service: 'Chennai-Digital copy for 2 year' ,
-      status: 'Pending',
-      type:"Digital copy",
-    },
-    {
-      id: 'TXN124454',
-      invoiceid: 'EXIM-1234',
-      date: '2023-01-15',
-      amount: '₹ 4,900',
-      Service: 'Chennai-Both , Gujrat-Digital copy for 1 year' ,
-      status: 'Completed',
-      type:"Digital copy",
-    },
-    
-    
-  ];
+  useEffect(() => {
+    const fetchDetails = async () => {
+      try {
+        const response = await API.post("/services/get_payments", {}, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+          },
+        });
+        console.log("Payment details:", response.data);
+
+        // Map backend data to match table structure
+        const mappedPayments = response.data.payments.map(payment => ({
+          id: payment.razorpayPaymentId || "N/A", // Payment ID
+          invoiceid: payment.razorpayOrderId || "N/A", // Invoice ID
+          Service: payment.subscription_details, // Needs parsing if object
+          type: payment.type || "N/A",
+          date: new Date(payment.createdAt).toISOString().split("T")[0], // Format date
+          amount: `₹ ${payment.amount.toLocaleString()}`, // Format amount
+          Expire: "N/A", // Placeholder; calculate if duration is available
+          status: payment.paymentStatus || payment.status || "Pending", // Use paymentStatus or status
+        }));
+
+        setPayments(mappedPayments);
+        // For now, refundhistory is not populated; adjust if backend provides refund data
+        setRefundHistory([]); // Placeholder until refund logic is clarified
+      } catch (error) {
+        console.error("Error in fetching details:", error);
+        setPayments([]); // Empty array on error
+        setRefundHistory([]);
+      }
+    };
+
+    fetchDetails();
+  }, []);
 
   return (
     <div className="container border shadow-sm p-md-5 py-md-3">
       <div className="row mt-4 ">
         <div className="col-md-12 mt-4 mb-2 text-center">
           <h2 className='text-center mb-3 fw-bold'>Subscription History  </h2>
-
         </div>
       </div>
       <div className="row ">
         <div className="col-md-12 mb-4">
-
           <Tabs
             defaultActiveKey="PaymentHistory"
             id="uncontrolled-tab-example"
@@ -169,7 +100,7 @@ const PaymentHistory = () => {
               </div>
             </Tab>
             <Tab eventKey="RefundHistory" title="Refund History">
-            <div className="table-responsive ">
+              <div className="table-responsive ">
                 <table className="table table-bordered table-hover ">
                   <thead className="table-primary">
                     <tr>
@@ -193,7 +124,7 @@ const PaymentHistory = () => {
                         <td>{payment.amount}</td>
                         <td>
                           <span
-                            className={`badge ${payment.status === 'Completed'
+                            className={`badge ${payment.status === 'success'
                                 ? 'bg-success'
                                 : payment.status === 'Pending'
                                   ? 'bg-warning text-dark'
@@ -209,16 +140,11 @@ const PaymentHistory = () => {
                 </table>
               </div>
             </Tab>
-
           </Tabs>
         </div>
-
-
-
       </div>
-
     </div>
-  )
-}
+  );
+};
 
 export default PaymentHistory;

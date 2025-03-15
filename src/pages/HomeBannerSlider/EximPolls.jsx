@@ -1,73 +1,73 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Form, Button } from "react-bootstrap";
-
 // Import Swiper styles
 import 'swiper/css';
 import 'swiper/css/free-mode';
 import 'swiper/css/navigation';
 import { Autoplay, FreeMode, Navigation } from 'swiper/modules';
+import API from "../../api";
 
 
 const EximPolls = (props) => {
 
     const [selectedAnswers, setSelectedAnswers] = useState({});
+    const [pollsData, setPollsData] = useState([]);
+    const [pollResults, setPollResults] = useState({});
 
-    const ExmiPollSlider = [
-        {
-            id: 1,
-            Ques: "Which logistical challenge poses the greatest hurdle for business?",
-            Ans: [
-                "Supply chain disruptions",
-                "Last-mile delivery efficiency",
-                "Attracting & retaining talent",
-                "Transport cost and efficiency"
-            ]
-        },
-        {
-            id: 2,
-            Ques: "What is the primary factor affecting supply chain efficiency?",
-            Ans: [
-                "Technological integration",
-                "Workforce training",
-                "Infrastructure development",
-                "Cost management"
-            ]
-        },
-        {
-            id: 3,
-            Ques: "Which market trend is impacting global trade the most?",
-            Ans: [
-                "Digital transformation",
-                "E-commerce growth",
-                "Trade regulations",
-                "Environmental policies"
-            ]
-        },
-        {
-            id: 4,
-            Ques: "What strategy helps mitigate supply chain disruptions?",
-            Ans: [
-                "Diversifying suppliers",
-                "Increasing inventory",
-                "Automating processes",
-                "Building stronger partnerships"
-            ]
+    useEffect(() => {
+        const fetchPolls = async () => {
+            try {
+                const response = await API.post("/polls/get_poll");
+                console.log("Polls data", response.data)
+                setPollsData(response.data);
+
+            } catch (error) {
+                console.error("Error in fetching polls", error)
+            }
         }
-    ];
+        fetchPolls();
+    }, [])
 
-    // Handle Answer Selection
-    const handleChange = (questionId, answer) => {
+    const handleChange = (questionId, optionIndex) => {
         setSelectedAnswers({
             ...selectedAnswers,
-            [questionId]: answer
+            [questionId]: optionIndex,
         });
     };
 
-    const handleSubmit = () => {
-        console.log("Selected Answers:", selectedAnswers);
-        alert("Responses Submitted!");
+
+
+    const handleSubmit = async () => {
+        if (Object.keys(selectedAnswers).length === 0) {
+            alert("Please select at least one option before submitting.");
+            return;
+        }
+    
+        const formattedResponses = Object.entries(selectedAnswers).map(([questionId, optionIndex]) => ({
+            id: questionId,
+            optionIndex: optionIndex
+        }));
+    
+        try {
+            const response = await API.post("/polls/submit_polls", { responses: formattedResponses });
+    
+            console.log("Response from polls backend:", response.data);
+            alert("Responses Submitted!");
+            
+            // Store poll results for displaying vote counts
+            const resultsData = response.data.polls.reduce((acc, poll) => {
+                acc[poll._id] = poll;
+                return acc;
+            }, {});
+            setPollResults(resultsData);
+    
+        } catch (error) {
+            console.error("Error submitting answers", error);
+            alert("Error submitting answers");
+        }
     };
+    
 
     return (
         <div className="col-lg-12 col-md-12 mt-3">
@@ -92,28 +92,48 @@ const EximPolls = (props) => {
                         modules={[Autoplay, Navigation, FreeMode]}
                         className="mySwiper"
                     >
-                        {ExmiPollSlider.map((pol) => (
-                            <SwiperSlide key={pol.id}>
-                                <div className="p-2">
-                                    <p><strong>{pol.Ques}</strong></p>
-                                    <div className="answer-box">
-                                        {pol.Ans.map((answer, index) => (
-                                            <Form.Check
-                                                key={index}
-                                                type="radio"
-                                                label={answer}
-                                                name={`question-${pol.id}`}
-                                                id={`q${pol.id}-a${index}`}
-                                                value={answer}
-                                                className="pollredioinput"
-                                                checked={selectedAnswers[pol.id] === answer}
-                                                onChange={() => handleChange(pol.id, answer)}
-                                            />
-                                        ))}
+                        {pollsData.map((pol) => {
+                            const pollResult = pollResults[pol._id]; // Get result data if available
+                            const totalVotes = pollResult ? pollResult.totalVotes : 0;
+
+                            return (
+                                <SwiperSlide key={pol._id}>
+                                    <div className="p-2">
+                                        <p><strong>{pol.question}</strong></p>
+                                        <div className="answer-box">
+                                            {pol.options.map((option, index) => {
+                                                const votes = pollResult ? pollResult.options[index].votes : 0;
+                                                const percentage = totalVotes ? (votes / totalVotes) * 100 : 0;
+
+                                                return (
+                                                    <div key={option._id} className="option-container">
+                                                        <Form.Check
+                                                            type="radio"
+                                                            label={option.text}
+                                                            name={`question-${pol._id}`}
+                                                            id={`q${pol._id}-a${index}`}
+                                                            value={index}
+                                                            className="pollredioinput"
+                                                            checked={selectedAnswers[pol._id] === index}
+                                                            onChange={() => handleChange(pol._id, index)}
+                                                        />
+
+                                                        {/* Show vote count and bar only if results are available */}
+                                                        {pollResult && (
+                                                            <div className="vote-bar-container">
+                                                                <div className="vote-bar" style={{ width: `${percentage}%` }}></div>
+                                                                <span className="vote-count">{votes} votes</span>
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                );
+                                            })}
+                                        </div>
                                     </div>
-                                </div>
-                            </SwiperSlide>
-                        ))}
+                                </SwiperSlide>
+                            );
+                        })}
+
                     </Swiper>
                 </Form>
                 <button className="viewResultbtn" onClick={handleSubmit}>View Results</button>

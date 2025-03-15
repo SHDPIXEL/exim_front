@@ -4,10 +4,12 @@
     margin: 0;
     padding: 0;
 }
+
 body.modal-open {
     overflow: auto !important;
     padding: 0px !important;
 }
+
 a {
     color: var(--primary-color);
     text-decoration: none !important;
@@ -418,6 +420,37 @@ a {
 // .righttopStory .imgside img {
 //     height: 130px !important;
 // }
+
+.option-container {
+    margin-bottom: 10px;
+    position: relative;
+}
+
+.vote-bar-container {
+    width: 100%;
+    background: #d4d3d36b;
+    border-radius: 5px;
+    margin-top: 5px;
+    position: relative;
+    height: 10px;
+}
+
+.vote-bar {
+    height: 10px;
+    background: #ffffff;
+    /* Blue progress bar */
+    border-radius: 5px;
+    transition: width 0.3s ease-in-out;
+}
+
+.vote-count {
+    position: absolute;
+    right: 5px;
+    top: -18px;
+    font-size: 12px;
+    color: #333;
+}
+
 
 
 .ViewallBtn {
@@ -1489,20 +1522,24 @@ input::-webkit-inner-spin-button {
     margin-bottom: 24px;
     /* Extra small devices */
 }
-.newsArchive img{
+
+.newsArchive img {
     height: 100px;
     width: 100%;
 }
-.newsArchive .imgside{
+
+.newsArchive .imgside {
     min-width: 150px;
     width: 150px;
 }
-.newsArchive h4{
+
+.newsArchive h4 {
     font-size: 20px;
     font-weight: 600;
     margin-top: 0;
     -webkit-line-clamp: 3;
 }
+
 @media (max-width: 575px) {
     .blog-info-wrap {
         gap: 5px;
@@ -1901,7 +1938,7 @@ a.hover-line:hover {
     border-radius: 10px 10px 0 0;
 }
 
-.EventBox-img-container{
+.EventBox-img-container {
     min-height: 130px;
 }
 
@@ -2116,7 +2153,8 @@ strong {
     color: var(--Primary--Navy-Blue);
 
 }
-.btnlink{
+
+.btnlink {
     background-color: transparent;
     border: none;
     color: inherit;
@@ -2127,9 +2165,11 @@ strong {
     border: 1px solid #ccc;
     margin: 0 5px;
 }
+
 .tab-content {
     padding: 0 !important;
 }
+
 // .nav-pills {
 //     --bs-nav-pills-border-radius: var(--bs-border-radius);
 //     --bs-nav-pills-link-active-color: #fff;
@@ -2188,43 +2228,53 @@ strong {
     .box-icon {
         margin-bottom: 10px;
     }
+
     .detailsbtn {
-        
+
         width: auto !important;
     }
+
     .footersection {
         padding: 40px 10px 30px;
-       
+
     }
+
     .newsArchive .imgside {
         min-width: 100px;
         width: 100px;
     }
+
     .newsArchive h4 {
         font-size: 16px;
     }
+
     .newsArchive img {
         height: 85px;
         width: 100%;
     }
+
     .rightlogoimg {
         margin: 20px 0 0;
     }
+
     .rightlogoimg h2 {
         font-size: 26px;
     }
+
     .rightlogoimg p {
-       
+
         font-size: 9px;
-       
+
     }
+
     .nav-pills .nav-item {
         width: 50%;
         font-size: 13px;
     }
-    .nav-pills .nav-link{
+
+    .nav-pills .nav-link {
         width: 95%;
         margin: 0px 10px 10px;
     }
-   
+
 }

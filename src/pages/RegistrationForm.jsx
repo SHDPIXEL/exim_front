@@ -2,34 +2,77 @@ import React, { useState } from 'react';
 import { Form, Row, Col, Modal, Button } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Link, useNavigate } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
+import API from '../api';
+import { useAuth } from '../context/AuthContext';
 
 const RegistrationForm = () => {
     const navigate = useNavigate();
     const [modalShow, setModalShow] = React.useState(false);
+    const { login } = useAuth();
 
-    const [formData, setFormData] = useState({
-        fullName: '',
-        email: '',
-        mobile: '',
-        password: '',
-        confirmPassword: '',
-        businessNature: '',
-        companyName: '',
-        designation: '',
-        address: '',
-        pincode: '',
+    const { register, handleSubmit, watch, formState: { errors } } = useForm({
+        defaultValues: {
+            fullName: '',  //name
+            email: '',
+            mobile: '',
+            password: '',
+            confirmPassword: '',  //confirm_password
+            businessNature: '',  //nature_business
+            companyName: '',     //company_name
+            designation: '',     //contact_person_designation
+            address: '',         //company_address
+            pincode: '',
+            city: '',
+            state: '',
+            country: 'India'
+        }
     });
 
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFormData({ ...formData, [name]: value });
-    };
+    const password = watch('password');
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        console.log('Form Submitted:', formData);
-        navigate('/paymentSummary');
+    const onSubmit = async (data) => {
+        try {
+            // Remove confirmPassword from the data as it's not needed in backend
+            const { ...submitData } = data;
 
+            // API endpoint - replace with your actual backend endpoint
+            const response = await API.post('/services/register', {
+                name: data.fullName,
+                email: data.email,
+                mobile: data.mobile,
+                password: data.password,
+                confirm_password: data.confirmPassword,
+                nature_business: data.businessNature,
+                company_name: data.companyName,
+                contact_person_designation: data.designation,
+                company_address: data.address,
+                pincode: data.pincode,
+                city: data.city,
+                state: data.state,
+                country: data.country,
+                subscribe_newsletter: true,
+            });
+
+            const { token } = response.data;
+            
+            if (token) {
+                login(token); 
+              } else {
+                console.warn('No token received from backend');
+              }
+
+            console.log('Registration successful:', response.data);
+            navigate('/subscribePage');
+        } catch (error) {
+            console.error('Registration failed:', error.response?.data || error.message);
+
+            if (error?.success	=== 0) {
+                alert(error.response?.data?.message || "User with the same email or mobile already exists.");
+            } else {
+                alert('Registration failed. Please try again.');
+            }
+        }
     };
 
 
@@ -95,13 +138,12 @@ const RegistrationForm = () => {
         <>
             <div className="container">
                 <div className="row mt-5 mb-5">
-
                     <div className="col-md-8 offset-md-2">
                         <h2 className='text-center mb-3 fw-bold'>Registration</h2>
-                        <div className="RegistrationForm border p-md-5 py-md-3  p-3 pt-3 rounded-1 bg-light mt-2">
+                        <div className="RegistrationForm border p-md-5 py-md-3 p-3 pt-3 rounded-1 bg-light mt-2">
                             <Row className="justify-content-md-center">
                                 <Col md={12}>
-                                    <Form onSubmit={handleSubmit}>
+                                    <Form onSubmit={handleSubmit(onSubmit)}>
                                         <Row>
                                             <Col md={6}>
                                                 <Form.Group controlId="formCompanyName" className="mt-3">
@@ -109,12 +151,20 @@ const RegistrationForm = () => {
                                                     <Form.Control
                                                         type="text"
                                                         placeholder="Enter company name"
-                                                        name="companyName"
-                                                        value={formData.companyName}
-                                                        onChange={handleChange}
-
-                                                        className='webinput'
+                                                        {...register('companyName', {
+                                                            required: 'Company name is required',
+                                                            minLength: {
+                                                                value: 2,
+                                                                message: 'Minimum 2 characters required'
+                                                            }
+                                                        })}
+                                                        className={`webinput ${errors.companyName ? 'is-invalid' : ''}`}
                                                     />
+                                                    {errors.companyName && (
+                                                        <div className="invalid-feedback">
+                                                            {errors.companyName.message}
+                                                        </div>
+                                                    )}
                                                 </Form.Group>
                                             </Col>
                                             <Col md={6}>
@@ -123,12 +173,16 @@ const RegistrationForm = () => {
                                                     <Form.Control
                                                         type="text"
                                                         placeholder="Enter nature of business"
-                                                        name="businessNature"
-                                                        value={formData.businessNature}
-                                                        onChange={handleChange}
-
-                                                        className='webinput'
+                                                        {...register('businessNature', {
+                                                            required: 'Business nature is required'
+                                                        })}
+                                                        className={`webinput ${errors.businessNature ? 'is-invalid' : ''}`}
                                                     />
+                                                    {errors.businessNature && (
+                                                        <div className="invalid-feedback">
+                                                            {errors.businessNature.message}
+                                                        </div>
+                                                    )}
                                                 </Form.Group>
                                             </Col>
                                             <Col md={6}>
@@ -137,12 +191,20 @@ const RegistrationForm = () => {
                                                     <Form.Control
                                                         type="text"
                                                         placeholder="Enter Contact Person name"
-                                                        name="fullName"
-                                                        value={formData.fullName}
-                                                        onChange={handleChange}
-
-                                                        className='webinput'
+                                                        {...register('fullName', {
+                                                            required: 'Contact person name is required',
+                                                            pattern: {
+                                                                value: /^[A-Za-z\s]+$/,
+                                                                message: 'Only letters and spaces allowed'
+                                                            }
+                                                        })}
+                                                        className={`webinput ${errors.fullName ? 'is-invalid' : ''}`}
                                                     />
+                                                    {errors.fullName && (
+                                                        <div className="invalid-feedback">
+                                                            {errors.fullName.message}
+                                                        </div>
+                                                    )}
                                                 </Form.Group>
                                             </Col>
                                             <Col md={6}>
@@ -151,12 +213,16 @@ const RegistrationForm = () => {
                                                     <Form.Control
                                                         type="text"
                                                         placeholder="Enter Contact Person Designation"
-                                                        name="designation"
-                                                        value={formData.designation}
-                                                        onChange={handleChange}
-
-                                                        className='webinput'
+                                                        {...register('designation', {
+                                                            required: 'Designation is required'
+                                                        })}
+                                                        className={`webinput ${errors.designation ? 'is-invalid' : ''}`}
                                                     />
+                                                    {errors.designation && (
+                                                        <div className="invalid-feedback">
+                                                            {errors.designation.message}
+                                                        </div>
+                                                    )}
                                                 </Form.Group>
                                             </Col>
                                             <Col md={12}>
@@ -165,26 +231,34 @@ const RegistrationForm = () => {
                                                     <Form.Control
                                                         type="text"
                                                         placeholder="Enter Company Address"
-                                                        name="address"
-                                                        value={formData.address}
-                                                        onChange={handleChange}
-
-                                                        className='webinput'
+                                                        {...register('address', {
+                                                            required: 'Address is required'
+                                                        })}
+                                                        className={`webinput ${errors.address ? 'is-invalid' : ''}`}
                                                     />
+                                                    {errors.address && (
+                                                        <div className="invalid-feedback">
+                                                            {errors.address.message}
+                                                        </div>
+                                                    )}
                                                 </Form.Group>
                                             </Col>
                                             <Col md={6}>
-                                                <Form.Group controlId="formPincode" className="mt-3">
+                                                <Form.Group controlId="formCity" className="mt-3">
                                                     <Form.Label>City *</Form.Label>
                                                     <Form.Control
                                                         type="text"
                                                         placeholder="Enter City"
-                                                        name="city"
-                                                        value={formData.pincode}
-                                                        onChange={handleChange}
-
-                                                        className='webinput'
+                                                        {...register('city', {
+                                                            required: 'City is required'
+                                                        })}
+                                                        className={`webinput ${errors.city ? 'is-invalid' : ''}`}
                                                     />
+                                                    {errors.city && (
+                                                        <div className="invalid-feedback">
+                                                            {errors.city.message}
+                                                        </div>
+                                                    )}
                                                 </Form.Group>
                                             </Col>
                                             <Col md={6}>
@@ -193,55 +267,71 @@ const RegistrationForm = () => {
                                                     <Form.Control
                                                         type="text"
                                                         placeholder="Enter pincode"
-                                                        name="pincode"
-                                                        value={formData.pincode}
-                                                        onChange={handleChange}
-
-                                                        className='webinput'
+                                                        {...register('pincode', {
+                                                            required: 'Pincode is required',
+                                                            pattern: {
+                                                                value: /^[0-9]{6}$/,
+                                                                message: 'Enter a valid 6-digit pincode'
+                                                            }
+                                                        })}
+                                                        className={`webinput ${errors.pincode ? 'is-invalid' : ''}`}
                                                     />
+                                                    {errors.pincode && (
+                                                        <div className="invalid-feedback">
+                                                            {errors.pincode.message}
+                                                        </div>
+                                                    )}
                                                 </Form.Group>
                                             </Col>
                                             <Col md={6}>
-                                                <Form.Group controlId="formPincode" className="mt-3">
+                                                <Form.Group controlId="formState" className="mt-3">
                                                     <Form.Label>State *</Form.Label>
                                                     <Form.Control
                                                         type="text"
                                                         placeholder="Enter State"
-                                                        name="state"
-                                                        value={formData.pincode}
-                                                        onChange={handleChange}
-
-                                                        className='webinput'
+                                                        {...register('state', {
+                                                            required: 'State is required'
+                                                        })}
+                                                        className={`webinput ${errors.state ? 'is-invalid' : ''}`}
                                                     />
+                                                    {errors.state && (
+                                                        <div className="invalid-feedback">
+                                                            {errors.state.message}
+                                                        </div>
+                                                    )}
                                                 </Form.Group>
                                             </Col>
                                             <Col md={6}>
-                                                <Form.Group controlId="formPincode" className="mt-3">
+                                                <Form.Group controlId="formCountry" className="mt-3">
                                                     <Form.Label>Country *</Form.Label>
                                                     <Form.Control
                                                         type="text"
                                                         placeholder="Enter Country"
-                                                        name="pincode"
-                                                        value={"India"}
-                                                        onChange={handleChange}
-
+                                                        {...register('country')}
+                                                        disabled
                                                         className='webinput'
                                                     />
                                                 </Form.Group>
                                             </Col>
-
                                             <Col md={6}>
                                                 <Form.Group controlId="formMobile" className="mt-3">
                                                     <Form.Label>Phone No.</Form.Label>
                                                     <Form.Control
                                                         type="text"
                                                         placeholder="Enter Phone number"
-                                                        name="mobile"
-                                                        value={formData.mobile}
-                                                        onChange={handleChange}
-
-                                                        className='webinput'
+                                                        {...register('mobile', {
+                                                            pattern: {
+                                                                value: /^[0-9]{10}$/,
+                                                                message: 'Enter a valid 10-digit phone number'
+                                                            }
+                                                        })}
+                                                        className={`webinput ${errors.mobile ? 'is-invalid' : ''}`}
                                                     />
+                                                    {errors.mobile && (
+                                                        <div className="invalid-feedback">
+                                                            {errors.mobile.message}
+                                                        </div>
+                                                    )}
                                                 </Form.Group>
                                             </Col>
                                             <Col md={6}>
@@ -250,12 +340,20 @@ const RegistrationForm = () => {
                                                     <Form.Control
                                                         type="email"
                                                         placeholder="Enter email"
-                                                        name="email"
-                                                        value={formData.email}
-                                                        onChange={handleChange}
-
-                                                        className='webinput'
+                                                        {...register('email', {
+                                                            required: 'Email is required',
+                                                            pattern: {
+                                                                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                                                                message: 'Invalid email address'
+                                                            }
+                                                        })}
+                                                        className={`webinput ${errors.email ? 'is-invalid' : ''}`}
                                                     />
+                                                    {errors.email && (
+                                                        <div className="invalid-feedback">
+                                                            {errors.email.message}
+                                                        </div>
+                                                    )}
                                                 </Form.Group>
                                             </Col>
                                             <Col md={6}>
@@ -264,12 +362,20 @@ const RegistrationForm = () => {
                                                     <Form.Control
                                                         type="password"
                                                         placeholder="Password"
-                                                        name="password"
-                                                        value={formData.password}
-                                                        onChange={handleChange}
-
-                                                        className='webinput'
+                                                        {...register('password', {
+                                                            required: 'Password is required',
+                                                            minLength: {
+                                                                value: 8,
+                                                                message: 'Password must be at least 8 characters'
+                                                            }
+                                                        })}
+                                                        className={`webinput ${errors.password ? 'is-invalid' : ''}`}
                                                     />
+                                                    {errors.password && (
+                                                        <div className="invalid-feedback">
+                                                            {errors.password.message}
+                                                        </div>
+                                                    )}
                                                 </Form.Group>
                                             </Col>
                                             <Col md={6}>
@@ -278,41 +384,52 @@ const RegistrationForm = () => {
                                                     <Form.Control
                                                         type="password"
                                                         placeholder="Confirm Password"
-                                                        name="confirmPassword"
-                                                        value={formData.confirmPassword}
-                                                        onChange={handleChange}
-
-                                                        className='webinput'
+                                                        {...register('confirmPassword', {
+                                                            required: 'Please confirm your password',
+                                                            validate: value => value === password || 'Passwords do not match'
+                                                        })}
+                                                        className={`webinput ${errors.confirmPassword ? 'is-invalid' : ''}`}
                                                     />
+                                                    {errors.confirmPassword && (
+                                                        <div className="invalid-feedback">
+                                                            {errors.confirmPassword.message}
+                                                        </div>
+                                                    )}
                                                 </Form.Group>
                                             </Col>
-
-
-
-
-
                                             <Col md={12}>
                                                 <Form.Group controlId="formBasicCheckbox" className="d-flex mt-4 align-items-center">
-                                                    <Form.Check size="lg" type="checkbox" /><span>I have read and agree to the  <Link onClick={() => setModalShow(true)} className='text-dark'>terms & conditions </Link></span>
+                                                    <Form.Check
+                                                        size="lg"
+                                                        type="checkbox"
+                                                        {...register('terms', {
+                                                            required: 'You must accept the terms and conditions'
+                                                        })}
+                                                    />
+                                                    <span>
+                                                        I have read and agree to the <Link onClick={() => setModalShow(true)} className='text-dark'>terms & conditions</Link>
+                                                    </span>
                                                 </Form.Group>
+                                                {errors.terms && (
+                                                    <div className="text-danger mt-1">
+                                                        {errors.terms.message}
+                                                    </div>
+                                                )}
                                             </Col>
                                         </Row>
                                         <Row>
-                                            <Col md={12} >
+                                            <Col md={12}>
                                                 <div className='text-center row justify-content-center'>
                                                     <div className='col-md-6'>
-                                                        <button type="submit" className="mt-4 mb-3 dailySubscribebtn p-2 " style={{ height: "50px" }}>
+                                                        <button type="submit" className="mt-4 mb-3 dailySubscribebtn p-2" style={{ height: "50px" }}>
                                                             REGISTER NOW
                                                         </button>
                                                     </div>
                                                 </div>
-
                                             </Col>
                                         </Row>
                                     </Form>
-
-
-                                    <p className='text-center mt-3'>already have an account? <Link to="/login">Sign in</Link></p>
+                                    <p className='text-center mt-3'>Already have an account? <Link to="/login">Sign in</Link></p>
                                 </Col>
                             </Row>
                         </div>
@@ -325,6 +442,7 @@ const RegistrationForm = () => {
             />
         </>
     );
+
 };
 
 export default RegistrationForm;
