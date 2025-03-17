@@ -11,17 +11,144 @@ const RegistrationForm = () => {
     const [modalShow, setModalShow] = React.useState(false);
     const { login } = useAuth();
 
+    const [selectedState, setSelectedState] = React.useState('');
+    const [cityOptions, setCityOptions] = React.useState([]);
+
+    const stateCityData = {
+        "Andhra Pradesh": [
+            "Visakhapatnam", "Vijayawada", "Guntur", "Nellore", "Kurnool", 
+            "Rajahmundry", "Tirupati", "Kadapa", "Anantapur", "Eluru"
+        ],
+        "Arunachal Pradesh": [
+            "Itanagar", "Naharlagun", "Tawang", "Ziro", "Pasighat", 
+            "Roing", "Bomdila", "Tezu", "Seppa", "Daporijo"
+        ],
+        "Assam": [
+            "Guwahati", "Dibrugarh", "Silchar", "Jorhat", "Tezpur", 
+            "Nagaon", "Tinsukia", "Bongaigaon", "Karimganj", "Goalpara"
+        ],
+        "Bihar": [
+            "Patna", "Gaya", "Bhagalpur", "Muzaffarpur", "Purnia", 
+            "Darbhanga", "Bihar Sharif", "Begusarai", "Chapra", "Arrah"
+        ],
+        "Chhattisgarh": [
+            "Raipur", "Bhilai", "Bilaspur", "Korba", "Durg", 
+            "Rajnandgaon", "Jagdalpur", "Ambikapur", "Raigarh", "Mahasamund"
+        ],
+        "Goa": [
+            "Panaji", "Margao", "Vasco da Gama", "Mapusa", "Ponda", 
+            "Bicholim", "Curchorem", "Sanquelim", "Valpoi", "Quepem"
+        ],
+        "Gujarat": [
+            "Ahmedabad", "Surat", "Vadodara", "Rajkot", "Bhavnagar", 
+            "Jamnagar", "Junagadh", "Gandhinagar", "Anand", "Morbi"
+        ],
+        "Haryana": [
+            "Chandigarh", "Faridabad", "Gurugram", "Panipat", "Ambala", 
+            "Yamunanagar", "Rohtak", "Hisar", "Sonipat", "Karnal"
+        ],
+        "Himachal Pradesh": [
+            "Shimla", "Manali", "Dharamshala", "Solan", "Mandi", 
+            "Kullu", "Chamba", "Hamirpur", "Bilaspur", "Nahan"
+        ],
+        "Jharkhand": [
+            "Ranchi", "Jamshedpur", "Dhanbad", "Bokaro", "Hazaribagh", 
+            "Deoghar", "Giridih", "Ramgarh", "Dumka", "Chaibasa"
+        ],
+        "Karnataka": [
+            "Bengaluru", "Mysuru", "Mangalore", "Hubballi", "Belagavi", 
+            "Davangere", "Ballari", "Shimoga", "Tumkur", "Gulbarga"
+        ],
+        "Kerala": [
+            "Thiruvananthapuram", "Kochi", "Kozhikode", "Thrissur", "Kollam", 
+            "Palakkad", "Alappuzha", "Malappuram", "Kannur", "Kottayam"
+        ],
+        "Madhya Pradesh": [
+            "Bhopal", "Indore", "Gwalior", "Jabalpur", "Ujjain", 
+            "Sagar", "Dewas", "Satna", "Ratlam", "Rewa"
+        ],
+        "Maharashtra": [
+            "Mumbai", "Pune", "Nagpur", "Nashik", "Aurangabad", 
+            "Solapur", "Amravati", "Kolhapur", "Nanded", "Sangli"
+        ],
+        "Manipur": [
+            "Imphal", "Thoubal", "Bishnupur", "Churachandpur", "Senapati", 
+            "Ukhrul", "Kakching", "Tamenglong", "Noney", "Kangpokpi"
+        ],
+        "Meghalaya": [
+            "Shillong", "Tura", "Jowai", "Nongstoin", "Baghmara", 
+            "Williamnagar", "Resubelpara", "Mairang", "Khliehriat", "Chokpot"
+        ],
+        "Mizoram": [
+            "Aizawl", "Lunglei", "Saiha", "Champhai", "Serchhip", 
+            "Kolasib", "Mamit", "Lawngtlai", "Bairabi", "Hnahthial"
+        ],
+        "Nagaland": [
+            "Kohima", "Dimapur", "Mokokchung", "Tuensang", "Zunheboto", 
+            "Wokha", "Mon", "Phek", "Kiphire", "Longleng"
+        ],
+        "Odisha": [
+            "Bhubaneswar", "Cuttack", "Rourkela", "Berhampur", "Sambalpur", 
+            "Balasore", "Puri", "Bhadrak", "Jeypore", "Angul"
+        ],
+        "Punjab": [
+            "Chandigarh", "Ludhiana", "Amritsar", "Jalandhar", "Patiala", 
+            "Bathinda", "Mohali", "Hoshiarpur", "Moga", "Pathankot"
+        ],
+        "Rajasthan": [
+            "Jaipur", "Jodhpur", "Udaipur", "Kota", "Bikaner", 
+            "Ajmer", "Bhilwara", "Alwar", "Sikar", "Pali"
+        ],
+        "Sikkim": [
+            "Gangtok", "Namchi", "Gyalshing", "Mangan", "Ravangla", 
+            "Singtam", "Jorethang", "Rangpo", "Rinchenpong", "Chungthang"
+        ],
+        "Tamil Nadu": [
+            "Chennai", "Coimbatore", "Madurai", "Tiruchirappalli", "Salem", 
+            "Erode", "Vellore", "Tirunelveli", "Thoothukudi", "Dindigul"
+        ],
+        "Telangana": [
+            "Hyderabad", "Warangal", "Nizamabad", "Khammam", "Karimnagar", 
+            "Ramagundam", "Mahbubnagar", "Nalgonda", "Adilabad", "Siddipet"
+        ],
+        "Tripura": [
+            "Agartala", "Udaipur", "Dharmanagar", "Ambassa", "Belonia", 
+            "Kailashahar", "Khowai", "Jogendranagar", "Pratapgarh", "Bishalgarh"
+        ],
+        "Uttar Pradesh": [
+            "Lucknow", "Kanpur", "Agra", "Varanasi", "Meerut", 
+            "Allahabad", "Bareilly", "Aligarh", "Moradabad", "Ghaziabad"
+        ],
+        "Uttarakhand": [
+            "Dehradun", "Haridwar", "Rishikesh", "Haldwani", "Nainital", 
+            "Mussoorie", "Roorkee", "Almora", "Pithoragarh", "Kotdwar"
+        ],
+        "West Bengal": [
+            "Kolkata", "Howrah", "Durgapur", "Asansol", "Siliguri", 
+            "Kharagpur", "Bardhaman", "Malda", "Haldia", "Jalpaiguri"
+        ],
+        "Andaman and Nicobar Islands": ["Port Blair", "Hut Bay", "Car Nicobar", "Diglipur"],
+        "Chandigarh": ["Chandigarh"],
+        "Dadra and Nagar Haveli and Daman and Diu": ["Silvassa", "Daman", "Diu"],
+        "Lakshadweep": ["Kavaratti", "Agatti", "Minicoy"],
+        "Delhi": ["New Delhi", "Dwarka", "Saket", "Karol Bagh"],
+        "Puducherry": ["Puducherry", "Karaikal", "Mahe", "Yanam"],
+        "Jammu and Kashmir": ["Srinagar", "Jammu", "Anantnag", "Baramulla"],
+        "Ladakh": ["Leh", "Kargil"]
+    };
+    
+
     const { register, handleSubmit, watch, formState: { errors } } = useForm({
         defaultValues: {
-            fullName: '',  //name
+            fullName: '',
             email: '',
             mobile: '',
             password: '',
-            confirmPassword: '',  //confirm_password
-            businessNature: '',  //nature_business
-            companyName: '',     //company_name
-            designation: '',     //contact_person_designation
-            address: '',         //company_address
+            confirmPassword: '',
+            businessNature: '',
+            companyName: '',
+            designation: '',
+            address: '',
             pincode: '',
             city: '',
             state: '',
@@ -55,24 +182,31 @@ const RegistrationForm = () => {
             });
 
             const { token } = response.data;
-            
+
             if (token) {
-                login(token); 
-              } else {
+                login(token);
+            } else {
                 console.warn('No token received from backend');
-              }
+            }
 
             console.log('Registration successful:', response.data);
             navigate('/subscribePage');
         } catch (error) {
             console.error('Registration failed:', error.response?.data || error.message);
 
-            if (error?.success	=== 0) {
+            if (error?.success === 0) {
                 alert(error.response?.data?.message || "User with the same email or mobile already exists.");
             } else {
                 alert('Registration failed. Please try again.');
             }
         }
+    };
+
+
+    const handleStateChange = (event) => {
+        const selected = event.target.value;
+        setSelectedState(selected);
+        setCityOptions(stateCityData[selected] || []);
     };
 
 
@@ -244,23 +378,22 @@ const RegistrationForm = () => {
                                                 </Form.Group>
                                             </Col>
                                             <Col md={6}>
-                                                <Form.Group controlId="formCity" className="mt-3">
-                                                    <Form.Label>City *</Form.Label>
-                                                    <Form.Control
-                                                        type="text"
-                                                        placeholder="Enter City"
-                                                        {...register('city', {
-                                                            required: 'City is required'
-                                                        })}
-                                                        className={`webinput ${errors.city ? 'is-invalid' : ''}`}
-                                                    />
-                                                    {errors.city && (
-                                                        <div className="invalid-feedback">
-                                                            {errors.city.message}
-                                                        </div>
-                                                    )}
+                                                <Form.Group controlId="formState" className="mt-3">
+                                                    <Form.Label>State *</Form.Label>
+                                                    <Form.Select
+                                                        {...register("state", { required: "State is required" })}
+                                                        className={`webinput ${errors.state ? "is-invalid" : ""}`}
+                                                        onChange={handleStateChange}
+                                                    >
+                                                        <option value="">Select State</option>
+                                                        {Object.keys(stateCityData).map((state) => (
+                                                            <option key={state} value={state}>{state}</option>
+                                                        ))}
+                                                    </Form.Select>
+                                                    {errors.state && <div className="invalid-feedback">{errors.state.message}</div>}
                                                 </Form.Group>
                                             </Col>
+
                                             <Col md={6}>
                                                 <Form.Group controlId="formPincode" className="mt-3">
                                                     <Form.Label>Pincode *</Form.Label>
@@ -284,21 +417,19 @@ const RegistrationForm = () => {
                                                 </Form.Group>
                                             </Col>
                                             <Col md={6}>
-                                                <Form.Group controlId="formState" className="mt-3">
-                                                    <Form.Label>State *</Form.Label>
-                                                    <Form.Control
-                                                        type="text"
-                                                        placeholder="Enter State"
-                                                        {...register('state', {
-                                                            required: 'State is required'
-                                                        })}
-                                                        className={`webinput ${errors.state ? 'is-invalid' : ''}`}
-                                                    />
-                                                    {errors.state && (
-                                                        <div className="invalid-feedback">
-                                                            {errors.state.message}
-                                                        </div>
-                                                    )}
+                                                <Form.Group controlId="formCity" className="mt-3">
+                                                    <Form.Label>City *</Form.Label>
+                                                    <Form.Select
+                                                        {...register("city", { required: "City is required" })}
+                                                        className={`webinput ${errors.city ? "is-invalid" : ""}`}
+                                                        disabled={!selectedState}
+                                                    >
+                                                        <option value="">Select City</option>
+                                                        {cityOptions.map((city) => (
+                                                            <option key={city} value={city}>{city}</option>
+                                                        ))}
+                                                    </Form.Select>
+                                                    {errors.city && <div className="invalid-feedback">{errors.city.message}</div>}
                                                 </Form.Group>
                                             </Col>
                                             <Col md={6}>

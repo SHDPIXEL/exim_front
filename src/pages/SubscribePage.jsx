@@ -2,12 +2,13 @@ import React, { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import demo from '../assets/images/demo.jpg';
-import gicon from '../assets/images/gicon.png';
+import { useUser } from '../context/UserContext';
 
 const SubscribePage = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { user } = useAuth();
+  const { user: userData, loading } = useUser();
 
   const [activeType, setActiveType] = useState('digital');
   const [selectedPackages, setSelectedPackages] = useState([]);
@@ -21,16 +22,33 @@ const SubscribePage = () => {
   };
 
   const handlePackageChange = (location, duration, price) => {
+    // Skip location check if it's a digital subscription
+    if (user && activeType !== "digital") {
+      if (!userData || (!userData.city && !userData.state)) {
+        alert("Your location details are missing. Please update your profile.");
+        return;
+      }
+  
+      const userLocationMatches =
+        userData.city?.toLowerCase() === location.toLowerCase() ||
+        userData.state?.toLowerCase() === location.toLowerCase();
+  
+      if (!userLocationMatches) {
+        alert("You can only subscribe to packages available in your city or state.");
+        return;
+      }
+    }
+  
     const packageKey = `${location}-${duration}`;
     setSelectedPackages((prev) => {
       const existing = prev.find((pkg) => pkg.key === packageKey);
-      if (existing) {
-        return prev.filter((pkg) => pkg.key !== packageKey); // Unselect
-      } else {
-        return [...prev, { location, duration, price, key: packageKey }]; // Select
-      }
+      return existing
+        ? prev.filter((pkg) => pkg.key !== packageKey) // Unselect
+        : [...prev, { location, duration, price, key: packageKey }]; // Select
     });
   };
+  
+
 
   const handleContinue = () => {
     if (selectedPackages.length === 0) {
@@ -58,7 +76,7 @@ const SubscribePage = () => {
 
   const packagesData = [
     { location: 'Mumbai', options: [{ duration: '1 year', price: 3500 }, { duration: '2 Year', price: 6000 }] },
-    { location: 'Gujrat', options: [{ duration: '1 year', price: 2500 }, { duration: '2 Year', price: 3500 }] },
+    { location: 'Gujarat', options: [{ duration: '1 year', price: 2500 }, { duration: '2 Year', price: 3500 }] },
     { location: 'Chennai', options: [{ duration: '1 year', price: 2400 }, { duration: '2 Year', price: 4000 }] },
     { location: 'Delhi / NCR', options: [{ duration: '1 year', price: 2400 }, { duration: '2 Year', price: 4000 }] },
     { location: 'Kolkata', options: [{ duration: '1 year', price: 1200 }] },
@@ -173,8 +191,13 @@ const SubscribePage = () => {
                                 className="form-check-input"
                                 type="checkbox"
                                 id={`${pkg.location}-${option.duration}`}
+                                checked={selectedPackages.some(
+                                  (selectedPkg) =>
+                                    selectedPkg.location === pkg.location && selectedPkg.duration === option.duration
+                                )} // Ensure it only checks the matching package
                                 onChange={() => handlePackageChange(pkg.location, option.duration, option.price)}
                               />
+
                               <label className="form-check-label" htmlFor={`${pkg.location}-${option.duration}`}>
                                 <h3>{option.duration}</h3> <h5>₹ {option.price.toLocaleString()}</h5>
                               </label>

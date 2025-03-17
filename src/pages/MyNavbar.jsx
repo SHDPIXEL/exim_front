@@ -42,7 +42,8 @@ const menuItems = [
     { text: 'Events', link: '/events' },
     { text: 'Appointments', link: '/appointments' },    
     { text: 'Video Gallery', link: '/videoGallery' },
-    { text: 'Contact Us', link: '/contact' }
+    { text: 'Contact Us', link: '/contact' },
+    {text: "Download", link: "/download"}
 
 
 ];

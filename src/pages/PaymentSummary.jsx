@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import API from '../api';
+import { useUser } from '../context/UserContext';
 
 const PaymentSummary = () => {
   const navigate = useNavigate();
@@ -9,18 +10,30 @@ const PaymentSummary = () => {
   const { user } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
   const authToken = localStorage.getItem("authToken") || "";
-
-  // Redirect to login if user or token is missing
-  if (!user || !user.token) {
-    console.error('Auth token is missing!');
-    alert('Authentication error! Please log in again.');
-    navigate('/login');
-    return null;
-  }
+  const { user: userData, loading } = useUser();
 
   const subscriptionType = state?.subscriptionType || 'digital';
   const packages = state?.packages || [];
   const total = packages.reduce((sum, pkg) => sum + pkg.price, 0);
+
+
+  useEffect(() => {
+    if (!user || !user.token) {
+      console.error('Auth token is missing!');
+      alert('Authentication error! Please log in again.');
+      navigate('/login');
+      return;
+    }
+
+    if (
+      subscriptionType !== 'digital' &&
+      userData &&
+      packages.some(pkg => pkg.location !== userData.state && pkg.location !== userData.city)
+    ) {
+      alert('Subscription location does not match your state or city. Please choose a valid subscription.');
+      navigate('/subscribePage');
+    }
+  }, [state, user, userData, navigate, subscriptionType, packages]);
 
   const loadScript = (src) => {
     return new Promise((resolve) => {
@@ -64,6 +77,8 @@ const PaymentSummary = () => {
         })),
         amount: total,
       };
+
+      console.log("subscription data" ,subscriptionData)
 
       const response = await API.post('/services/order', subscriptionData, {
         headers: {
@@ -118,9 +133,9 @@ const PaymentSummary = () => {
           }
         },
         prefill: {
-          name: user?.name || 'John Doe',
-          email: user?.email || 'user@example.com',
-          contact: user?.mobile ? `+91${user.mobile}` : '+919999999999',
+          name: userData?.name || 'John Doe',
+          email: userData?.email || 'user@example.com',
+          contact: userData?.mobile ? `+91${userData.mobile}` : '+919999999999',
         },
         notes: {
           address: 'Exim',
@@ -151,6 +166,8 @@ const PaymentSummary = () => {
     displayRazorpay();
   };
 
+  if (loading) return <p>Loading...</p>;
+
   return (
     <div className="container mb-4">
       <div className="row mt-5 mb-5">
@@ -161,11 +178,11 @@ const PaymentSummary = () => {
               <div className="SummarryBox">
                 <div className="SummarryBoxList">
                   <div className="leftSummBox">Name - </div>
-                  <div className="rightSummBox">{user?.name || 'John Doe'}</div>
+                  <div className="rightSummBox">{userData?.name || 'John Doe'}</div>
                 </div>
                 <div className="SummarryBoxList">
                   <div className="leftSummBox">Designation - </div>
-                  <div className="rightSummBox">{user?.designation || 'Admin'}</div>
+                  <div className="rightSummBox">{userData?.contact_person_designation || 'Admin'}</div>
                 </div>
                 <div className="SummarryBoxList">
                   <div className="leftSummBox">Subscription Details - </div>

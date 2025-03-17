@@ -33,7 +33,7 @@ const PaymentDone = () => {
                 className="mt-4 dailySubscribebtn p-2 mx-auto"
                 style={{ height: '50px', width: '200px' }}
               >
-                Go to Login Page
+                Go to Dashboard
               </button>
             </div>
           </div>

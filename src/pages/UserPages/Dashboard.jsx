@@ -10,11 +10,13 @@ import { useNavigate } from "react-router-dom";
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { useAuth } from "../../context/AuthContext";
+import { useUser } from "../../context/UserContext";
 
 const Dashboard = () => {
     const navigate = useNavigate();
 
     const { logout } = useAuth();
+    const { user, loading, userSubscription } = useUser();
 
     const pastdata = [
         { id: 1, dateU: "31 Dec 2024" },
@@ -31,40 +33,46 @@ const Dashboard = () => {
 
     const [selectedDate, setSelectedDate] = useState(null);
 
+    if (loading) return <p>Loading...</p>;
+
     return (
         <>
             <div className="container border shadow-sm p-md-5 py-md-3">
                 <div className="row mt-4 mb-4">
                     <div className="col-md-6  d-flex justify-content-md-start justify-content-center">
-                        <h3 className="">Welcome to, <span className="text-webColor">Amol Patil</span></h3>
+                        <h3 className="">Welcome to, <span className="text-webColor">{user?.name}</span></h3>
                     </div>
                     <div className="col-md-6 d-flex justify-content-md-end justify-content-center">
-                        <p>Last login 01 Jan 2025 , 10:01:15</p>
+                        <p>{user?.login_history[0].timestamp}</p>
                     </div>
                 </div>
                 <div className="row">
                     <div className="col-md-12 mb-1">
                         <div className="webTittle"><i className="bi bi-chevron-right"></i> Subscribed Editions</div>
                     </div>
-                    <div className="col-md-2 mt-3 col-6">
-                        <div className="Editionsbox active">
-                            <h4>Mumbai</h4>
-                            <p>Expire at <span>31 Dec 2025</span></p>
-                        </div>
-                    </div>
-                    <div className="col-md-2 mt-3 col-6">
+                    {
+                        userSubscription.map((edition) => (
+                            <div className="col-md-2 mt-3 col-6">
+                                <div className="Editionsbox active">
+                                    <h4>{edition?.location || "Edition Name"}</h4>
+                                    <p>Expire at <span>{edition?.expiry_date}</span></p>
+                                </div>
+                            </div>
+                        ))
+                    }
+                    {/* <div className="col-md-2 mt-3 col-6">
                         <div className="Editionsbox">
                             <h4>CHENNAI</h4>
                             <p>Expire at <span>31 Dec 2026</span></p>
                         </div>
-                    </div>
+                    </div> */}
                 </div>
                 <div className="row mt-5 ">
 
-                    <div class="col-md-4 mb-3 offset-md-4 text-center ">
+                    <div className="col-md-4 mb-3 offset-md-4 text-center ">
                         <h5 className="fw-bold">Mumbai Editions - 01 Jan 2025</h5>
-                        <div class="newspaper-container mt-3 ">
-                            <img alt="home" class="w-100 border shadow-sm rounded-3" src={demoimg} />
+                        <div className="newspaper-container mt-3 ">
+                            <img alt="home" className="w-100 border shadow-sm rounded-3" src={demoimg} />
                             <button className="dailySubscribebtn mt-3 mx-auto p-2" onClick={() => navigate("/viewpage")} style={{ width: "200px" }}>View  </button>
                         </div>
                     </div>

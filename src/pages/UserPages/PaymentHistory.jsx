@@ -5,42 +5,45 @@ import API from "../../api";
 
 const PaymentHistory = () => {
   const [payments, setPayments] = useState([]);
-  const [refundhistory, setRefundHistory] = useState([]); // Placeholder for future refund logic
+  const [refundhistory, setRefundHistory] = useState([]); 
 
   useEffect(() => {
     const fetchDetails = async () => {
+      console.log("before runnig the payment details")
       try {
-        const response = await API.post("/services/get_payments", {}, {
+        const response = await API.post("/services/get_payments", {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("authToken")}`,
           },
         });
+  
         console.log("Payment details:", response.data);
-
-        // Map backend data to match table structure
+  
         const mappedPayments = response.data.payments.map(payment => ({
-          id: payment.razorpayPaymentId || "N/A", // Payment ID
-          invoiceid: payment.razorpayOrderId || "N/A", // Invoice ID
-          Service: payment.subscription_details, // Needs parsing if object
+          id: payment.razorpayPaymentId || "N/A", 
+          invoiceid: payment.razorpayOrderId || "N/A", 
+          Service: payment.subscription_details
+            ? payment.subscription_details.map(sub => `${sub.location} - ${sub.duration}`).join(", ")
+            : "N/A", 
           type: payment.type || "N/A",
-          date: new Date(payment.createdAt).toISOString().split("T")[0], // Format date
-          amount: `₹ ${payment.amount.toLocaleString()}`, // Format amount
-          Expire: "N/A", // Placeholder; calculate if duration is available
-          status: payment.paymentStatus || payment.status || "Pending", // Use paymentStatus or status
+          date: new Date(payment.createdAt).toISOString().split("T")[0],
+          amount: `₹ ${payment.amount.toLocaleString()}`, 
+          Expire: payment.expiry_date, 
+          status: payment.paymentStatus || payment.status || "Pending", 
         }));
-
+  
         setPayments(mappedPayments);
-        // For now, refundhistory is not populated; adjust if backend provides refund data
-        setRefundHistory([]); // Placeholder until refund logic is clarified
+        setRefundHistory([]); 
       } catch (error) {
-        console.error("Error in fetching details:", error);
-        setPayments([]); // Empty array on error
+        console.error("Error in fetching payment details:", error);
+        setPayments([]); 
         setRefundHistory([]);
       }
     };
-
+  
     fetchDetails();
   }, []);
+  
 
   return (
     <div className="container border shadow-sm p-md-5 py-md-3">
@@ -83,9 +86,9 @@ const PaymentHistory = () => {
                         <td>{payment.Expire}</td>
                         <td>
                           <span
-                            className={`badge ${payment.status === 'Completed'
+                            className={`badge ${payment.status === 'success'
                                 ? 'bg-success'
-                                : payment.status === 'Pending'
+                                : payment.status === 'pending'
                                   ? 'bg-warning text-dark'
                                   : 'bg-danger'
                               }`}

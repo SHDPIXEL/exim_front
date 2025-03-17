@@ -19,9 +19,15 @@ export function AuthProvider({ children }) {
   };
 
   const logout = () => {
-    localStorage.removeItem('authToken');
-    setUser(null);
-  };
+    try {
+        localStorage.removeItem("authToken"); 
+        localStorage.clear(); 
+        setUser(null); // Reset user state
+        navigate("/login"); // Redirect to login page
+    } catch (error) {
+        console.error("Error during logout:", error);
+    }
+};
 
   return (
     <AuthContext.Provider value={{ user, login, logout }}>

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import { Form, Row, Col, Button } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
@@ -10,7 +10,14 @@ import { useForm } from 'react-hook-form';
 const Login = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { login } = useAuth();
+  const { login, user } = useAuth();
+
+  useEffect(() => {
+    // Only redirect to dashboard if user exists AND there's no subscription redirect pending
+    if (user && (!location.state?.from || location.state.from !== '/subscribePage')) {
+      navigate('/dashboard');
+    }
+  }, [user, navigate, location.state]);
 
   // Initialize react-hook-form
   const {
@@ -26,14 +33,21 @@ const Login = () => {
 
   const onSubmit = async (data) => {
     try {
+      // Fetch the user's IP address
+      const ipResponse = await fetch('https://api64.ipify.org?format=json');
+      const ipData = await ipResponse.json();
+      const userIp = ipData.ip;
+  
+      // Send login request with IP
       const response = await API.post('/services/login', {
         email: data.username,
         password: data.password,
+        ip: userIp, 
       });
+  
       const { token } = response.data;
       if (token) {
         login(token);
-        // Check if there's state from SubscribePage
         if (location.state?.from === '/subscribePage' && location.state?.subscriptionType && location.state?.packages) {
           navigate('/paymentSummary', {
             state: {
@@ -42,7 +56,6 @@ const Login = () => {
             },
           });
         } else {
-          // Default redirect to dashboard if no subscription data
           navigate('/dashboard');
         }
       } else {
@@ -53,6 +66,7 @@ const Login = () => {
       alert(error.response?.data?.message || 'Login failed. Please check your credentials.');
     }
   };
+  
 
   return (
     <>
