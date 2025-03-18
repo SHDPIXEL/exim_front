@@ -9,8 +9,6 @@ const PaymentDone = () => {
   const orderId = state?.order_id;
   const transactionId = state?.razorpayPaymentId || '123456'; 
 
-  console.log(transactionId)
-
   const handlelogin = () => {
     navigate('/dashboard');
   };

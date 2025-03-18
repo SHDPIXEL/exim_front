@@ -16,7 +16,7 @@ const MainHeader = () => {
     navigate('/subscribePage');
   }
 
-  const {logout} = useAuth();
+  const {logout, user} = useAuth();
 
   return (
     <>
@@ -42,7 +42,14 @@ const MainHeader = () => {
                 <Link to="https://play.google.com/store/apps/details?id=com.hv.eximindia&pli=1" target='_blank' className='mx-2 my-1' ><img src={playStore} width={80} className='rounded-1'/></Link>
                 <Link to="https://apps.apple.com/in/app/exim-india/id1225479989" target='_blank'  className='mx-2 my-1' ><img src={AppStore} width={80} className='rounded-1' /></Link>
                 {/* <div className='searchtop'><i className="bi bi-search"></i> Search</div> */}
-                <div className='loginbtn' onClick={() => navigate('/Login')}><i className="bi bi-person-circle"></i> Login</div>
+                {
+                  user ? (
+                    <div className='loginbtn' onClick={() => navigate('/dashboard')}> Dashboard</div>
+
+                  ) : (
+                    <div className='loginbtn' onClick={() => navigate('/Login')}><i className="bi bi-person-circle"></i> Login</div>
+                  )
+                }
 
               </div>
 

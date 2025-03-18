@@ -19,7 +19,6 @@ const EximPolls = (props) => {
         const fetchPolls = async () => {
             try {
                 const response = await API.post("/polls/get_poll");
-                console.log("Polls data", response.data)
                 setPollsData(response.data);
 
             } catch (error) {
@@ -51,8 +50,6 @@ const EximPolls = (props) => {
     
         try {
             const response = await API.post("/polls/submit_polls", { responses: formattedResponses });
-    
-            console.log("Response from polls backend:", response.data);
             alert("Responses Submitted!");
             
             // Store poll results for displaying vote counts

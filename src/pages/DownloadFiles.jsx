@@ -23,7 +23,6 @@ const DownloadFiles = () => {
     const fetchFiles = async () => {
       try {
         const response = await API.post("/files/get_files");
-        console.log("files data", response.data);
 
         // Flatten the files array while keeping the title from each item
         const extractedFiles = response.data.flatMap(item =>

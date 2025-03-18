@@ -20,12 +20,12 @@ const ProfilePage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+
     if (newPassword !== confirmPassword) {
       alert("New Password and Confirm Password do not match!");
       return;
     }
-  
+
     try {
       const response = await API.post('/services/change_password', {
         oldPassword,
@@ -36,7 +36,7 @@ const ProfilePage = () => {
           Authorization: `Bearer ${localStorage.getItem("authToken")}`,
         },
       });
-  
+
       if (response.data.success) {
         alert("Password changed successfully!");
         handleClose();
@@ -49,74 +49,6 @@ const ProfilePage = () => {
     }
   };
 
-
-  const logindata = [
-    {
-      currentlogin: '2025-01-10 15:35:40',
-      device: 'desktop',
-      location: 'India (182:662:30:146)',
-      firstlogin: '2025-01-10 15:35:40',
-      logintype: 'google',
-    },
-    {
-      currentlogin: '2025-01-10 15:35:40',
-      device: 'desktop',
-      location: 'India (182:662:30:146)',
-      firstlogin: '2025-01-10 15:35:40',
-      logintype: 'google',
-    },
-
-    {
-      currentlogin: '2025-01-10 15:35:40',
-      device: 'desktop',
-      location: 'India (182:662:30:146)',
-      firstlogin: '2025-01-10 15:35:40',
-      logintype: 'google',
-    },
-
-    {
-      currentlogin: '2025-01-10 15:35:40',
-      device: 'desktop',
-      location: 'India (182:662:30:146)',
-      firstlogin: '2025-01-10 15:35:40',
-      logintype: 'google',
-    },
-
-    {
-      currentlogin: '2025-01-10 15:35:40',
-      device: 'desktop',
-      location: 'India (182:662:30:146)',
-      firstlogin: '2025-01-10 15:35:40',
-      logintype: 'google',
-    },
-
-    {
-      currentlogin: '2025-01-10 15:35:40',
-      device: 'desktop',
-      location: 'India (182:662:30:146)',
-      firstlogin: '2025-01-10 15:35:40',
-      logintype: 'google',
-    },
-
-    {
-      currentlogin: '2025-01-10 15:35:40',
-      device: 'desktop',
-      location: 'India (182:662:30:146)',
-      firstlogin: '2025-01-10 15:35:40',
-      logintype: 'google',
-    },
-
-    {
-      currentlogin: '2025-01-10 15:35:40',
-      device: 'desktop',
-      location: 'India (182:662:30:146)',
-      firstlogin: '2025-01-10 15:35:40',
-      logintype: 'google',
-    },
-
-
-
-  ];
   return (
 
     <div className="container border shadow-sm p-md-5 py-md-3">
@@ -195,20 +127,28 @@ const ProfilePage = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {user?.login_history.map((log, index) => (
+                    {user?.login_history?.map((log, index) => (
                       <tr key={index}>
-                        <td>{log?.timestamp}</td>
-                        {/* <td>{log.device}</td> */}
-                        {log.country || log.ip ? `${log.country || ""}${log.country && log.ip ? " (" : ""}${log.ip || ""}${log.country && log.ip ? ")" : ""}` : "N/A"}
-                        <td>{new Date(user?.createdAt).toLocaleDateString("en-US", {
-                          year: "numeric",
-                          month: "long",
-                          day: "numeric",
-                        })}</td>
-                        {/* <td>{log.logintype}</td> */}
+                        {log?.timestamp ? <td>{log.timestamp}</td> : <td></td>}
 
+                        <td>
+                          {log.country || log.ip
+                            ? `${log.country || ""}${log.country && log.ip ? " (" : ""}${log.ip || ""}${log.country && log.ip ? ")" : ""}`
+                            : "N/A"}
+                        </td>
+
+                        <td>
+                          {user?.createdAt
+                            ? new Date(user.createdAt).toLocaleDateString("en-US", {
+                              year: "numeric",
+                              month: "long",
+                              day: "numeric",
+                            })
+                            : "N/A"}
+                        </td>
                       </tr>
                     ))}
+
 
                   </tbody>
 

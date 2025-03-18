@@ -25,7 +25,7 @@ const NewsFocus = () => {
                 const data = response.data.data;
                 setNewsInFocus(data)
             } catch (error) {
-                console.log("Error in fetching news in focus", error);
+                console.error("Error in fetching news in focus", error);
             }
         };
         fetchNewsInFocus();

@@ -23,7 +23,7 @@ const TopStorySlider = () => {
                 const response = await API.post("/news/get_news_topstories");
                 setTopStories(response.data.data);
             } catch (error) {
-                console.log("Error in fetching headline", error);
+                console.error("Error in fetching headline", error);
             }
         };
         fetchTopStories();

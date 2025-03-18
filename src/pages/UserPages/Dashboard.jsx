@@ -43,7 +43,7 @@ const Dashboard = () => {
                         <h3 className="">Welcome to, <span className="text-webColor">{user?.name}</span></h3>
                     </div>
                     <div className="col-md-6 d-flex justify-content-md-end justify-content-center">
-                        <p>{user?.login_history[0].timestamp}</p>
+                    <p>{user?.login_history?.[0]?.timestamp || "No login history available"}</p>
                     </div>
                 </div>
                 <div className="row">

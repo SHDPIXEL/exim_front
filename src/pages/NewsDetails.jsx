@@ -56,7 +56,7 @@ const NewsDetails = () => {
                     <div className="th-blog blog-single">
                         <Link to="/#" className="categorybtn" >{newsDetails.category_name}</Link>
                         <h2 className="blog-title">{newsDetails.headline}</h2>
-                        <div className="blog-meta"><Link className="author" href="/"><i className="far fa-user"></i>By - Tnews</Link> <Link to="/#"><i className="far fa-calendar-days"></i>21 June, 2023</Link>
+                        <div className="blog-meta"><Link className="author" href="/"><i className="far fa-user"></i>By - Tnews</Link> <Link to="/#"><i className="far fa-calendar-days"></i>{dataFormatter(newsDetails.date)}</Link>
 
                         </div>
                         <div className="blog-img"><img src={blogdetailsimg} alt="Blog" width={"100%"} /></div>
@@ -74,7 +74,6 @@ const NewsDetails = () => {
                                     <div className="blog-content">
                                         <p dangerouslySetInnerHTML={{ __html: newsDetails.description }}></p>
                                     </div>
-
                                 </div>
 
                             </div>

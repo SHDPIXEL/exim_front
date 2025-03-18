@@ -33,7 +33,7 @@ const Home = () => {
                 setTopNews(data.slice(0, 11));
                 SetHeadlines(data.slice(11));
             } catch (error) {
-                console.log("Error in fetching Headlines", error);
+                console.error("Error in fetching Headlines", error);
             }
         };
         fetchHeadlines();

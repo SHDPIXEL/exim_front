@@ -26,10 +26,9 @@ const NewCategories = () => {
         const fetchCategoriesNews = async () => {
             try {
                 const response = await API.post("/news/get_news_category");
-                console.log("category news", response.data);
                 setCategoryNews(response.data.data);
             } catch (error) {
-                console.log("Error in fetching Headlines", error);
+                console.error("Error in fetching Headlines", error);
             }
         };
         fetchCategoriesNews();

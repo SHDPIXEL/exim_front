@@ -188,8 +188,6 @@ const RegistrationForm = () => {
             } else {
                 console.warn('No token received from backend');
             }
-
-            console.log('Registration successful:', response.data);
             navigate('/subscribePage');
         } catch (error) {
             console.error('Registration failed:', error.response?.data || error.message);
@@ -446,7 +444,7 @@ const RegistrationForm = () => {
                                             </Col>
                                             <Col md={6}>
                                                 <Form.Group controlId="formMobile" className="mt-3">
-                                                    <Form.Label>Phone No.</Form.Label>
+                                                    <Form.Label>Phone No. *</Form.Label>
                                                     <Form.Control
                                                         type="text"
                                                         placeholder="Enter Phone number"
@@ -538,7 +536,7 @@ const RegistrationForm = () => {
                                                         })}
                                                     />
                                                     <span>
-                                                        I have read and agree to the <Link onClick={() => setModalShow(true)} className='text-dark'>terms & conditions</Link>
+                                                        I have read and agree to the <Link onClick={() => setModalShow(true)} className='text-dark'>terms & conditions *</Link>
                                                     </span>
                                                 </Form.Group>
                                                 {errors.terms && (

@@ -48,7 +48,6 @@ const Catergory = () => {
                 categoryId: categoryId,
                 page: pageNumber
             });
-            console.log("category id data", response.data);
             setNewsData((prev) => {
                 if (pageNumber === 1) {
                     return response.data.data;

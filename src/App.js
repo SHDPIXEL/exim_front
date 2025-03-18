@@ -63,7 +63,7 @@ function App() {
             <Route path="/subscribePage" element={<Layout><SubscribePage /></Layout>} />
             <Route path="/newsDetails/:id" element={<Layout><NewsDetails /></Layout>} />
             <Route path="/videoGallery" element={<Layout><VideoGalleryNews /></Layout>} />
-            <Route path="/videoGalleryDetails" element={<Layout><VideGalleryDetails /></Layout>} />
+            <Route path="/videoGalleryDetails/:id" element={<Layout><VideGalleryDetails /></Layout>} />
             <Route path="/events" element={<Layout><EventsPage /></Layout>} />
             <Route path="/rates" element={<Layout><ExchangeRates /></Layout>} />
             <Route path="/Customrates" element={<Layout><CustomRates /></Layout>} />

@@ -40,7 +40,6 @@ const PaymentSummary = () => {
       const script = document.createElement('script');
       script.src = src;
       script.onload = () => {
-        console.log('Razorpay SDK loaded successfully');
         resolve(true);
       };
       script.onerror = () => {
@@ -78,7 +77,6 @@ const PaymentSummary = () => {
         amount: total,
       };
 
-      console.log("subscription data" ,subscriptionData)
 
       const response = await API.post('/services/order', subscriptionData, {
         headers: {
@@ -86,7 +84,6 @@ const PaymentSummary = () => {
         },
       });
 
-      console.log('Backend response:', response.data);
 
       // Correct destructuring based on response structure
       const { amount, id: order_id, currency } = response.data.razorpayOrder;
@@ -145,7 +142,6 @@ const PaymentSummary = () => {
         },
       };
 
-      console.log('Razorpay options:', options);
 
       const paymentObject = new window.Razorpay(options);
       paymentObject.on('payment.failed', function (response) {

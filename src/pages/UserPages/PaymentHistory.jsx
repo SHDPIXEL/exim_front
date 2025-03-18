@@ -9,16 +9,13 @@ const PaymentHistory = () => {
 
   useEffect(() => {
     const fetchDetails = async () => {
-      console.log("before runnig the payment details")
       try {
         const response = await API.post("/services/get_payments", {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("authToken")}`,
           },
         });
-  
-        console.log("Payment details:", response.data);
-  
+    
         const mappedPayments = response.data.payments.map(payment => ({
           id: payment.razorpayPaymentId || "N/A", 
           invoiceid: payment.razorpayOrderId || "N/A", 

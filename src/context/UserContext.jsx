@@ -10,15 +10,20 @@ export const UserProvider = ({ children }) => {
 
     useEffect(() => {
         const fetchUser = async () => {
+            const token = localStorage.getItem("authToken");
+            if (!token) {
+                setLoading(false);
+                return;
+            }
             try {
                 const response = await API.get("/app_users/getUserDetails", {
                     headers: {
-                        Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+                        Authorization: `Bearer ${token}`,
                     },
                 });
                 setUser(response.data.user);
                 setUserSubscription(response.data.subscription_locations);
-                console.log("User data",response.data)
+                // console.log("User data",response.data)
             } catch (error) {
                 console.error("Failed to fetch user details", error);
                 setUser(null);

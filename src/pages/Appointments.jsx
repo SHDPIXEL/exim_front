@@ -9,7 +9,6 @@ const Appointments = () => {
      const [searchTerm, setSearchTerm] = useState("");
     
       const handleSearch = () => {
-        console.log("Search Term:", searchTerm);
         // Add your search logic here
       };
     const jobs = [
