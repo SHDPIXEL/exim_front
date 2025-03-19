@@ -39,7 +39,7 @@ import ProtectedRoute from './pages/ProtectedRoute.jsx';
 import { AuthProvider } from './context/AuthContext.jsx';
 import { UserProvider } from './context/UserContext.jsx';
 import DownloadFiles from './pages/DownloadFiles.jsx';
-
+import { AdProvider } from './context/AdContext.jsx';
 
 
 function Layout({ children }) {
@@ -57,40 +57,42 @@ function App() {
     <BrowserRouter basename="/eximApp">
       <AuthProvider>
         <UserProvider>
-          <ScrollToTop />
-          <Routes>
-            <Route path="/" element={<Layout><Home /></Layout>} />
-            <Route path="/subscribePage" element={<Layout><SubscribePage /></Layout>} />
-            <Route path="/newsDetails/:id" element={<Layout><NewsDetails /></Layout>} />
-            <Route path="/videoGallery" element={<Layout><VideoGalleryNews /></Layout>} />
-            <Route path="/videoGalleryDetails/:id" element={<Layout><VideGalleryDetails /></Layout>} />
-            <Route path="/events" element={<Layout><EventsPage /></Layout>} />
-            <Route path="/rates" element={<Layout><ExchangeRates /></Layout>} />
-            <Route path="/Customrates" element={<Layout><CustomRates /></Layout>} />
-            <Route path="/eximnews" element={<Layout><News /></Layout>} />
-            <Route path="/dailyeximnews" element={<Layout><DailyEximNews /></Layout>} />
-            <Route path="/appointments" element={<Layout><Appointments /></Layout>} />
-            <Route path="/EximIndia" element={<Layout><EximIndia /></Layout>} />
-            <Route path="/oureditions" element={<Layout><OurEditors /></Layout>} />
-            <Route path="/ourReaders" element={<Layout><OurReaders /></Layout>} />
-            <Route path="/Category" element={<Layout><Catergory /></Layout>} />
-            <Route path="/login" element={<Layout><Login /></Layout>} />
-            <Route path="/registrationPage" element={<Layout><RegistrationForm /></Layout>} />
-            <Route path="/Forgotpass" element={<Layout><ForgotPass /></Layout>} />
-            <Route path="/paymentSummary" element={<ProtectedRoute><Layout><PaymentSummary /></Layout></ProtectedRoute>} />
-            <Route path="/paymentDone" element={<Layout><PaymentDone /></Layout>} />
-            <Route path="/dashboard" element={<ProtectedRoute><Layout><Dashboard /></Layout></ProtectedRoute>} />
-            <Route path="/mydevice" element={<Layout><MyDevice /></Layout>} />
-            <Route path="/paymentHistory" element={<Layout><PaymentHistory /></Layout>} />
-            <Route path="/profile" element={<Layout><ProfilePage /></Layout>} />
-            <Route path="/viewpage" element={<Layout><ViewPage /></Layout>} />
-            <Route path="/contact" element={<Layout><ContactPage /></Layout>} />
-            <Route path="/privacypolicy" element={<Layout><PrivacyPolicy /></Layout>} />
-            <Route path="/termsandconditions" element={<Layout><TermsAndConditions /></Layout>} />
-            <Route path="/shippingAndDeliveryPolicy" element={<Layout><ShippingAndDeliveryPolicy /></Layout>} />
-            <Route path="/cancellationAndRefundPolicy" element={<Layout><CancellationAndRefundPolicy /></Layout>} />
-            <Route path='/download' element={<Layout><DownloadFiles /></Layout>} />
-          </Routes>
+          <AdProvider>
+            <ScrollToTop />
+            <Routes>
+              <Route path="/" element={<Layout><Home /></Layout>} />
+              <Route path="/subscribePage" element={<Layout><SubscribePage /></Layout>} />
+              <Route path="/newsDetails/:id" element={<Layout><NewsDetails /></Layout>} />
+              <Route path="/videoGallery" element={<Layout><VideoGalleryNews /></Layout>} />
+              <Route path="/videoGalleryDetails/:id" element={<Layout><VideGalleryDetails /></Layout>} />
+              <Route path="/events" element={<Layout><EventsPage /></Layout>} />
+              <Route path="/rates" element={<Layout><ExchangeRates /></Layout>} />
+              <Route path="/Customrates" element={<Layout><CustomRates /></Layout>} />
+              <Route path="/eximnews" element={<Layout><News /></Layout>} />
+              <Route path="/dailyeximnews" element={<Layout><DailyEximNews /></Layout>} />
+              <Route path="/appointments" element={<Layout><Appointments /></Layout>} />
+              <Route path="/EximIndia" element={<Layout><EximIndia /></Layout>} />
+              <Route path="/oureditions" element={<Layout><OurEditors /></Layout>} />
+              <Route path="/ourReaders" element={<Layout><OurReaders /></Layout>} />
+              <Route path="/Category" element={<Layout><Catergory /></Layout>} />
+              <Route path="/login" element={<Layout><Login /></Layout>} />
+              <Route path="/registrationPage" element={<Layout><RegistrationForm /></Layout>} />
+              <Route path="/Forgotpass" element={<Layout><ForgotPass /></Layout>} />
+              <Route path="/paymentSummary" element={<ProtectedRoute><Layout><PaymentSummary /></Layout></ProtectedRoute>} />
+              <Route path="/paymentDone" element={<Layout><PaymentDone /></Layout>} />
+              <Route path="/dashboard" element={<ProtectedRoute><Layout><Dashboard /></Layout></ProtectedRoute>} />
+              <Route path="/mydevice" element={<Layout><MyDevice /></Layout>} />
+              <Route path="/paymentHistory" element={<Layout><PaymentHistory /></Layout>} />
+              <Route path="/profile" element={<Layout><ProfilePage /></Layout>} />
+              <Route path="/viewpage" element={<Layout><ViewPage /></Layout>} />
+              <Route path="/contact" element={<Layout><ContactPage /></Layout>} />
+              <Route path="/privacypolicy" element={<Layout><PrivacyPolicy /></Layout>} />
+              <Route path="/termsandconditions" element={<Layout><TermsAndConditions /></Layout>} />
+              <Route path="/shippingAndDeliveryPolicy" element={<Layout><ShippingAndDeliveryPolicy /></Layout>} />
+              <Route path="/cancellationAndRefundPolicy" element={<Layout><CancellationAndRefundPolicy /></Layout>} />
+              <Route path='/download' element={<Layout><DownloadFiles /></Layout>} />
+            </Routes>
+          </AdProvider>
         </UserProvider>
       </AuthProvider>
     </BrowserRouter>

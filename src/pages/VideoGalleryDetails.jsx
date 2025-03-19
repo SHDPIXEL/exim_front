@@ -9,6 +9,12 @@ import banner4 from "../assets/images/banner7.png";
 import newfocusVideo from "../assets/images/newfocusVideo.mp4";
 import API, { BASE_URL } from "../api";
 import dataFormatter from "../helper/DateFormatter";
+import { useAds } from "../context/AdContext";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Pagination, Autoplay } from "swiper/modules";
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
 
 // Utility function to extract YouTube video ID from URL
 const getYouTubeVideoId = (url) => {
@@ -21,7 +27,24 @@ const VideoGalleryDetails = () => {
     const { id } = useParams();
     const [loading, setLoading] = useState(true);
     const [VideoNewsDetails, setVideoNewsData] = useState({});
-    const [topHeadlines, setTopHeadlines] = useState([]); // Unused, kept for future use
+    const [topHeadlines, setTopHeadlines] = useState([]);
+    const { ads } = useAds();
+
+
+    const getActiveMedia = (ad) => {
+        if (ad?.status === "Active") {
+            const activeImages = ad.images?.filter(image => image.status === "Active") || [];
+            const activeVideos = ad.videos?.filter(video => video.status === "Active") || [];
+
+            return [...activeImages.map(img => ({ type: "image", src: img.filePath })),
+            ...activeVideos.map(vid => ({ type: "video", src: vid.filePath }))];
+        }
+        return [];
+    };
+
+    const VideoDetailsAds = ads?.find(ad => ad.position === "VideoDetails_Ads");
+    const VideoDetailsMedia = getActiveMedia(VideoDetailsAds);
+
 
     const bottomData = [
         { id: 1, title: "Proposed US tariffs seen impacting dry bulk trade", imgUrl: banner4, Datetime: "December 06, 2024", category: "Shipping" },
@@ -34,7 +57,6 @@ const VideoGalleryDetails = () => {
         const fetchVideoNewsDetails = async () => {
             try {
                 const response = await API.get(`/videoNews/get_videoNews/${id}`);
-                console.log("Details news:", response.data);
                 setVideoNewsData(response.data);
             } catch (error) {
                 console.error("Error in fetching News details:", error);
@@ -49,8 +71,6 @@ const VideoGalleryDetails = () => {
     if (loading) return <p>Loading...</p>;
 
     const youtubeVideoId = !VideoNewsDetails.isVideo ? getYouTubeVideoId(VideoNewsDetails.urls) : null;
-    console.log("YouTube video ID:", youtubeVideoId);
-    console.log("Constructed iframe src:", `https://www.youtube.com/embed/${youtubeVideoId || ''}`);
 
     return (
         <div className='container mt-5 mb-5'>
@@ -107,7 +127,7 @@ const VideoGalleryDetails = () => {
                             )}
                         </div>
 
-                    {/* <div className="blog-content-wrap">
+                        {/* <div className="blog-content-wrap">
                             <div className="share-links-wrap">
                                 <div className="share-links">
                                     <span className="share-links-title">Share Post:</span>
@@ -135,8 +155,8 @@ const VideoGalleryDetails = () => {
                                 </div>
                             </div>
                         </div> */}
-                </div>
-                {/* <div className="blog-navigation mt-3">
+                    </div>
+                    {/* <div className="blog-navigation mt-3">
                         <div className="nav-btn prev">
                             <div className="img"><img src={banner2} alt="blog img" className="nav-img" /></div>
                             <div className="media-body">
@@ -153,9 +173,9 @@ const VideoGalleryDetails = () => {
                             <div className="img"><img src={banner3} alt="blog img" className="nav-img" /></div>
                         </div>
                     </div> */}
-            </div>
-            <div className="col-lg-3">
-                {/* <div className="mb-3">
+                </div>
+                <div className="col-lg-3">
+                    {/* <div className="mb-3">
                         <div className="col-md-12 mb-3">
                             <div className="webTittle"><i className="bi bi-chevron-right"></i>Recent News</div>
                         </div>
@@ -172,7 +192,7 @@ const VideoGalleryDetails = () => {
                             </div>
                         ))}
                     </div> */}
-                {/* <div className="mb-4 mt-4">
+                    {/* <div className="mb-4 mt-4">
                         <div className="col-md-12 mb-3">
                             <div className="webTittle"><i className="bi bi-chevron-right"></i>Popular Tags</div>
                         </div>
@@ -182,9 +202,32 @@ const VideoGalleryDetails = () => {
                             <Link to="/#">Transport & logistic</Link><Link to="/#">Port</Link>
                         </div>
                     </div> */}
-                <img src={adsleftbannerimg} alt="ad" className="w-100" style={{ height: "348px" }} />
-                <div className="mt-4">
-                    {/* <div className="HeadlineList">
+
+                    {VideoDetailsMedia.length > 0 ? (
+                        <Swiper
+                            modules={[Pagination, Autoplay]}
+                            pagination={{ clickable: true }}
+                            autoplay={{ delay: 3000 }}
+                        >
+                            {VideoDetailsMedia.map((media, index) => (
+                                <SwiperSlide key={index}>
+                                    {media.type === "image" ? (
+                                        <img src={media.src} alt="Advertisement" className="w-100 ad-image-between" style={{ height: "348px" }} />
+                                    ) : (
+                                        <video style={{ height: "348px" }} controls={false} autoPlay muted className="w-100 ad-image-between">
+                                            <source src={media.src} type="video/mp4" />
+                                            Your browser does not support the video tag.
+                                        </video>
+                                    )}
+                                </SwiperSlide>
+                            ))}
+                        </Swiper>
+                    ) : (
+                        ""
+                    )}
+
+                    <div className="mt-4">
+                        {/* <div className="HeadlineList">
                             <div className="categorybtn d-inline-block p-2 px-3 mx-auto w-auto mb-4">
                                 <i className="bi bi-fire me-2"></i> Top Headlines
                             </div>
@@ -198,9 +241,9 @@ const VideoGalleryDetails = () => {
                                 <li><div className="Headlinesingle"><h3>07</h3><h5>Proposed US tariffs seen impacting dry bulk trade</h5></div></li>
                             </ul>
                         </div> */}
+                    </div>
                 </div>
             </div>
-        </div>
         </div >
     );
 };

@@ -49,27 +49,27 @@ const DownloadFiles = () => {
   const handleDownload = async (filePath, fileName) => {
     try {
       const fullPath = `${BASE_URL}${filePath}`;
-      
+
       const response = await fetch(fullPath);
       if (!response.ok) throw new Error("Network response was not ok");
-      
+
       const blob = await response.blob();
       const url = window.URL.createObjectURL(blob);
-  
+
       const a = document.createElement("a");
       a.href = url;
       a.download = fileName || "download"; // Fallback if fileName is empty
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
-      
+
       window.URL.revokeObjectURL(url);
     } catch (error) {
       console.error("Download failed:", error);
     }
   };
-  
-  
+
+
 
   return (
     <div className="container mt-4 mb-4">
@@ -77,6 +77,8 @@ const DownloadFiles = () => {
 
       {loading ? (
         <p className="text-center">Loading files...</p>
+      ) : files.length === 0 ? (
+        <p className="text-center text-muted">No files to download</p>
       ) : (
         <div className="row">
           {files.map((file, index) => (
@@ -85,7 +87,7 @@ const DownloadFiles = () => {
                 <div className="d-flex align-items-center">
                   <i className={`bi ${getFileIcon(file.fileType)} fs-3 me-3`}></i>
                   <div>
-                    <h6 className="mb-1">{file.title}</h6> {/* Display title */}
+                    <h6 className="mb-1">{file.title}</h6>
                     <small className="text-muted">{file.fileType.toUpperCase()}</small>
                   </div>
                 </div>
@@ -95,7 +97,6 @@ const DownloadFiles = () => {
                 >
                   <i className="bi bi-download"></i> Download
                 </button>
-
               </div>
             </div>
           ))}
@@ -103,6 +104,7 @@ const DownloadFiles = () => {
       )}
     </div>
   );
+
 };
 
 export default DownloadFiles;

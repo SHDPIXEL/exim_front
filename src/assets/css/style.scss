@@ -451,6 +451,19 @@ a {
     color: #333;
 }
 
+.ad-image-top {
+    width: 100%;
+    height: 150px; /* Matches bottom media */
+    object-fit: cover; /* Ensures consistent rectangle shape */
+}
+
+
+
+.ad-image-between {
+    width: 100%;
+    height: 348px; /* Ensure this doesn't conflict with other styles */
+    object-fit: cover; 
+}
 
 
 .ViewallBtn {

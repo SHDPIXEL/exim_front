@@ -10,7 +10,7 @@ const PaymentHistory = () => {
   useEffect(() => {
     const fetchDetails = async () => {
       try {
-        const response = await API.post("/services/get_payments", {
+        const response = await API.post("/services/get_payments",{} ,{
           headers: {
             Authorization: `Bearer ${localStorage.getItem("authToken")}`,
           },

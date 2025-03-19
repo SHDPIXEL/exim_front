@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Modal , Form, InputGroup } from 'react-bootstrap';
 import ads4 from "../assets/images/ads4.png";
 import ads5 from "../assets/images/ads5.png";
 import jobsads from "../assets/images/jobshd.jpg";
+import API from '../api';
 
 
 const Appointments = () => {
@@ -223,6 +224,18 @@ const Appointments = () => {
         setSelectedJob(job);
         setShow(true);
     };
+
+    useEffect(() => {
+        const fetchAppoinments = async () => {
+            try{
+                const response = await API.post("/appointments/get_appointments");
+                console.log("appoinment data", response.data)
+            }catch(error) {
+                console.log("Error in fetching appoinmetns", error)
+            }
+        }
+        fetchAppoinments();
+    },[])
 
 
     const [visibleJobsCount, setVisibleJobsCount] = useState(5);

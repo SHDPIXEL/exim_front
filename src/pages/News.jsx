@@ -6,27 +6,68 @@ import adsleftbannerimg from "../assets/images/topleftads.png";
 import DatePicker from 'react-datepicker';
 import banner4 from "../assets/images/banner7.png";
 import { Link, useNavigate } from 'react-router-dom';
-import { Button, Form, InputGroup } from 'react-bootstrap';
+import { Form, InputGroup } from 'react-bootstrap';
 import API from '../api';
-import { useLocation } from 'react-router-dom';
+import { useAds } from "../context/AdContext";
+
 
 const News = () => {
 
     const navigate = useNavigate();
-    const location = useLocation();
     const [selectedDate, setSelectedDate] = useState(null);
     const [searchTerm, setSearchTerm] = useState("");
     const [repeatedNews, setRepeatedNews] = useState([]);
     const [page, setPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
     const [loading, setLoading] = useState(false);
+    const [headlines, SetHeadlines] = useState([]);
+    const { ads } = useAds();
 
-    const { headlines } = location.state || {};
+
+    const getActiveMedia = (ad) => {
+        if (ad?.status === "Active") {
+            const activeImage = ad.images?.find(image => image.status === "Active");
+            if (activeImage) {
+                return { type: "image", src: activeImage.filePath };
+            }
+
+            const activeVideo = ad.videos?.find(video => video.status === "Active");
+            if (activeVideo) {
+                return { type: "video", src: activeVideo.filePath };
+            }
+        }
+        return null;
+    };
+
+
+    const bottomRightAd = ads?.find(ad => ad.position === "EximNews_Bottom_Right");
+    const bottomLeftAd = ads?.find(ad => ad.position === "EximNews_Bottom_Left");
+
+    const bottomRightMedia = getActiveMedia(bottomLeftAd);
+    const bottomLeftMedia = getActiveMedia(bottomLeftAd);
+
+
+
+
+    // const { headlines } = location.state || {};
 
     const handleSearch = () => {
         console.log("Search Term:", searchTerm);
         // Add your search logic here
     };
+
+    useEffect(() => {
+        const fetchHeadlines = async () => {
+            try {
+                const response = await API.post("/news/get_news_recent");
+                const data = response.data.data;
+                SetHeadlines(data.slice(11));
+            } catch (error) {
+                console.error("Error in fetching Headlines", error);
+            }
+        };
+        fetchHeadlines();
+    }, []);
 
 
     const fetchNews = async (pageNumber) => {
@@ -155,20 +196,20 @@ const News = () => {
                 <div className='col-md-3' >
 
                     <div className="mt-5 p-3 pt-5 pb-1">
-                            <div className="HeadlineList">
-                                <div className="categorybtn d-inline-block p-2 px-3 mx-auto w-auto mb-4"><i className="bi bi-fire me-2"></i> Top Headlines</div>
-                                <ul>
-                                    {
-                                        headlines.map((headlineItem, index) => (
-                                            <li key={index}>
-                                                <div className="Headlinesingle" onClick={() => navigate(`/newsDetails/${headlineItem._id}`)}>
-                                                    <h3>{index + 1}</h3>
-                                                    <h5>{headlineItem.headline}</h5>
-                                                </div>
-                                            </li>
-                                        ))
-                                    }
-                                </ul>
+                        <div className="HeadlineList">
+                            <div className="categorybtn d-inline-block p-2 px-3 mx-auto w-auto mb-4"><i className="bi bi-fire me-2"></i> Top Headlines</div>
+                            <ul>
+                                {
+                                    headlines.map((headlineItem, index) => (
+                                        <li key={index}>
+                                            <div className="Headlinesingle" onClick={() => navigate(`/newsDetails/${headlineItem._id}`)}>
+                                                <h3>{index + 1}</h3>
+                                                <h5>{headlineItem.headline}</h5>
+                                            </div>
+                                        </li>
+                                    ))
+                                }
+                            </ul>
                         </div>
                     </div>
                     <div className="mb-4  p-3">
@@ -183,13 +224,41 @@ const News = () => {
             </div>
 
             <div className="borderbg"></div>
+
             <div className="row mb-4">
-                <div className="col-md-6 mt-4 mb-2">
-                    <img src={ads4} alt="adsv" className="w-100" />
-                </div>
-                <div className="col-md-6 my-4 mb-2 ">
-                    <img src={ads5} alt="adsv" className="w-100" />
-                </div>
+                {bottomRightMedia && (
+                    <div className="col-md-6 mt-2 mb-2">
+                        {bottomRightMedia.type === "image" ? (
+                            <img
+                                src={bottomRightMedia.src}
+                                alt="Top Right Advertisement"
+                                className="w-100 ad-image-top"
+                            />
+                        ) : (
+                            <video controls={false} autoPlay muted className="w-100 ad-image-top">
+                                <source src={bottomRightMedia.src} type="video/mp4" />
+                                Your browser does not support the video tag.
+                            </video>
+                        )}
+                    </div>
+                )}
+
+                {bottomLeftMedia && (
+                    <div className="col-md-6 my-2 mb-2">
+                        {bottomLeftMedia.type === "image" ? (
+                            <img
+                                src={bottomLeftMedia.src}
+                                alt="Top Left Advertisement"
+                                className="w-100 ad-image-top"
+                            />
+                        ) : (
+                            <video controls={false} autoPlay={true} muted className="w-100 ad-image-top">
+                                <source src={bottomLeftMedia.src} type="video/mp4" />
+                                Your browser does not support the video tag.
+                            </video>
+                        )}
+                    </div>
+                )}
             </div>
 
 

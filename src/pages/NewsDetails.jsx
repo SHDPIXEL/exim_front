@@ -1,15 +1,18 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import blogdetailsimg from "../assets/images/blogdetails.jpg";
-import adsimg from "../assets/images/adsimg.gif";
-import banner2 from "../assets/images/banner2.png";
-import banner3 from "../assets/images/banner3.png";
 import adsleftbannerimg from "../assets/images/topleftads.png";
 import banner4 from "../assets/images/banner7.png";
 import { useParams } from "react-router-dom";
 import API from "../api";
 import { useLocation, useNavigate } from "react-router-dom";
 import dataFormatter from "../helper/DateFormatter";
+import { useAds } from "../context/AdContext";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation, Pagination, Autoplay } from "swiper/modules";
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
 
 
 const NewsDetails = () => {
@@ -20,6 +23,26 @@ const NewsDetails = () => {
     const [topHeadlines, setTopHeadlines] = useState([])
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
+    const { ads } = useAds();
+
+
+    const getActiveMedia = (ad) => {
+        if (ad?.status === "Active") {
+            const activeImages = ad.images?.filter(image => image.status === "Active") || [];
+            const activeVideos = ad.videos?.filter(video => video.status === "Active") || [];
+
+            return [...activeImages.map(img => ({ type: "image", src: img.filePath })),
+            ...activeVideos.map(vid => ({ type: "video", src: vid.filePath }))];
+        }
+        return [];
+    };
+
+    const NewsDetailsAds = ads?.find(ad => ad.position === "NewsDetails_Ads");
+    const NewsDetailsMedia = getActiveMedia(NewsDetailsAds);
+
+    // const NewsDetailsAds = ads?.find(ad => ad.position === "NewsDetails_Ads");
+    // const NewsDetailsMedia = getActiveMedia(NewsDetailsAds);
+
 
 
     useEffect(() => {
@@ -41,7 +64,6 @@ const NewsDetails = () => {
                 window.scrollTo(0, 0);
             }
         };
-
         fetchNewsDetails();
     }, [id]);
 
@@ -56,7 +78,7 @@ const NewsDetails = () => {
                     <div className="th-blog blog-single">
                         <Link to="/#" className="categorybtn" >{newsDetails.category_name}</Link>
                         <h2 className="blog-title">{newsDetails.headline}</h2>
-                        <div className="blog-meta"><Link className="author" href="/"><i className="far fa-user"></i>By - Tnews</Link> <Link to="/#"><i className="far fa-calendar-days"></i>{dataFormatter(newsDetails.date)}</Link>
+                        <div className="blog-meta"><Link to="/#"><i className="far fa-calendar-days"></i>{dataFormatter(newsDetails.date)}</Link>
 
                         </div>
                         <div className="blog-img"><img src={blogdetailsimg} alt="Blog" width={"100%"} /></div>
@@ -79,7 +101,7 @@ const NewsDetails = () => {
                             </div>
                         </div>
                     </div>
-                    <div className="blog-navigation mt-3">
+                    {/* <div className="blog-navigation mt-3">
                         <div className="nav-btn prev">
                             <div className="img"><img src={banner2} alt="blog img" className="nav-img" /></div>
                             <div className="media-body">
@@ -91,12 +113,10 @@ const NewsDetails = () => {
                                 <h5 className="title"><Link className="hover-line" to="/#">Minister launches policy for  movement...</Link></h5><Link to="/#" className="nav-text">Next<i className="fas fa-arrow-right ms-2"></i></Link></div>
                             <div className="img"><img src={banner3} alt="blog img" className="nav-img" /></div>
                         </div>
-                    </div>
+                    </div> */}
 
                 </div>
                 <div className="col-lg-3">
-
-
                     <div className="mb-3">
                         <div className="col-md-12 mb-3">
                             <div className="webTittle"><i className="bi bi-chevron-right"></i>Recent News</div>
@@ -115,16 +135,39 @@ const NewsDetails = () => {
                                 </div>
                             </div>
                         ))}
-
                     </div>
-                    <div className="mb-4 mt-4">
+                    {/* <div className="mb-4 mt-4">
                         <div className="col-md-12 mb-3">
                             <div className="webTittle"><i className="bi bi-chevron-right"></i>Popular Tags</div>
                         </div>
                         <div className="tagcloud"><Link to="/#">Trade</Link>  <Link to="/#">Shipping</Link><Link to="/#">Exports</Link> <Link to="/#">Special Reports</Link><Link to="/#">Indian Economy </Link> <Link to="/#">Tarnsport & logistic</Link><Link to="/#">Port</Link></div>
+                    </div> */}
 
-                    </div>
-                    <img src={adsleftbannerimg} alt="hu" className="w-100" style={{ height: "348px" }} />
+                    {/* <img src={adsleftbannerimg} alt="hu" className="w-100" style={{ height: "348px" }} /> */}
+
+                    {NewsDetailsMedia.length > 0 ? (
+                        <Swiper
+                            modules={[Pagination, Autoplay]}
+                            pagination={{ clickable: true }}
+                            autoplay={{ delay: 3000 }}
+                        >
+                            {NewsDetailsMedia.map((media, index) => (
+                                <SwiperSlide key={index}>
+                                    {media.type === "image" ? (
+                                        <img src={media.src} alt="Advertisement" className="w-100 ad-image-between" style={{ height: "348px" }} />
+                                    ) : (
+                                        <video style={{ height: "348px" }} controls={false} autoPlay muted className="w-100 ad-image-between">
+                                            <source src={media.src} type="video/mp4" />
+                                            Your browser does not support the video tag.
+                                        </video>
+                                    )}
+                                </SwiperSlide>
+                            ))}
+                        </Swiper>
+                    ) : (
+                        ""
+                    )}
+
                     <div className="mt-4">
                         <div className="HeadlineList">
                             <div className="categorybtn d-inline-block p-2 px-3 mx-auto w-auto mb-4"><i className="bi bi-fire me-2"></i> Top Headlines</div>

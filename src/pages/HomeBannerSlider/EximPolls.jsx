@@ -51,6 +51,7 @@ const EximPolls = (props) => {
         try {
             const response = await API.post("/polls/submit_polls", { responses: formattedResponses });
             alert("Responses Submitted!");
+            console.log("polls data",response.data)
             
             // Store poll results for displaying vote counts
             const resultsData = response.data.polls.reduce((acc, poll) => {
@@ -119,7 +120,7 @@ const EximPolls = (props) => {
                                                         {pollResult && (
                                                             <div className="vote-bar-container">
                                                                 <div className="vote-bar" style={{ width: `${percentage}%` }}></div>
-                                                                <span className="vote-count">{votes} votes</span>
+                                                                <span className="vote-count">{percentage.toFixed(2)} %</span>
                                                             </div>
                                                         )}
                                                     </div>

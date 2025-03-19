@@ -44,7 +44,6 @@ const VideoGalleryNews = () => {
             const response = await API.post(`/videoNews/news`, {
                 page: pageNumber
             });
-            console.log("Response video data:", response.data);
 
             setVideoItems((prev) => {
                 if (pageNumber === 1) {
@@ -54,7 +53,6 @@ const VideoGalleryNews = () => {
             });
             setPage(pageNumber);
             setTotalPages(response.data.pagination.totalPages);
-            console.log("Total items in videoItems:", videoItems.length + response.data.news.length);
         } catch (error) {
             console.error("Error fetching videos:", error);
         } finally {

@@ -28,8 +28,6 @@ const VideoGallery = () => {
             try {
                 const response = await API.post("/videoNews/get_videoNews");
                 setVideoNewsData(response.data);
-                console.log("video data video link", response.data[0].videos);
-                console.log(BASE_URL);
             } catch (error) {
                 console.error("Error in fetching Video news", error);
             }
