@@ -1,14 +1,11 @@
 
 import React, { useEffect, useState } from 'react';
-import ads4 from "../assets/images/ads4.png";
-import ads5 from "../assets/images/ads5.png";
-import adsleftbannerimg from "../assets/images/topleftads.png";
 import DatePicker from 'react-datepicker';
-import banner4 from "../assets/images/banner7.png";
 import { Link, useNavigate } from 'react-router-dom';
 import { Form, InputGroup } from 'react-bootstrap';
 import API from '../api';
 import { useAds } from "../context/AdContext";
+import BottomAds from "../components/BottomAds";
 
 
 const News = () => {
@@ -21,30 +18,7 @@ const News = () => {
     const [totalPages, setTotalPages] = useState(1);
     const [loading, setLoading] = useState(false);
     const [headlines, SetHeadlines] = useState([]);
-    const { ads } = useAds();
-
-
-    const getActiveMedia = (ad) => {
-        if (ad?.status === "Active") {
-            const activeImage = ad.images?.find(image => image.status === "Active");
-            if (activeImage) {
-                return { type: "image", src: activeImage.filePath };
-            }
-
-            const activeVideo = ad.videos?.find(video => video.status === "Active");
-            if (activeVideo) {
-                return { type: "video", src: activeVideo.filePath };
-            }
-        }
-        return null;
-    };
-
-
-    const bottomRightAd = ads?.find(ad => ad.position === "EximNews_Bottom_Right");
-    const bottomLeftAd = ads?.find(ad => ad.position === "EximNews_Bottom_Left");
-
-    const bottomRightMedia = getActiveMedia(bottomLeftAd);
-    const bottomLeftMedia = getActiveMedia(bottomLeftAd);
+    const { selectedAds } = useAds();
 
 
 
@@ -212,54 +186,19 @@ const News = () => {
                             </ul>
                         </div>
                     </div>
-                    <div className="mb-4  p-3">
+                    {/* <div className="mb-4  p-3">
                         <div className="col-md-12 mb-3">
                             <div className="webTittle"><i className="bi bi-chevron-right"></i>Popular Tags</div>
                         </div>
                         <div className="tagcloud"><Link to="/#">Trade</Link>  <Link to="/#">Shipping</Link><Link to="/#">Exports</Link> <Link to="/#">Special Reports</Link><Link to="/#">Indian Economy </Link> <Link to="/#">Tarnsport & logistic</Link><Link to="/#">Port</Link></div>
 
-                    </div>
+                    </div> */}
 
                 </div>
             </div>
 
             <div className="borderbg"></div>
-
-            <div className="row mb-4">
-                {bottomRightMedia && (
-                    <div className="col-md-6 mt-2 mb-2">
-                        {bottomRightMedia.type === "image" ? (
-                            <img
-                                src={bottomRightMedia.src}
-                                alt="Top Right Advertisement"
-                                className="w-100 ad-image-top"
-                            />
-                        ) : (
-                            <video controls={false} autoPlay muted className="w-100 ad-image-top">
-                                <source src={bottomRightMedia.src} type="video/mp4" />
-                                Your browser does not support the video tag.
-                            </video>
-                        )}
-                    </div>
-                )}
-
-                {bottomLeftMedia && (
-                    <div className="col-md-6 my-2 mb-2">
-                        {bottomLeftMedia.type === "image" ? (
-                            <img
-                                src={bottomLeftMedia.src}
-                                alt="Top Left Advertisement"
-                                className="w-100 ad-image-top"
-                            />
-                        ) : (
-                            <video controls={false} autoPlay={true} muted className="w-100 ad-image-top">
-                                <source src={bottomLeftMedia.src} type="video/mp4" />
-                                Your browser does not support the video tag.
-                            </video>
-                        )}
-                    </div>
-                )}
-            </div>
+            <BottomAds leftPosition={"News_Bottom_Left"} rightPosition={"News_Bottom_Right"} />
 
 
         </div>

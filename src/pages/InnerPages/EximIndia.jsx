@@ -1,6 +1,8 @@
 import React from "react";
 import ads4 from "../../assets/images/ads4.png";
 import ads5 from "../../assets/images/ads5.png";
+import BottomAds from "../../components/BottomAds";
+
 const EximIndia = () => {
 
     return (
@@ -64,14 +66,16 @@ const EximIndia = () => {
                         &nbsp;</p>
                 </div></div></div>
                 <div className="borderbg"></div>
-                <div className="row mb-4">
+                {/* <div className="row mb-4">
                     <div className="col-md-6 mt-4 mb-2">
                         <img src={ads4} alt="adsv" className="w-100" />
                     </div>
                     <div className="col-md-6 my-4 mb-2">
                         <img src={ads5} alt="adsv" className="w-100" />
                     </div>
-                </div>
+                </div> */}
+
+                <BottomAds leftPosition={"EximIndia_Bottom_Left"} rightPosition={"EximIndia_Bottom_Right"} />
         </div>)
 }
 

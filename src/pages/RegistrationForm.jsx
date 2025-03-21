@@ -16,115 +16,115 @@ const RegistrationForm = () => {
 
     const stateCityData = {
         "Andhra Pradesh": [
-            "Visakhapatnam", "Vijayawada", "Guntur", "Nellore", "Kurnool", 
+            "Visakhapatnam", "Vijayawada", "Guntur", "Nellore", "Kurnool",
             "Rajahmundry", "Tirupati", "Kadapa", "Anantapur", "Eluru"
         ],
         "Arunachal Pradesh": [
-            "Itanagar", "Naharlagun", "Tawang", "Ziro", "Pasighat", 
+            "Itanagar", "Naharlagun", "Tawang", "Ziro", "Pasighat",
             "Roing", "Bomdila", "Tezu", "Seppa", "Daporijo"
         ],
         "Assam": [
-            "Guwahati", "Dibrugarh", "Silchar", "Jorhat", "Tezpur", 
+            "Guwahati", "Dibrugarh", "Silchar", "Jorhat", "Tezpur",
             "Nagaon", "Tinsukia", "Bongaigaon", "Karimganj", "Goalpara"
         ],
         "Bihar": [
-            "Patna", "Gaya", "Bhagalpur", "Muzaffarpur", "Purnia", 
+            "Patna", "Gaya", "Bhagalpur", "Muzaffarpur", "Purnia",
             "Darbhanga", "Bihar Sharif", "Begusarai", "Chapra", "Arrah"
         ],
         "Chhattisgarh": [
-            "Raipur", "Bhilai", "Bilaspur", "Korba", "Durg", 
+            "Raipur", "Bhilai", "Bilaspur", "Korba", "Durg",
             "Rajnandgaon", "Jagdalpur", "Ambikapur", "Raigarh", "Mahasamund"
         ],
         "Goa": [
-            "Panaji", "Margao", "Vasco da Gama", "Mapusa", "Ponda", 
+            "Panaji", "Margao", "Vasco da Gama", "Mapusa", "Ponda",
             "Bicholim", "Curchorem", "Sanquelim", "Valpoi", "Quepem"
         ],
         "Gujarat": [
-            "Ahmedabad", "Surat", "Vadodara", "Rajkot", "Bhavnagar", 
+            "Ahmedabad", "Surat", "Vadodara", "Rajkot", "Bhavnagar",
             "Jamnagar", "Junagadh", "Gandhinagar", "Anand", "Morbi"
         ],
         "Haryana": [
-            "Chandigarh", "Faridabad", "Gurugram", "Panipat", "Ambala", 
+            "Chandigarh", "Faridabad", "Gurugram", "Panipat", "Ambala",
             "Yamunanagar", "Rohtak", "Hisar", "Sonipat", "Karnal"
         ],
         "Himachal Pradesh": [
-            "Shimla", "Manali", "Dharamshala", "Solan", "Mandi", 
+            "Shimla", "Manali", "Dharamshala", "Solan", "Mandi",
             "Kullu", "Chamba", "Hamirpur", "Bilaspur", "Nahan"
         ],
         "Jharkhand": [
-            "Ranchi", "Jamshedpur", "Dhanbad", "Bokaro", "Hazaribagh", 
+            "Ranchi", "Jamshedpur", "Dhanbad", "Bokaro", "Hazaribagh",
             "Deoghar", "Giridih", "Ramgarh", "Dumka", "Chaibasa"
         ],
         "Karnataka": [
-            "Bengaluru", "Mysuru", "Mangalore", "Hubballi", "Belagavi", 
+            "Bengaluru", "Mysuru", "Mangalore", "Hubballi", "Belagavi",
             "Davangere", "Ballari", "Shimoga", "Tumkur", "Gulbarga"
         ],
         "Kerala": [
-            "Thiruvananthapuram", "Kochi", "Kozhikode", "Thrissur", "Kollam", 
+            "Thiruvananthapuram", "Kochi", "Kozhikode", "Thrissur", "Kollam",
             "Palakkad", "Alappuzha", "Malappuram", "Kannur", "Kottayam"
         ],
         "Madhya Pradesh": [
-            "Bhopal", "Indore", "Gwalior", "Jabalpur", "Ujjain", 
+            "Bhopal", "Indore", "Gwalior", "Jabalpur", "Ujjain",
             "Sagar", "Dewas", "Satna", "Ratlam", "Rewa"
         ],
         "Maharashtra": [
-            "Mumbai", "Pune", "Nagpur", "Nashik", "Aurangabad", 
+            "Mumbai", "Pune", "Nagpur", "Nashik", "Aurangabad",
             "Solapur", "Amravati", "Kolhapur", "Nanded", "Sangli"
         ],
         "Manipur": [
-            "Imphal", "Thoubal", "Bishnupur", "Churachandpur", "Senapati", 
+            "Imphal", "Thoubal", "Bishnupur", "Churachandpur", "Senapati",
             "Ukhrul", "Kakching", "Tamenglong", "Noney", "Kangpokpi"
         ],
         "Meghalaya": [
-            "Shillong", "Tura", "Jowai", "Nongstoin", "Baghmara", 
+            "Shillong", "Tura", "Jowai", "Nongstoin", "Baghmara",
             "Williamnagar", "Resubelpara", "Mairang", "Khliehriat", "Chokpot"
         ],
         "Mizoram": [
-            "Aizawl", "Lunglei", "Saiha", "Champhai", "Serchhip", 
+            "Aizawl", "Lunglei", "Saiha", "Champhai", "Serchhip",
             "Kolasib", "Mamit", "Lawngtlai", "Bairabi", "Hnahthial"
         ],
         "Nagaland": [
-            "Kohima", "Dimapur", "Mokokchung", "Tuensang", "Zunheboto", 
+            "Kohima", "Dimapur", "Mokokchung", "Tuensang", "Zunheboto",
             "Wokha", "Mon", "Phek", "Kiphire", "Longleng"
         ],
         "Odisha": [
-            "Bhubaneswar", "Cuttack", "Rourkela", "Berhampur", "Sambalpur", 
+            "Bhubaneswar", "Cuttack", "Rourkela", "Berhampur", "Sambalpur",
             "Balasore", "Puri", "Bhadrak", "Jeypore", "Angul"
         ],
         "Punjab": [
-            "Chandigarh", "Ludhiana", "Amritsar", "Jalandhar", "Patiala", 
+            "Chandigarh", "Ludhiana", "Amritsar", "Jalandhar", "Patiala",
             "Bathinda", "Mohali", "Hoshiarpur", "Moga", "Pathankot"
         ],
         "Rajasthan": [
-            "Jaipur", "Jodhpur", "Udaipur", "Kota", "Bikaner", 
+            "Jaipur", "Jodhpur", "Udaipur", "Kota", "Bikaner",
             "Ajmer", "Bhilwara", "Alwar", "Sikar", "Pali"
         ],
         "Sikkim": [
-            "Gangtok", "Namchi", "Gyalshing", "Mangan", "Ravangla", 
+            "Gangtok", "Namchi", "Gyalshing", "Mangan", "Ravangla",
             "Singtam", "Jorethang", "Rangpo", "Rinchenpong", "Chungthang"
         ],
         "Tamil Nadu": [
-            "Chennai", "Coimbatore", "Madurai", "Tiruchirappalli", "Salem", 
+            "Chennai", "Coimbatore", "Madurai", "Tiruchirappalli", "Salem",
             "Erode", "Vellore", "Tirunelveli", "Thoothukudi", "Dindigul"
         ],
         "Telangana": [
-            "Hyderabad", "Warangal", "Nizamabad", "Khammam", "Karimnagar", 
+            "Hyderabad", "Warangal", "Nizamabad", "Khammam", "Karimnagar",
             "Ramagundam", "Mahbubnagar", "Nalgonda", "Adilabad", "Siddipet"
         ],
         "Tripura": [
-            "Agartala", "Udaipur", "Dharmanagar", "Ambassa", "Belonia", 
+            "Agartala", "Udaipur", "Dharmanagar", "Ambassa", "Belonia",
             "Kailashahar", "Khowai", "Jogendranagar", "Pratapgarh", "Bishalgarh"
         ],
         "Uttar Pradesh": [
-            "Lucknow", "Kanpur", "Agra", "Varanasi", "Meerut", 
+            "Lucknow", "Kanpur", "Agra", "Varanasi", "Meerut",
             "Allahabad", "Bareilly", "Aligarh", "Moradabad", "Ghaziabad"
         ],
         "Uttarakhand": [
-            "Dehradun", "Haridwar", "Rishikesh", "Haldwani", "Nainital", 
+            "Dehradun", "Haridwar", "Rishikesh", "Haldwani", "Nainital",
             "Mussoorie", "Roorkee", "Almora", "Pithoragarh", "Kotdwar"
         ],
         "West Bengal": [
-            "Kolkata", "Howrah", "Durgapur", "Asansol", "Siliguri", 
+            "Kolkata", "Howrah", "Durgapur", "Asansol", "Siliguri",
             "Kharagpur", "Bardhaman", "Malda", "Haldia", "Jalpaiguri"
         ],
         "Andaman and Nicobar Islands": ["Port Blair", "Hut Bay", "Car Nicobar", "Diglipur"],
@@ -136,7 +136,7 @@ const RegistrationForm = () => {
         "Jammu and Kashmir": ["Srinagar", "Jammu", "Anantnag", "Baramulla"],
         "Ladakh": ["Leh", "Kargil"]
     };
-    
+
 
     const { register, handleSubmit, watch, formState: { errors } } = useForm({
         defaultValues: {
@@ -448,18 +448,22 @@ const RegistrationForm = () => {
                                                     <Form.Control
                                                         type="text"
                                                         placeholder="Enter Phone number"
+                                                        inputMode="numeric" // Mobile numeric keyboard
+                                                        pattern="[0-9]*" // Accepts only numbers
+                                                        maxLength={10} // Max length set to 10 digits
                                                         {...register('mobile', {
+                                                            required: "Phone number is required",
                                                             pattern: {
                                                                 value: /^[0-9]{10}$/,
-                                                                message: 'Enter a valid 10-digit phone number'
-                                                            }
+                                                                message: "Enter a valid 10-digit phone number"
+                                                            },
+                                                            validate: (value) =>
+                                                                value.length === 10 || "Phone number must be exactly 10 digits"
                                                         })}
                                                         className={`webinput ${errors.mobile ? 'is-invalid' : ''}`}
                                                     />
                                                     {errors.mobile && (
-                                                        <div className="invalid-feedback">
-                                                            {errors.mobile.message}
-                                                        </div>
+                                                        <div className="invalid-feedback">{errors.mobile.message}</div>
                                                     )}
                                                 </Form.Group>
                                             </Col>

@@ -13,6 +13,7 @@ import { Navigation, Pagination, Autoplay } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
+import getActiveMedia from "../helper/GetActiveMedia";
 
 
 const NewsDetails = () => {
@@ -23,25 +24,13 @@ const NewsDetails = () => {
     const [topHeadlines, setTopHeadlines] = useState([])
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
-    const { ads } = useAds();
+    const { selectedAds } = useAds();
 
 
-    const getActiveMedia = (ad) => {
-        if (ad?.status === "Active") {
-            const activeImages = ad.images?.filter(image => image.status === "Active") || [];
-            const activeVideos = ad.videos?.filter(video => video.status === "Active") || [];
-
-            return [...activeImages.map(img => ({ type: "image", src: img.filePath })),
-            ...activeVideos.map(vid => ({ type: "video", src: vid.filePath }))];
-        }
-        return [];
-    };
-
-    const NewsDetailsAds = ads?.find(ad => ad.position === "NewsDetails_Ads");
+    const NewsDetailsAds = selectedAds?.find(ad =>
+        ad.selectedMedia.some(media => media.position === "News_Details")
+    );
     const NewsDetailsMedia = getActiveMedia(NewsDetailsAds);
-
-    // const NewsDetailsAds = ads?.find(ad => ad.position === "NewsDetails_Ads");
-    // const NewsDetailsMedia = getActiveMedia(NewsDetailsAds);
 
 
 
@@ -119,23 +108,37 @@ const NewsDetails = () => {
                 <div className="col-lg-3">
                     <div className="mb-3">
                         <div className="col-md-12 mb-3">
-                            <div className="webTittle"><i className="bi bi-chevron-right"></i>Recent News</div>
+                            <div className="webTittle">
+                                <i className="bi bi-chevron-right"></i> Recent News
+                            </div>
                         </div>
                         {recetnNews.map((item) => (
                             <div
+                                key={item._id}
+                                className="righttopStory topleftimgcard SiderecentPost"
                                 onClick={() => navigate(`/newsDetails/${item._id}`)}
-                                className="righttopStory topleftimgcard SiderecentPost" key={item._id}>
-                                <div className="imgside">
-                                    <img src={banner4} width="" height="100%" alt={item.title} />
+                                style={{ display: 'flex', gap: '10px', marginBottom: '15px' }}
+                            >
+                                <div className="imgside" style={{ width: '150px', height: '100px', overflow: 'hidden' }}>
+                                    <img
+                                        src={banner4}
+                                        alt={item.title}
+                                        style={{
+                                            width: '100%',
+                                            height: '100%',
+                                            objectFit: 'cover',
+                                        }}
+                                    />
                                 </div>
-                                <div className="textside">
+                                <div className="textside" style={{ flex: 1 }}>
                                     <div className="categorybtn">{item.category_name}</div>
-                                    <h4>{item.headline}</h4>
+                                    <h4 style={{ margin: '5' }}>{item.headline}</h4>
                                     <p>{dataFormatter(item.date)}</p>
                                 </div>
                             </div>
                         ))}
                     </div>
+
                     {/* <div className="mb-4 mt-4">
                         <div className="col-md-12 mb-3">
                             <div className="webTittle"><i className="bi bi-chevron-right"></i>Popular Tags</div>
@@ -150,13 +153,14 @@ const NewsDetails = () => {
                             modules={[Pagination, Autoplay]}
                             pagination={{ clickable: true }}
                             autoplay={{ delay: 3000 }}
+                            loop={true}
                         >
                             {NewsDetailsMedia.map((media, index) => (
                                 <SwiperSlide key={index}>
                                     {media.type === "image" ? (
                                         <img src={media.src} alt="Advertisement" className="w-100 ad-image-between" style={{ height: "348px" }} />
                                     ) : (
-                                        <video style={{ height: "348px" }} controls={false} autoPlay muted className="w-100 ad-image-between">
+                                        <video style={{ height: "348px" }} controls={false} autoPlay loop muted className="w-100 ad-image-between">
                                             <source src={media.src} type="video/mp4" />
                                             Your browser does not support the video tag.
                                         </video>

@@ -81,10 +81,10 @@ function App() {
               <Route path="/paymentSummary" element={<ProtectedRoute><Layout><PaymentSummary /></Layout></ProtectedRoute>} />
               <Route path="/paymentDone" element={<Layout><PaymentDone /></Layout>} />
               <Route path="/dashboard" element={<ProtectedRoute><Layout><Dashboard /></Layout></ProtectedRoute>} />
-              <Route path="/mydevice" element={<Layout><MyDevice /></Layout>} />
-              <Route path="/paymentHistory" element={<Layout><PaymentHistory /></Layout>} />
-              <Route path="/profile" element={<Layout><ProfilePage /></Layout>} />
-              <Route path="/viewpage" element={<Layout><ViewPage /></Layout>} />
+              <Route path="/mydevice" element={<ProtectedRoute><Layout><MyDevice /></Layout></ProtectedRoute>} />
+              <Route path="/paymentHistory" element={<ProtectedRoute><Layout><PaymentHistory /></Layout></ProtectedRoute>} />
+              <Route path="/profile" element={<ProtectedRoute><Layout><ProfilePage /></Layout></ProtectedRoute>} />
+              <Route path="/viewpage" element={<ProtectedRoute><Layout><ViewPage /></Layout></ProtectedRoute>} />
               <Route path="/contact" element={<Layout><ContactPage /></Layout>} />
               <Route path="/privacypolicy" element={<Layout><PrivacyPolicy /></Layout>} />
               <Route path="/termsandconditions" element={<Layout><TermsAndConditions /></Layout>} />

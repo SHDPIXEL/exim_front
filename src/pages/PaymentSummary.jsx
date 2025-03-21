@@ -150,10 +150,12 @@ const PaymentSummary = () => {
       });
       paymentObject.open();
     } catch (error) {
-      alert(error.response?.data?.message || 'An error occurred while initiating payment.');
+      const errorMessage =
+        error.response?.data?.message || // Try to get the message from the server response
+        'An error occurred while initiating payment.'; // Fallback error message
+
+      alert(`Error: ${errorMessage}`);
       console.error('Payment initiation error:', error);
-    } finally {
-      setIsLoading(false);
     }
   };
 

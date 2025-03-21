@@ -5,28 +5,17 @@ import "swiper/css/free-mode";
 import "swiper/css/navigation";
 import { Autoplay, FreeMode, Navigation } from "swiper/modules";
 import { useAds } from "../../context/AdContext";
+import getActiveMedia from "../../helper/GetActiveMedia";
 
 const HomeAdvertise = () => {
-    const { ads, loading, error } = useAds();
-    const headlineTopHome = ads?.find(ad => ad.position === "Headline_Top_Home" && ad.status === "Active");
+    const { selectedAds } = useAds();
 
-    const activeMedia = [];
 
-    if (headlineTopHome) {
-        if (headlineTopHome.images?.length) {
-            activeMedia.push(...headlineTopHome.images
-                .filter(image => image.status === "Active")
-                .map(image => ({ type: "image", src: image.filePath }))
-            );
-        }
+    const ads = selectedAds?.find(ad =>
+        ad.selectedMedia.some(media => media.position === "Home_Above_Headlines")
+    );
+    const activeMedia = getActiveMedia(ads);
 
-        if (headlineTopHome.videos?.length) {
-            activeMedia.push(...headlineTopHome.videos
-                .filter(video => video.status === "Active")
-                .map(video => ({ type: "video", src: video.filePath }))
-            );
-        }
-    }
 
     return (
         <Swiper
@@ -35,6 +24,7 @@ const HomeAdvertise = () => {
                 delay: 2000,
                 disableOnInteraction: false,
             }}
+            loop={true}
             breakpoints={{
                 1024: { slidesPerView: 1, spaceBetween: 0 },
                 768: { slidesPerView: 1, spaceBetween: 0 },
@@ -49,7 +39,7 @@ const HomeAdvertise = () => {
                         {media.type === "image" ? (
                             <img src={media.src} className="w-100" alt="Advertisement" style={{ height: "348px", objectFit: "cover" }} />
                         ) : (
-                            <video controls={false} autoPlay muted className="w-100" style={{ height: "348px", objectFit: "cover" }}>
+                            <video controls={false} autoPlay muted loop className="w-100" style={{ height: "348px", objectFit: "cover" }}>
                                 <source src={media.src} type="video/mp4" />
                                 Your browser does not support the video tag.
                             </video>
@@ -57,8 +47,7 @@ const HomeAdvertise = () => {
                     </SwiperSlide>
                 ))
             ) : (
-                <p>No active advertisements available</p>
-            )}
+                "")}
         </Swiper>
     );
 };

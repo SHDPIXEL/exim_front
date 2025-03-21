@@ -75,19 +75,33 @@ const TopStorySlider = () => {
                         </Swiper>
                     </div>
                     <div className="col-md-6 mb-3">
-                        {topStories.slice(0,3).map((item) => (
-                            <div className="righttopStory topleftimgcard" key={item._id} onClick={() => navigate(`/newsDetails/${item._id}`)}>
-                                <div className="imgside">
-                                    <img src={banner4} width="" height="100%" alt={item.headline} />
+                        {topStories.slice(0, 3).map((item) => (
+                            <div
+                                className="righttopStory topleftimgcard"
+                                key={item._id}
+                                onClick={() => navigate(`/newsDetails/${item._id}`)}
+                                style={{ display: 'flex', gap: '10px', marginBottom: '15px' }}
+                            >
+                                <div className="imgside" style={{ width: '150px', height: '100px', overflow: 'hidden' }}>
+                                    <img
+                                        src={banner4}
+                                        alt={item.headline}
+                                        style={{
+                                            width: '100%',
+                                            height: '100%',
+                                            objectFit: 'cover',
+                                        }}
+                                    />
                                 </div>
-                                <div className="textside">
+                                <div className="textside" style={{ flex: 1 }}>
                                     <div className="categorybtn">{item.category_name}</div>
-                                    <h4>{item.headline}</h4>
+                                    <h4 style={{ margin: '5' }}>{item.headline}</h4>
                                     <p>{dataFormatter(item.date)}</p>
                                 </div>
                             </div>
                         ))}
                     </div>
+
                 </div>
 
             </div>

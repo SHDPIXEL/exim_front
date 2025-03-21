@@ -3,8 +3,6 @@ import { Link, useNavigate } from 'react-router-dom';
 import TopBannerSlider from "./HomeBannerSlider/TopBannerSlider";
 import TopStorySlider from "./HomeBannerSlider/TopStorySlider";
 import Newsletter from "./Newsletter";
-import ads4 from "../assets/images/ads4.png";
-import ads5 from "../assets/images/ads5.png";
 import EximEventsSlider from "./HomeBannerSlider/EximEventSlider";
 import homenewpaper from "../assets/images/homenewpaper.png";
 import ads6 from "../assets/images/ads6.png";
@@ -12,7 +10,6 @@ import NewsFocus from "./HomeBannerSlider/NewsFocus";
 import NewCategories from "./HomeBannerSlider/NewCategories";
 import EximPolls from "./HomeBannerSlider/EximPolls";
 import VideoGallery from "./HomeBannerSlider/VideoGallery";
-import ads7 from "../assets/images/ads7.png";
 import jobimg from "../assets/images/Job.svg"
 import FacebookPost from "./HomeBannerSlider/FacebookPost";
 import TwitterPost from "./HomeBannerSlider/TwitterPost";
@@ -24,49 +21,55 @@ import { Pagination, Autoplay } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
+import getActiveMedia from "../helper/GetActiveMedia";
 
 
 const Home = () => {
-    const { ads, loading, error } = useAds();
+    const { selectedAds } = useAds();
 
     const navigate = useNavigate();
     const [headlines, SetHeadlines] = useState([]);
     const [TopNews, setTopNews] = useState([]);
 
-    const getActiveMedia = (ad) => {
-        if (ad?.status === "Active") {
-            const activeImages = ad.images?.filter(image => image.status === "Active") || [];
-            const activeVideos = ad.videos?.filter(video => video.status === "Active") || [];
-
-            return [...activeImages.map(img => ({ type: "image", src: img.filePath })),
-            ...activeVideos.map(vid => ({ type: "video", src: vid.filePath }))];
-        }
-        return [];
-    };
-
-
-
     // Get active media for top right and top left ads
-    const topRightAd = ads?.find(ad => ad.position === "Top_Right");
-    const topLeftAd = ads?.find(ad => ad.position === "Top_Left");
+    const topRightAd = selectedAds?.find(ad =>
+        ad.selectedMedia.some(media => media.position === "Home_Top_Right")
+    );
+    const topLeftAd = selectedAds?.find(ad =>
+        ad.selectedMedia.some(media => media.position === "Home_Top_Left")
+    );
 
+    const aboveEventstRight = selectedAds?.find(ad =>
+        ad.selectedMedia.some(media => media.position === "Home_AboveEvents_Right")
+    );
+    const aboveEventstLeft = selectedAds?.find(ad =>
+        ad.selectedMedia.some(media => media.position === "Home_AboveEvents_Left")
+    );
+
+    const SubscribeAds = selectedAds?.find(ad =>
+        ad.selectedMedia.some(media => media.position === "Home_Subscribe")
+    );
+
+    const videoHomeAds = selectedAds?.find(ad =>
+        ad.selectedMedia.some(media => media.position === "Home_Video")
+    );
+
+    const bottomRightAd = selectedAds?.find(ad =>
+        ad.selectedMedia.some(media => media.position === "Home_Bottom_Right")
+    );
+    const bottomLeftAd = selectedAds?.find(ad =>
+        ad.selectedMedia.some(media => media.position === "Home_Bottom_Left")
+    );
+
+    // Extracting active media
     const topRightMedia = getActiveMedia(topRightAd);
     const topLeftMedia = getActiveMedia(topLeftAd);
-
-    const aboveEventstRight = ads?.find(ad => ad.position === "Above_Events_Right");
-    const aboveEventstLeft = ads?.find(ad => ad.position === "Above_Events_Left");
 
     const aboveEventsRightMedia = getActiveMedia(aboveEventstRight);
     const aboveEventsLeftMedia = getActiveMedia(aboveEventstLeft);
 
-    const SubscribeAds = ads?.find(ad => ad.position === "Subscribe_Ads");
     const SubscribeMedia = getActiveMedia(SubscribeAds);
-
-    const videoHomeAds = ads?.find(ad => ad.position === "Video_Home_Ads");
     const videoHomeMedia = getActiveMedia(videoHomeAds);
-
-    const bottomRightAd = ads?.find(ad => ad.position === "Bottom_Right");
-    const bottomLeftAd = ads?.find(ad => ad.position === "Bottom_Left");
 
     const bottomRightMedia = getActiveMedia(bottomRightAd);
     const bottomLeftMedia = getActiveMedia(bottomLeftAd);
@@ -86,8 +89,6 @@ const Home = () => {
         fetchHeadlines();
     }, []);
 
-
-
     return (
         <>
             <div className='container mt-3'>
@@ -101,13 +102,14 @@ const Home = () => {
                                     modules={[Pagination, Autoplay]}
                                     pagination={{ clickable: true }}
                                     autoplay={{ delay: 3000 }}
+                                    loop={true}
                                 >
                                     {topLeftMedia.map((media, index) => (
                                         <SwiperSlide key={index}>
                                             {media.type === "image" ? (
                                                 <img src={media.src} alt="Advertisement" className="w-100 ad-image-top" />
                                             ) : (
-                                                <video controls={false} autoPlay muted className="w-100 ad-image-top">
+                                                <video controls={false} autoPlay loop muted className="w-100 ad-image-top">
                                                     <source src={media.src} type="video/mp4" />
                                                     Your browser does not support the video tag.
                                                 </video>
@@ -143,8 +145,6 @@ const Home = () => {
                         )}
                     </div>
                 </div>
-
-
 
                 <div className="borderbg"></div>
                 <div className="row mb-4 mt-4">
@@ -205,7 +205,7 @@ const Home = () => {
                                             {media.type === "image" ? (
                                                 <img src={media.src} alt="Advertisement" className="w-100 ad-image-top" />
                                             ) : (
-                                                <video controls={false} autoPlay muted className="w-100">
+                                                <video controls={false} autoPlay muted className="w-100 ad-image-top">
                                                     <source src={media.src} type="video/mp4" />
                                                     Your browser does not support the video tag.
                                                 </video>
@@ -242,8 +242,7 @@ const Home = () => {
                     </div>
                 </div>
 
-
-                <div className="borderbg"></div>
+                    <div className="borderbg"></div>
 
                 <div className="row my-4 ">
                     <EximEventsSlider />
@@ -277,30 +276,31 @@ const Home = () => {
                     </div>
 
                     <div className="col-md-3 mb-3">
-                        {SubscribeMedia && (
-                            <div className="w-100">
-                                {SubscribeMedia.length > 0 && (
-                                    <div className="col-md-6 mt-2 mb-2">
-                                        <Swiper
-                                            modules={[Pagination, Autoplay]}
-                                            pagination={{ clickable: true }}
-                                            autoplay={{ delay: 3000 }}
-                                        >
-                                            {SubscribeMedia.map((media, index) => (
-                                                <SwiperSlide key={index}>
-                                                    {media.type === "image" ? (
-                                                        <img src={media.src} alt="Advertisement" className="w-100 ad-image-between" />
-                                                    ) : (
-                                                        <video controls={false} autoPlay muted className="w-100 ad-image-between">
-                                                            <source src={media.src} type="video/mp4" />
-                                                            Your browser does not support the video tag.
-                                                        </video>
-                                                    )}
-                                                </SwiperSlide>
-                                            ))}
-                                        </Swiper>
-                                    </div>
-                                )}
+                        {SubscribeMedia && SubscribeMedia.length > 0 && (
+                            <div className="w-100 mt-2 mb-2">
+                                <Swiper
+                                    modules={[Pagination, Autoplay]}
+                                    pagination={{ clickable: true }}
+                                    autoplay={{ delay: 3000 }}
+                                >
+                                    {SubscribeMedia.map((media, index) => (
+                                        <SwiperSlide key={index}>
+                                            {media.type === "image" ? (
+                                                <img src={media.src} alt="Advertisement" className="ad-image-between w-100" />
+                                            ) : (
+                                                <video
+                                                    controls={false}
+                                                    autoPlay
+                                                    muted
+                                                    className="ad-image-between w-100"
+                                                >
+                                                    <source src={media.src} type="video/mp4" />
+                                                    Your browser does not support the video tag.
+                                                </video>
+                                            )}
+                                        </SwiperSlide>
+                                    ))}
+                                </Swiper>
                             </div>
                         )}
                     </div>
@@ -371,37 +371,35 @@ const Home = () => {
                     </div>
 
                     <div className="col-md-3 mb-3">
-                        {videoHomeMedia && (
-                            <div className="w-100">
-                                {videoHomeMedia && (
-                                    <div className="w-100">
-                                        {SubscribeMedia.length > 0 && (
-                                            <div className="col-md-6 mt-2 mb-2">
-                                                <Swiper
-                                                    modules={[Pagination, Autoplay]}
-                                                    pagination={{ clickable: true }}
-                                                    autoplay={{ delay: 3000 }}
+                        {videoHomeMedia && videoHomeMedia.length > 0 && (
+                            <div className="w-100 mt-2 mb-2">
+                                <Swiper
+                                    modules={[Pagination, Autoplay]}
+                                    pagination={{ clickable: true }}
+                                    autoplay={{ delay: 3000 }}
+                                >
+                                    {videoHomeMedia.map((media, index) => (
+                                        <SwiperSlide key={index}>
+                                            {media.type === "image" ? (
+                                                <img src={media.src} alt="Advertisement" className="ad-image-between w-100" />
+                                            ) : (
+                                                <video
+                                                    controls={false}
+                                                    autoPlay
+                                                    muted
+                                                    className="ad-image-between w-100"
                                                 >
-                                                    {videoHomeMedia.map((media, index) => (
-                                                        <SwiperSlide key={index}>
-                                                            {media.type === "image" ? (
-                                                                <img src={media.src} alt="Advertisement" className="w-100 ad-image-between" />
-                                                            ) : (
-                                                                <video controls={false} autoPlay muted className="w-100 ad-image-between">
-                                                                    <source src={media.src} type="video/mp4" />
-                                                                    Your browser does not support the video tag.
-                                                                </video>
-                                                            )}
-                                                        </SwiperSlide>
-                                                    ))}
-                                                </Swiper>
-                                            </div>
-                                        )}
-                                    </div>
-                                )}
+                                                    <source src={media.src} type="video/mp4" />
+                                                    Your browser does not support the video tag.
+                                                </video>
+                                            )}
+                                        </SwiperSlide>
+                                    ))}
+                                </Swiper>
                             </div>
                         )}
                     </div>
+
                 </div>
                 <div className="borderbg"></div>
                 <div className="row my-4">

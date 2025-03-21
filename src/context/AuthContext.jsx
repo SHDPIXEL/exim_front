@@ -26,8 +26,11 @@ export function AuthProvider({ children }) {
     localStorage.setItem('authToken', token);
     localStorage.setItem('loginTime', Date.now().toString());
     setUser({ token });
+
+    // Optional: Trigger a manual storage event to sync across tabs
+    window.dispatchEvent(new Event("storage"));
     navigate('/dashboard');
-  };
+};
 
   const logout = () => {
     localStorage.clear();

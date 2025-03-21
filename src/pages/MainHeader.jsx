@@ -25,7 +25,7 @@ const MainHeader = () => {
           <div className='row'>
             <div className='col-md-8 text-center text-md-start'>
               <div> <ul>
-                <li>Thu, Nov 21, 2024</li>
+              <li>{new Date().toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' })}</li>
                 <li>|</li>
                 <li><i className="bi bi-geo-alt-fill"></i> Mumbai <i className="bi bi-sun-fill"></i> 21° C</li>
                 <li>|</li>

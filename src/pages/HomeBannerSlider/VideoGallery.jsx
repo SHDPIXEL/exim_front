@@ -46,6 +46,7 @@ const VideoGallery = () => {
                         768: { slidesPerView: 1, spaceBetween: 20 },
                         400: { slidesPerView: 1, spaceBetween: 10 },
                     }}
+                    loop
                     modules={[Autoplay, Navigation, FreeMode]}
                     className="mySwiper"
                 >
@@ -65,7 +66,7 @@ const VideoGallery = () => {
                                                 <iframe
                                                     width="100%"
                                                     height="100%"
-                                                    src={`https://www.youtube.com/embed/${youtubeVideoId || '0RDI9CMilhk'}`} // Fallback if ID extraction fails
+                                                    src={`https://www.youtube.com/embed/${youtubeVideoId || ''}`} // Fallback if ID extraction fails
                                                     title="YouTube video player"
                                                     frameBorder="0"
                                                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
@@ -110,7 +111,7 @@ const VideoGallery = () => {
                                         <iframe
                                             width="100%"
                                             height="100%"
-                                            src={`https://www.youtube.com/embed/${youtubeVideoId || '0RDI9CMilhk'}`} // Fallback if ID extraction fails
+                                            src={`https://www.youtube.com/embed/${youtubeVideoId || ''}`} // Fallback if ID extraction fails
                                             title="YouTube video player"
                                             frameBorder="0"
                                             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"

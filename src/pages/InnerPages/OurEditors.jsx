@@ -10,6 +10,8 @@ import TuticorinMap from "../../assets/images/tuticorin.jpg";
 import KolkataMap from "../../assets/images/kolkata.jpg";
 import NothMap from "../../assets/images/Nothindia.jpg";
 import westMap from "../../assets/images/westernIndia.jpg";
+import BottomAds from "../../components/BottomAds";
+
 const OurEditors = () => {
 
     return (
@@ -72,14 +74,8 @@ const OurEditors = () => {
 
 
             <div className="borderbg"></div>
-            <div className="row mb-4">
-                <div className="col-md-6 mt-4 mb-2">
-                    <img src={ads4} alt="adsv" className="w-100" />
-                </div>
-                <div className="col-md-6 my-4 mb-2">
-                    <img src={ads5} alt="adsv" className="w-100" />
-                </div>
-            </div>
+            <BottomAds leftPosition={"OurEditors_Bottom_Left"} rightPosition={"OurEditors_Bottom_Right"} />
+
         </div>)
 }
 

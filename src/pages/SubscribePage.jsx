@@ -4,6 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import demo from '../assets/images/demo.jpg';
 import { useUser } from '../context/UserContext';
 
+
 const SubscribePage = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -22,32 +23,31 @@ const SubscribePage = () => {
   };
 
   const handlePackageChange = (location, duration, price) => {
-    // Skip location check if it's a digital subscription
     if (user && activeType !== "digital") {
       if (!userData || (!userData.city && !userData.state)) {
         alert("Your location details are missing. Please update your profile.");
         return;
       }
-  
+
       const userLocationMatches =
         userData.city?.toLowerCase() === location.toLowerCase() ||
         userData.state?.toLowerCase() === location.toLowerCase();
-  
+
       if (!userLocationMatches) {
         alert("You can only subscribe to packages available in your city or state.");
         return;
       }
     }
-  
-    const packageKey = `${location}-${duration}`;
-    setSelectedPackages((prev) => {
-      const existing = prev.find((pkg) => pkg.key === packageKey);
-      return existing
-        ? prev.filter((pkg) => pkg.key !== packageKey) // Unselect
-        : [...prev, { location, duration, price, key: packageKey }]; // Select
-    });
+
+    // Allow only one selection per location
+    setSelectedPackages((prev) => [
+      ...prev.filter((pkg) => pkg.location !== location),
+      { location, duration, price }
+    ]);
   };
-  
+
+
+
 
 
   const handleContinue = () => {
@@ -177,7 +177,7 @@ const SubscribePage = () => {
                 <div className="row mb-5">
                   <div className="col-md-12 mb-3">
                     <div className="webTittle">
-                      <i className="bi bi-chevron-right"></i>Select a Packages
+                      <i className="bi bi-chevron-right"></i>Select a Package
                     </div>
                   </div>
                   {packagesData.map((pkg) => (
@@ -189,15 +189,16 @@ const SubscribePage = () => {
                             <div key={option.duration} className="form-check packinput">
                               <input
                                 className="form-check-input"
-                                type="checkbox"
+                                type="radio"
+                                name={`package-${pkg.location}`} // Group by location
                                 id={`${pkg.location}-${option.duration}`}
                                 checked={selectedPackages.some(
                                   (selectedPkg) =>
-                                    selectedPkg.location === pkg.location && selectedPkg.duration === option.duration
-                                )} // Ensure it only checks the matching package
+                                    selectedPkg.location === pkg.location &&
+                                    selectedPkg.duration === option.duration
+                                )}
                                 onChange={() => handlePackageChange(pkg.location, option.duration, option.price)}
                               />
-
                               <label className="form-check-label" htmlFor={`${pkg.location}-${option.duration}`}>
                                 <h3>{option.duration}</h3> <h5>₹ {option.price.toLocaleString()}</h5>
                               </label>

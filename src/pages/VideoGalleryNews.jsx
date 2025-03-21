@@ -3,11 +3,14 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/free-mode";
 import "swiper/css/navigation";
-import { Autoplay, FreeMode, Navigation } from "swiper/modules";
+import "swiper/css/pagination";
+import { Autoplay, FreeMode, Navigation, Pagination } from "swiper/modules";
 import newfocusVideo from "../assets/images/newfocusVideo.mp4";
 import ads7 from "../assets/images/ads7.png";
 import { useNavigate } from 'react-router-dom';
 import API, { BASE_URL } from '../api';
+import { useAds } from "../context/AdContext";
+import getActiveMedia from "../helper/GetActiveMedia";
 
 // Utility function to extract YouTube video ID from URL
 const getYouTubeVideoId = (url) => {
@@ -18,18 +21,7 @@ const getYouTubeVideoId = (url) => {
 
 const VideoGalleryNews = () => {
     const navigate = useNavigate();
-
-    const topSlider = [
-        {
-            _id: "1",
-            headline: "Global trade reaching a record in 2024 presents opportunities amidst uncertainty: Report",
-            videos: newfocusVideo,
-            description: "Global trade is set to reach a record $33 trillion in 2024, according to the latest Global Trade Update by UN Trade and Development (UNCTAD). This $1 trillion increase, reflecting 3.3% annual growth, highlights resilience in global trade...",
-            date: "2024-12-06T00:00:00.000Z",
-            category_id: "Trade",
-            isVideo: true
-        },
-    ];
+    const { selectedAds } = useAds();
 
     const [videoItems, setVideoItems] = useState([]);
     const [page, setPage] = useState(1);
@@ -70,10 +62,17 @@ const VideoGalleryNews = () => {
         }
     };
 
+    const videoHomeAds = selectedAds?.find(ad =>
+        ad.selectedMedia.some(media => media.position === "Video_Gallery_News")
+    );
+
+    const videoHomeMedia = getActiveMedia(videoHomeAds);
+    const hasAds = videoHomeMedia && videoHomeMedia.length > 0;
+
     return (
         <div className='container my-5'>
             <div className="row">
-                <div className="col-md-9">
+                <div className={`col-md-${hasAds ? '9' : '12'}`}>
                     <div className="row">
                         <div className="col-md-12 mb-3">
                             <div className="customerReview m-0 mb-3">
@@ -192,9 +191,38 @@ const VideoGalleryNews = () => {
                         </div>
                     </div>
                 </div>
-                <div className="col-md-3">
-                    <img src={ads7} className="w-100 ps-2" alt="advertisement" />
-                </div>
+
+                {hasAds && (
+                    <div className="col-md-3 mb-3">
+                        <div className="w-100 mt-2 mb-2">
+                            <Swiper
+                                modules={[Pagination, Autoplay]}
+                                pagination={{ clickable: true }}
+                                autoplay={{ delay: 3000 }}
+                                loop={true}
+                            >
+                                {videoHomeMedia.map((media, index) => (
+                                    <SwiperSlide key={index}>
+                                        {media.type === "image" ? (
+                                            <img src={media.src} alt="Advertisement" className="ad-image-between w-100" />
+                                        ) : (
+                                            <video
+                                                controls={false}
+                                                autoPlay
+                                                muted
+                                                loop
+                                                className="ad-image-between w-100"
+                                            >
+                                                <source src={media.src} type="video/mp4" />
+                                                Your browser does not support the video tag.
+                                            </video>
+                                        )}
+                                    </SwiperSlide>
+                                ))}
+                            </Swiper>
+                        </div>
+                    </div>
+                )}
             </div>
         </div>
     );

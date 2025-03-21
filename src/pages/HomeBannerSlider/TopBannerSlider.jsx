@@ -31,6 +31,7 @@ const TopBannerSlider = ({ topNews, headlines }) => {
                         delay: 3000,
                         disableOnInteraction: false,
                     }}
+                    loop
                     //autoplay={false}
                     breakpoints={{
                         1024: { slidesPerView: 1, spaceBetween: 30 },

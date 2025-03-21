@@ -59,8 +59,9 @@ const EximEventsSlider = (props) => {
                     modules={[Autoplay, Navigation, FreeMode]}
                     className="mySwiper"
                 >
+                    {/* onClick={() => navigate("https://ctl.net.in/ctl-bhp-2025-default.aspx")} */}
                     {events.map((event) => (
-                        <SwiperSlide key={events._id} role="button" onClick={() => navigate("https://ctl.net.in/ctl-bhp-2025-default.aspx")}>
+                        <SwiperSlide key={events._id} role="button">
                             {/* <div className="homeeventBox">
                                 <img src={events.imgUrl} alt="eventsimg" className="w-100" />
                             </div> */}
