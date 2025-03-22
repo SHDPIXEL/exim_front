@@ -1,7 +1,7 @@
 import axios from "axios";
 
 // Base URL for the API
-export const BASE_URL = "http://192.168.1.11:4010";
+export const BASE_URL = "https://eximback.demo.shdpixel.com";
 
 
 
