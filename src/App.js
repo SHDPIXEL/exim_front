@@ -54,7 +54,7 @@ function Layout({ children }) {
 
 function App() {
   return (
-    <BrowserRouter basename="/eximApp">
+    <BrowserRouter>
       <AuthProvider>
         <UserProvider>
           <AdProvider>
