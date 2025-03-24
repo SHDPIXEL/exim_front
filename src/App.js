@@ -40,6 +40,7 @@ import { AuthProvider } from './context/AuthContext.jsx';
 import { UserProvider } from './context/UserContext.jsx';
 import DownloadFiles from './pages/DownloadFiles.jsx';
 import { AdProvider } from './context/AdContext.jsx';
+import ResetPasswordPage from './pages/ResetPassword.jsx';
 
 
 function Layout({ children }) {
@@ -91,6 +92,7 @@ function App() {
               <Route path="/shippingAndDeliveryPolicy" element={<Layout><ShippingAndDeliveryPolicy /></Layout>} />
               <Route path="/cancellationAndRefundPolicy" element={<Layout><CancellationAndRefundPolicy /></Layout>} />
               <Route path='/download' element={<Layout><DownloadFiles /></Layout>} />
+              <Route path='/reset-password/:token' element={<Layout><ResetPasswordPage /></Layout>} /> 
             </Routes>
           </AdProvider>
         </UserProvider>

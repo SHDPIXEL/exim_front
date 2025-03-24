@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import demo from '../assets/images/demo.jpg';
 import { useUser } from '../context/UserContext';
-
+import API from '../api';
 
 const SubscribePage = () => {
   const navigate = useNavigate();
@@ -13,6 +13,52 @@ const SubscribePage = () => {
 
   const [activeType, setActiveType] = useState('digital');
   const [selectedPackages, setSelectedPackages] = useState([]);
+  const [subscribedPackages, setSubscribedPackages] = useState([]); // Store user's subscribed packages
+
+  const packagesData = [
+    { location: 'Mumbai', options: [{ duration: '1 year', price: 3500 }, { duration: '2 Year', price: 6000 }] },
+    { location: 'Gujarat', options: [{ duration: '1 year', price: 2500 }, { duration: '2 Year', price: 3500 }] },
+    { location: 'Chennai', options: [{ duration: '1 year', price: 2400 }, { duration: '2 Year', price: 4000 }] },
+    { location: 'Delhi / NCR', options: [{ duration: '1 year', price: 2400 }, { duration: '2 Year', price: 4000 }] },
+    { location: 'Kolkata', options: [{ duration: '1 year', price: 1200 }] },
+    { location: 'Tuticorin', options: [{ duration: '1 year', price: 1000 }] },
+    { location: 'Kochi', options: [{ duration: '1 year', price: 1000 }] },
+  ];
+
+  // Fetch user's subscribed packages
+  useEffect(() => {
+    if (!user) return;
+
+    const fetchSubscribedPackages = async () => {
+      try {
+        const response = await API.post(
+          "/services/get_userSubscription",
+          {},
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+            },
+          }
+        );
+
+        const subscriptions = response.data.userSubscription.map((sub) => ({
+          location: sub.location,
+          duration: sub.duration,
+          type: sub.type,
+          price: sub.price,
+          expiryDate: new Date(sub.expiryDate),
+          status: sub.paymentStatus || "Pending",
+        }));
+
+        setSubscribedPackages(subscriptions);
+      } catch (error) {
+        console.error("Error fetching subscribed packages:", error);
+        setSubscribedPackages([]);
+      }
+    };
+
+    fetchSubscribedPackages();
+  }, [user]);
 
   const registernow = () => {
     navigate('/registrationPage');
@@ -20,6 +66,7 @@ const SubscribePage = () => {
 
   const handleTypeClick = (type) => {
     setActiveType(type);
+    setSelectedPackages([]);
   };
 
   const handlePackageChange = (location, duration, price) => {
@@ -39,16 +86,32 @@ const SubscribePage = () => {
       }
     }
 
-    // Allow only one selection per location
-    setSelectedPackages((prev) => [
-      ...prev.filter((pkg) => pkg.location !== location),
-      { location, duration, price }
-    ]);
+    setSelectedPackages((prev) => {
+      const isSelected = prev.some(
+        (pkg) => pkg.location === location && pkg.duration === duration
+      );
+
+      if (isSelected) {
+        return prev.filter(
+          (pkg) => !(pkg.location === location && pkg.duration === duration)
+        );
+      } else {
+        return [
+          ...prev.filter((pkg) => pkg.location !== location),
+          { location, duration, price }
+        ];
+      }
+    });
   };
 
-
-
-
+  const handleRenewClick = (location, duration, price, type) => {
+    navigate('/paymentSummary', {
+      state: {
+        subscriptionType: type,
+        packages: [{ location, duration, price }],
+      },
+    });
+  };
 
   const handleContinue = () => {
     if (selectedPackages.length === 0) {
@@ -64,7 +127,6 @@ const SubscribePage = () => {
   };
 
   const handleLoginRedirect = () => {
-    // Pass subscription data in the redirect state
     navigate('/login', {
       state: {
         from: location.pathname,
@@ -74,15 +136,31 @@ const SubscribePage = () => {
     });
   };
 
-  const packagesData = [
-    { location: 'Mumbai', options: [{ duration: '1 year', price: 3500 }, { duration: '2 Year', price: 6000 }] },
-    { location: 'Gujarat', options: [{ duration: '1 year', price: 2500 }, { duration: '2 Year', price: 3500 }] },
-    { location: 'Chennai', options: [{ duration: '1 year', price: 2400 }, { duration: '2 Year', price: 4000 }] },
-    { location: 'Delhi / NCR', options: [{ duration: '1 year', price: 2400 }, { duration: '2 Year', price: 4000 }] },
-    { location: 'Kolkata', options: [{ duration: '1 year', price: 1200 }] },
-    { location: 'Tuticorin', options: [{ duration: '1 year', price: 1000 }] },
-    { location: 'Kochi', options: [{ duration: '1 year', price: 1000 }] },
-  ];
+  // Check if a package is subscribed and active
+  const isPackageSubscribed = (location, duration) => {
+    return subscribedPackages.some(
+      (sub) =>
+        sub.location === location &&
+        sub.duration === duration &&
+        sub.type === activeType &&
+        sub.status === "success" &&
+        sub.expiryDate > new Date()
+    );
+  };
+
+  // Check if a package is renewable (expired or within 30 days of expiry)
+  const isPackageRenewable = (location, duration) => {
+    const sub = subscribedPackages.find(
+      (s) => s.location === location && s.duration === duration && s.type === activeType
+    );
+    if (!sub || sub.status !== "success") return false;
+
+    const today = new Date();
+    const daysLeft = (sub.expiryDate - today) / (1000 * 60 * 60 * 24);
+    return sub.expiryDate < today || daysLeft <= 30;
+  };
+
+  if (loading) return <p>Loading...</p>;
 
   return (
     <>
@@ -138,19 +216,10 @@ const SubscribePage = () => {
                             features :-
                           </h3>
                           <ul>
-                            <li>
-                              <i className="bi bi-arrow-right-circle-fill"></i> Seamless access on desktop & mobile browser
-                            </li>
-                            <li>
-                              <i className="bi bi-arrow-right-circle-fill"></i> Archives for the past 1 month
-                            </li>
-                            <li>
-                              <i className="bi bi-arrow-right-circle-fill"></i> You can have up to 3 devices linked to your
-                              exim digital Copy subscription at any time
-                            </li>
-                            <li>
-                              <i className="bi bi-arrow-right-circle-fill"></i> All devices compatible
-                            </li>
+                            <li><i className="bi bi-arrow-right-circle-fill"></i> Seamless access on desktop & mobile browser</li>
+                            <li><i className="bi bi-arrow-right-circle-fill"></i> Archives for the past 1 month</li>
+                            <li><i className="bi bi-arrow-right-circle-fill"></i> Up to 3 devices linked</li>
+                            <li><i className="bi bi-arrow-right-circle-fill"></i> All devices compatible</li>
                           </ul>
                         </div>
                       </div>
@@ -185,25 +254,49 @@ const SubscribePage = () => {
                       <div className="packbox">
                         <div className="toppack">{pkg.location}</div>
                         <div className="botpack">
-                          {pkg.options.map((option) => (
-                            <div key={option.duration} className="form-check packinput">
-                              <input
-                                className="form-check-input"
-                                type="radio"
-                                name={`package-${pkg.location}`} // Group by location
-                                id={`${pkg.location}-${option.duration}`}
-                                checked={selectedPackages.some(
-                                  (selectedPkg) =>
-                                    selectedPkg.location === pkg.location &&
-                                    selectedPkg.duration === option.duration
+                          {pkg.options.map((option) => {
+                            const isSubscribed = isPackageSubscribed(pkg.location, option.duration);
+                            const isRenewable = isPackageRenewable(pkg.location, option.duration);
+
+                            return (
+                              <div
+                                key={option.duration}
+                                className="form-check packinput p-2 border rounded mb-3"
+                                style={{ backgroundColor: isSubscribed ? '#f0f8ff' : '#fff' }}
+                              >
+                                <div>
+                                  <input
+                                    className="form-check-input me-2"
+                                    type="checkbox"
+                                    id={`${pkg.location}-${option.duration}`}
+                                    checked={selectedPackages.some(
+                                      (selectedPkg) =>
+                                        selectedPkg.location === pkg.location &&
+                                        selectedPkg.duration === option.duration
+                                    )}
+                                    onChange={() => handlePackageChange(pkg.location, option.duration, option.price)}
+                                    disabled={isSubscribed && !isRenewable} // Disable if subscribed and not renewable
+                                  />
+                                  <label className="form-check-label" htmlFor={`${pkg.location}-${option.duration}`}>
+                                    <h3 className="mb-1">{option.duration}</h3>
+                                    <h5>₹ {option.price.toLocaleString()}</h5>
+                                  </label>
+                                </div>
+
+                                {isSubscribed && isRenewable && (
+                                  <div className="mt-2">
+                                    <button
+                                      className="btn btn-sm btn-primary w-100"
+                                      onClick={() => handleRenewClick(pkg.location, option.duration, option.price, activeType)}
+                                    >
+                                      Renew
+                                    </button>
+                                  </div>
                                 )}
-                                onChange={() => handlePackageChange(pkg.location, option.duration, option.price)}
-                              />
-                              <label className="form-check-label" htmlFor={`${pkg.location}-${option.duration}`}>
-                                <h3>{option.duration}</h3> <h5>₹ {option.price.toLocaleString()}</h5>
-                              </label>
-                            </div>
-                          ))}
+                              </div>
+                            );
+                          })}
+
                         </div>
                       </div>
                     </div>
@@ -239,12 +332,6 @@ const SubscribePage = () => {
                         <h4 className="mb-3">New Registration</h4>
                         <div className="row align-item-center justify-content-center">
                           <div className="col-md-5">
-                            {/* <div className="loginGoogleBtn mb-4 p-3 fw-normal" onClick={registernow}>
-                              <img alt="" className="me-2" src={gicon} /> Login with Gmail
-                            </div>
-                            <div className="Orbtn">
-                              <p>OR</p>
-                            </div> */}
                             <button className="dailySubscribebtn mt-4 fw-normal" onClick={registernow}>
                               CUSTOM LOGIN
                             </button>

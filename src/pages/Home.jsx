@@ -99,8 +99,7 @@ const Home = () => {
                         {topLeftMedia.length > 0 && (
                             <div className="col-md-6 mt-2 mb-2">
                                 <Swiper
-                                    modules={[Pagination, Autoplay]}
-                                    pagination={{ clickable: true }}
+                                    modules={[Autoplay]}
                                     autoplay={{ delay: 3000 }}
                                     loop={true}
                                 >
@@ -124,8 +123,7 @@ const Home = () => {
                         {topRightMedia.length > 0 && (
                             <div className="col-md-6 mt-2 mb-2">
                                 <Swiper
-                                    modules={[Pagination, Autoplay]}
-                                    pagination={{ clickable: true }}
+                                    modules={[Autoplay]}
                                     autoplay={{ delay: 3000 }}
                                 >
                                     {topRightMedia.map((media, index) => (
@@ -196,8 +194,7 @@ const Home = () => {
                         {aboveEventsLeftMedia.length > 0 && (
                             <div className="col-md-6 mt-2 mb-2">
                                 <Swiper
-                                    modules={[Pagination, Autoplay]}
-                                    pagination={{ clickable: true }}
+                                    modules={[Autoplay]}
                                     autoplay={{ delay: 3000 }}
                                 >
                                     {aboveEventsLeftMedia.map((media, index) => (
@@ -220,8 +217,7 @@ const Home = () => {
                         {aboveEventsRightMedia.length > 0 && (
                             <div className="col-md-6 mt-2 mb-2">
                                 <Swiper
-                                    modules={[Pagination, Autoplay]}
-                                    pagination={{ clickable: true }}
+                                    modules={[Autoplay]}
                                     autoplay={{ delay: 3000 }}
                                 >
                                     {aboveEventsRightMedia.map((media, index) => (
@@ -279,8 +275,7 @@ const Home = () => {
                         {SubscribeMedia && SubscribeMedia.length > 0 && (
                             <div className="w-100 mt-2 mb-2">
                                 <Swiper
-                                    modules={[Pagination, Autoplay]}
-                                    pagination={{ clickable: true }}
+                                    modules={[Autoplay]}
                                     autoplay={{ delay: 3000 }}
                                 >
                                     {SubscribeMedia.map((media, index) => (
@@ -374,8 +369,7 @@ const Home = () => {
                         {videoHomeMedia && videoHomeMedia.length > 0 && (
                             <div className="w-100 mt-2 mb-2">
                                 <Swiper
-                                    modules={[Pagination, Autoplay]}
-                                    pagination={{ clickable: true }}
+                                    modules={[Autoplay]}
                                     autoplay={{ delay: 3000 }}
                                 >
                                     {videoHomeMedia.map((media, index) => (
@@ -470,8 +464,7 @@ const Home = () => {
                         {bottomLeftMedia.length > 0 && (
                             <div className="col-md-6 mt-2 mb-2">
                                 <Swiper
-                                    modules={[Pagination, Autoplay]}
-                                    pagination={{ clickable: true }}
+                                    modules={[Autoplay]}
                                     autoplay={{ delay: 3000 }}
                                 >
                                     {bottomLeftMedia.map((media, index) => (
@@ -494,8 +487,7 @@ const Home = () => {
                         {bottomRightMedia.length > 0 && (
                             <div className="col-md-6 mt-2 mb-2">
                                 <Swiper
-                                    modules={[Pagination, Autoplay]}
-                                    pagination={{ clickable: true }}
+                                    modules={[Autoplay]}
                                     autoplay={{ delay: 3000 }}
                                 >
                                     {bottomRightMedia.map((media, index) => (

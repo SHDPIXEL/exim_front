@@ -25,7 +25,7 @@ const BottomAds = ({ leftPosition, rightPosition }) => {
         {/* Left Ad */}
         {leftMedia.length > 0 && (
           <div className="col-md-6 mt-2 mb-2">
-            <Swiper modules={[Pagination, Autoplay]} pagination={{ clickable: true }} autoplay={{ delay: 3000 }} loop={true} >
+            <Swiper modules={[Autoplay]} autoplay={{ delay: 3000 }} loop={true} >
               {leftMedia.map((media, index) => (
                 <SwiperSlide key={index}>
                   {media.type === 'image' ? (
@@ -45,7 +45,7 @@ const BottomAds = ({ leftPosition, rightPosition }) => {
         {/* Right Ad */}
         {rightMedia.length > 0 && (
           <div className="col-md-6 mt-2 mb-2">
-            <Swiper modules={[Pagination, Autoplay]} pagination={{ clickable: true }} autoplay={{ delay: 3000 }} loop={true}>
+            <Swiper modules={[Pagination, Autoplay]} autoplay={{ delay: 3000 }} loop={true}>
               {rightMedia.map((media, index) => (
                 <SwiperSlide key={index}>
                   {media.type === 'image' ? (

@@ -9,13 +9,13 @@ const PaymentSummary = () => {
   const { state } = useLocation();
   const { user } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
+  const [paymentObject, setPaymentObject] = useState(null); // Store Razorpay payment object
   const authToken = localStorage.getItem("authToken") || "";
   const { user: userData, loading } = useUser();
 
   const subscriptionType = state?.subscriptionType || 'digital';
   const packages = state?.packages || [];
   const total = packages.reduce((sum, pkg) => sum + pkg.price, 0);
-
 
   useEffect(() => {
     if (!user || !user.token) {
@@ -39,9 +39,7 @@ const PaymentSummary = () => {
     return new Promise((resolve) => {
       const script = document.createElement('script');
       script.src = src;
-      script.onload = () => {
-        resolve(true);
-      };
+      script.onload = () => resolve(true);
       script.onerror = () => {
         console.error('Razorpay SDK failed to load');
         resolve(false);
@@ -50,22 +48,31 @@ const PaymentSummary = () => {
     });
   };
 
+  const closeRazorpayModal = () => {
+    if (paymentObject) {
+      paymentObject.close(); // Close the modal if it exists
+      setPaymentObject(null); // Clear the reference
+    }
+  };
+
   const displayRazorpay = async () => {
     const res = await loadScript('https://checkout.razorpay.com/v1/checkout.js');
+  
     if (!res) {
       alert('Razorpay SDK failed to load. Please check your internet connection.');
+      navigate('/subscribePage');
       return;
     }
-
-    // Ensure Razorpay is available
+  
     if (!window.Razorpay) {
       alert('Razorpay SDK is not available. Please try again.');
       console.error('window.Razorpay is undefined');
+      navigate('/subscribePage');
       return;
     }
-
+  
     setIsLoading(true);
-
+  
     try {
       const subscriptionData = {
         type: subscriptionType,
@@ -76,55 +83,56 @@ const PaymentSummary = () => {
         })),
         amount: total,
       };
-
-
+  
       const response = await API.post('/services/order', subscriptionData, {
         headers: {
           Authorization: `Bearer ${authToken}`,
         },
       });
-
-
-      // Correct destructuring based on response structure
+  
       const { amount, id: order_id, currency } = response.data.razorpayOrder;
       const userId = user.id;
-
+  
       const options = {
-        key: 'rzp_test_TmUiraAoARSPLC', // Verify this key in Razorpay dashboard
+        key: 'rzp_test_TmUiraAoARSPLC',
         amount: amount.toString(),
         currency: currency,
         name: 'Exim',
         description: 'News membership',
-        image: '', // Add logo URL if available
+        image: '',
         order_id: order_id,
         handler: async function (response) {
-          setIsLoading(true);
-          const paymentData = {
-            orderCreationId: order_id,
-            razorpayPaymentId: response.razorpay_payment_id,
-            razorpayOrderId: response.razorpay_order_id,
-            razorpaySignature: response.razorpay_signature,
-            user: userId,
-            amount,
-          };
-
           try {
+            const paymentData = {
+              orderCreationId: order_id,
+              razorpayPaymentId: response.razorpay_payment_id,
+              razorpayOrderId: response.razorpay_order_id,
+              razorpaySignature: response.razorpay_signature,
+              user: userId,
+              amount,
+            };
+  
             const verificationResponse = await API.post('/services/order-success', paymentData, {
               headers: {
                 Authorization: `Bearer ${authToken}`,
               },
             });
-
+  
             if (verificationResponse.status === 200) {
+              closeRazorpayModal(); // Close modal before success navigation
               navigate('/paymentDone', {
                 state: { order_id: order_id, amount: amount / 100 },
               });
             } else {
               alert('Payment verification failed. Please contact support.');
+              closeRazorpayModal();
+              navigate('/subscribePage');
             }
           } catch (error) {
-            alert('Error verifying payment: ' + (error.response?.data?.message || error.message));
-            console.error('Verification error:', error);
+            console.error('Error verifying payment:', error);
+            alert('Error verifying payment. Please try again.');
+            closeRazorpayModal();
+            navigate('/subscribePage');
           } finally {
             setIsLoading(false);
           }
@@ -141,28 +149,38 @@ const PaymentSummary = () => {
           color: '#61dafb',
         },
       };
-
-
-      const paymentObject = new window.Razorpay(options);
-      paymentObject.on('payment.failed', function (response) {
+  
+      const razorpayInstance = new window.Razorpay(options);
+      setPaymentObject(razorpayInstance); // Store the payment object
+  
+      razorpayInstance.on('payment.failed', function (response) {
         alert('Payment failed: ' + response.error.description);
         setIsLoading(false);
+        closeRazorpayModal(); // Close modal on payment failure
+        navigate('/subscribePage');
       });
-      paymentObject.open();
+  
+      razorpayInstance.open();
     } catch (error) {
-      const errorMessage =
-        error.response?.data?.message || // Try to get the message from the server response
-        'An error occurred while initiating payment.'; // Fallback error message
-
-      alert(`Error: ${errorMessage}`);
       console.error('Payment initiation error:', error);
+      alert(error?.message);
+      setIsLoading(false);
+      closeRazorpayModal(); // Close modal if it was opened
+      navigate('/subscribePage');
     }
-  };
+  };  
 
   const handlePayment = (e) => {
     e.preventDefault();
     displayRazorpay();
   };
+
+  // Cleanup on unmount to ensure modal is closed if component is left unexpectedly
+  useEffect(() => {
+    return () => {
+      closeRazorpayModal(); // Cleanup on unmount
+    };
+  }, [paymentObject]);
 
   if (loading) return <p>Loading...</p>;
 

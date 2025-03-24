@@ -87,8 +87,8 @@ const MainHeader = () => {
 
 
               <div className=' d-flex justify-content-end'>
-                {(location.pathname !== "/dashboard" && location.pathname !== "/profile" && location.pathname !== "/mydevice" && location.pathname !== "/paymentHistory") && (
-                  <button className='menu-btn' onClick={subscribeClick}>SUBSCRIBE TO EXIM INDIA</button>
+                {(location.pathname !== "/profile" && location.pathname !== "/mydevice" && location.pathname !== "/paymentHistory") && (
+                  <button className='menu-btn mx-3' onClick={subscribeClick}>SUBSCRIBE TO EXIM INDIA</button>
                 )}
 
                 {(location.pathname === "/dashboard" || location.pathname === "/profile" || location.pathname === "/mydevice" || location.pathname === "/paymentHistory") && (

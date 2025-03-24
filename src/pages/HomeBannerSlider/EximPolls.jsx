@@ -51,7 +51,6 @@ const EximPolls = (props) => {
         try {
             const response = await API.post("/polls/submit_polls", { responses: formattedResponses });
             alert("Responses Submitted!");
-            console.log("polls data",response.data)
             
             // Store poll results for displaying vote counts
             const resultsData = response.data.polls.reduce((acc, poll) => {

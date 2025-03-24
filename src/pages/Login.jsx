@@ -81,7 +81,7 @@ const Login = () => {
                     <Row>
                       <Col md={12}>
                         <Form.Group controlId="formEmail" className="mt-3">
-                          <Form.Label>Username *</Form.Label>
+                          <Form.Label>Email *</Form.Label>
                           <Form.Control
                             type="email"
                             placeholder="Enter username"
@@ -127,11 +127,11 @@ const Login = () => {
                           <span className="mt-1">Remember me</span>
                         </Form.Group>
                       </Col>
-                      <Col md={6} className="justify-content-end d-md-flex">
+                      {/* <Col md={6} className="justify-content-end d-md-flex">
                         <Link to="/Forgotpass" className="d-flex forgotPass mt-4">
                           Forgot Password
                         </Link>
-                      </Col>
+                      </Col> */}
                     </Row>
                     <Row>
                       <Col md={12}>

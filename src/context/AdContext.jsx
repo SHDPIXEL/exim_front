@@ -19,7 +19,6 @@ export function AdProvider({ children }) {
 
         // Fetch new selected ads data
         const selectedResponse = await API.post("/adds/get_selected");
-        console.log("Selected Ads Data:", selectedResponse.data.selectedAds);
         setSelectedAds(selectedResponse.data.selectedAds);
 
       } catch (err) {

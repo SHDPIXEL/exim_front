@@ -18,10 +18,13 @@ const Dashboard = () => {
     const { logout } = useAuth();
     const { user, loading } = useUser();
 
-    const [selectedDate, setSelectedDate] = useState(null);
+    const [selectedDate, setSelectedDate] = useState(new Date()); // Default to today
     const [selectedEdition, setSelectedEdition] = useState(null);
     const [pastDates, setPastDates] = useState([]);
-    const [userSubscription, setUserSubscription ] = useState([]);
+    const [userSubscription, setUserSubscription] = useState([]);
+    const [editionUrl, setEditionUrl] = useState(null);
+    const [editionImage, setEditionImage] = useState(null); // Renamed for consistency
+    const [isFetching, setIsFetching] = useState(false); // Track fetch status
 
     // Generate last 10 days dynamically
     const generatePastDates = () => {
@@ -42,44 +45,42 @@ const Dashboard = () => {
         return dates;
     };
 
-    // Set past dates on component mount
-    useEffect(() => {
-        setPastDates(generatePastDates());
-    }, []);
-
     // Format date to YYYY-MM-DD in local timezone
     const formatDateToLocal = (date) => {
         const year = date.getFullYear();
-        const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed
+        const month = String(date.getMonth() + 1).padStart(2, '0');
         const day = String(date.getDate()).padStart(2, '0');
         return `${year}-${month}-${day}`;
     };
 
+    // Fetch subscription data
     useEffect(() => {
-        const fetchSubscriptiondata = async () => {
-            try{
-                const response = await API.post("/services/get_userSubscription");
-                console.log("subscription data", response.data)
-                setUserSubscription(response.data.userSubscription);
-            }catch(error) {
-                console.error("Error in fetching subscription", error)
+        const fetchSubscriptionData = async () => {
+            try {
+                const response = await API.post("/services/get_dashboardSubscription", {}, {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+                    },
+                });
+                const subscriptions = response.data.userSubscription;
+                setUserSubscription(subscriptions);
+                if (subscriptions.length > 0 && !selectedEdition) {
+                    setSelectedEdition(subscriptions[0]); // Default to first subscription
+                }
+            } catch (error) {
+                console.error("Error fetching subscription", error);
             }
-        }
-        fetchSubscriptiondata()
-    },[])
+        };
+        fetchSubscriptionData();
+    }, []);
 
-    // Handle View button click
-    const handleViewClick = async (e) => {
-        e.preventDefault(); // Prevent default behavior
+    // Fetch edition based on selectedEdition and selectedDate
+    const fetchEditionData = async () => {
+        if (!selectedEdition || !selectedDate) return;
 
-        if (!selectedEdition || !selectedDate) {
-            alert("Please select an edition and a date");
-            return;
-        }
-
+        setIsFetching(true); // Indicate fetching has started
         try {
             const formattedDate = formatDateToLocal(selectedDate);
-
             const response = await API.post(
                 "/digital_copies/get_bydate",
                 {
@@ -92,24 +93,64 @@ const Dashboard = () => {
                     },
                 }
             );
-
-            console.log("Response data:", response.data);
-
-            if (response.data.success && response.data.data.length > 0) {
-                navigate("/viewpage", {
-                    state: {
-                        url: response.data.data[0].url, // Pass the URL directly
-                        location: selectedEdition.location,
-                        date: formattedDate,
-                    },
-                });
+            console.log(response.data)
+            if (response.data.success && response.data.data) {
+                setEditionUrl(response.data.data.url);
+                setEditionImage(response.data.data.image);
             } else {
-                alert(response.data.message || "No data found for the selected date and edition.");
+                setEditionUrl(null);
+                setEditionImage(null);
+                console.log(response.data.message || "No data found.");
             }
         } catch (error) {
             console.error("Error fetching edition data:", error);
-            alert("Failed to load edition data. Please try again.");
+            alert(error?.message)
+            setEditionUrl(null);
+            setEditionImage(null);
+        } finally {
+            setIsFetching(false); // Fetching complete
         }
+    };
+
+    // Set past dates on mount
+    useEffect(() => {
+        setPastDates(generatePastDates());
+    }, []);
+
+    // Fetch edition when selectedEdition or selectedDate changes
+    useEffect(() => {
+        fetchEditionData();
+    }, [selectedEdition, selectedDate]);
+
+    // Handle View button click
+    const handleViewClick = (e) => {
+        e.preventDefault();
+
+        if (isFetching) {
+            alert("Please wait, fetching edition data...");
+            return;
+        }
+
+        if (!editionUrl || !selectedEdition || !selectedDate) {
+            alert("No edition available for the selected date and edition.");
+            return;
+        }
+
+        console.log("Navigating with:", {
+            url: editionUrl,
+            location: selectedEdition.location,
+            date: formatDateToLocal(selectedDate),
+            image: editionImage,
+        });
+
+        navigate("/viewpage", {
+            state: {
+                url: editionUrl,
+                location: selectedEdition.location,
+                date: formatDateToLocal(selectedDate),
+                image: editionImage, // Pass image if needed on viewpage
+            },
+        });
     };
 
     if (loading) return <p>Loading...</p>;
@@ -159,11 +200,20 @@ const Dashboard = () => {
                         {selectedDate ? ` - ${selectedDate.toLocaleDateString("en-US", { day: "numeric", month: "long", year: "numeric" })}` : ""}
                     </h5>
                     <div className="newspaper-container mt-3">
-                        <img alt="home" className="w-100 border shadow-sm rounded-3" src={demoimg} />
+                        {isFetching ? (
+                            <p>Loading edition...</p>
+                        ) : (
+                            <img
+                                alt="edition"
+                                className="w-100 border shadow-sm rounded-3"
+                                src={editionImage || demoimg}
+                            />
+                        )}
                         <button
                             className="dailySubscribebtn mt-3 mx-auto p-2"
                             onClick={handleViewClick}
                             style={{ width: "200px" }}
+                            disabled={isFetching || !editionUrl} // Disable during fetch or if no URL
                         >
                             View
                         </button>

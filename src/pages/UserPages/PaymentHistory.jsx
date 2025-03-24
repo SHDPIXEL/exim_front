@@ -1,141 +1,181 @@
 import React, { useEffect, useState } from "react";
-import Tab from 'react-bootstrap/Tab';
-import Tabs from 'react-bootstrap/Tabs';
+import Tab from "react-bootstrap/Tab";
+import Tabs from "react-bootstrap/Tabs";
 import API from "../../api";
+import { useNavigate } from "react-router-dom";
 
 const PaymentHistory = () => {
+  const navigate = useNavigate();
   const [payments, setPayments] = useState([]);
-  const [refundhistory, setRefundHistory] = useState([]); 
+  const [renewableSubscriptions, setRenewableSubscriptions] = useState([]);
 
   useEffect(() => {
     const fetchDetails = async () => {
       try {
-        const response = await API.post("/services/get_payments",{} ,{
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("authToken")}`,
-          },
-        });
-    
-        const mappedPayments = response.data.payments.map(payment => ({
-          id: payment.razorpayPaymentId || "N/A", 
-          invoiceid: payment.razorpayOrderId || "N/A", 
-          Service: payment.subscription_details
-            ? payment.subscription_details.map(sub => `${sub.location} - ${sub.duration}`).join(", ")
-            : "N/A", 
+        const response = await API.post(
+          "/services/get_userSubscription",
+          {},
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+            },
+          }
+        );
+
+        console.log("Payment history:", response.data);
+
+        // Map payment data
+        const mappedPayments = response.data.userSubscription.map((payment) => ({
+          id: payment.razorpayPaymentId || "N/A",
+          invoiceId: payment.razorpayOrderId || "N/A",
+          location: payment.location || "N/A",
+          duration: payment.duration || "N/A",
           type: payment.type || "N/A",
           date: new Date(payment.createdAt).toISOString().split("T")[0],
-          amount: `₹ ${payment.amount.toLocaleString()}`, 
-          Expire: payment.expiry_date, 
-          status: payment.paymentStatus || payment.status || "Pending", 
+          amount: `₹ ${payment.price?.toLocaleString()}`,
+          expiryDate: new Date(payment.expiryDate).toISOString().split("T")[0],
+          status: payment.paymentStatus || "Pending",
         }));
-  
+
         setPayments(mappedPayments);
-        setRefundHistory([]); 
+
+        // Filter expired or expiring within a month
+        const today = new Date();
+        const renewable = mappedPayments.filter((payment) => {
+          const expiryDate = new Date(payment.expiryDate);
+          const daysLeft = (expiryDate - today) / (1000 * 60 * 60 * 24);
+
+          return (
+            payment.status === "success" &&
+            (expiryDate < today || daysLeft <= 30)
+          );
+        });
+
+        setRenewableSubscriptions(renewable);
       } catch (error) {
         console.error("Error in fetching payment details:", error);
-        setPayments([]); 
-        setRefundHistory([]);
+        setPayments([]);
+        setRenewableSubscriptions([]);
       }
     };
-  
+
     fetchDetails();
   }, []);
-  
+
+  const handleRenewClick = (payment) => {
+    navigate("/paymentSummary", {
+      state: {
+        subscriptionType: payment.type,
+        packages: [{ location: payment.location, duration: payment.duration, price: parseInt(payment.amount.replace(/[^0-9]/g, "")) }],
+      },
+    });
+  };
 
   return (
     <div className="container border shadow-sm p-md-5 py-md-3">
-      <div className="row mt-4 ">
+      <div className="row mt-4">
         <div className="col-md-12 mt-4 mb-2 text-center">
-          <h2 className='text-center mb-3 fw-bold'>Subscription History  </h2>
+          <h2 className="text-center mb-3 fw-bold">Subscription History</h2>
         </div>
       </div>
-      <div className="row ">
+      <div className="row">
         <div className="col-md-12 mb-4">
-          <Tabs
-            defaultActiveKey="PaymentHistory"
-            id="uncontrolled-tab-example"
-            className="mb-3"
-          >
+          <Tabs defaultActiveKey="PaymentHistory" id="uncontrolled-tab-example" className="mb-3">
             <Tab eventKey="PaymentHistory" title="Payment History">
-              <div className="table-responsive ">
-                <table className="table table-bordered table-hover ">
+              <div className="table-responsive">
+                <table className="table table-bordered table-hover">
                   <thead className="table-primary">
                     <tr>
-                      <th scope="col" style={{minWidth:"120px"}}>Payment ID</th>
-                      <th scope="col" style={{minWidth:"120px"}}>Invoice ID</th>
-                      <th scope="col" style={{minWidth:"200px"}}>Subscription </th>
-                      <th scope="col" style={{minWidth:"100px"}}>Type </th>
-                      <th scope="col" style={{minWidth:"120px"}}>Paid at</th>
-                      <th scope="col">Amount</th>
-                      <th scope="col" style={{minWidth:"110px"}}>Expiry Date </th>
-                      <th scope="col" style={{minWidth:"120px"}}>Status</th>
+                      <th>Payment ID</th>
+                      <th>Invoice ID</th>
+                      <th>Edition</th>
+                      <th>Duration</th>
+                      <th>Type</th>
+                      <th>Paid At</th>
+                      <th>Amount</th>
+                      <th>Expiry Date</th>
+                      <th>Status</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {payments.map((payment, index) => (
-                      <tr key={index}>
-                        <td>{payment.id}</td>
-                        <td>{payment.invoiceid}</td>
-                        <td>{payment.Service}</td>
-                        <td>{payment.type}</td>
-                        <td>{payment.date}</td>
-                        <td>{payment.amount}</td>
-                        <td>{payment.Expire}</td>
-                        <td>
-                          <span
-                            className={`badge ${payment.status === 'success'
-                                ? 'bg-success'
-                                : payment.status === 'pending'
-                                  ? 'bg-warning text-dark'
-                                  : 'bg-danger'
+                    {payments.length > 0 ? (
+                      payments.map((payment, index) => (
+                        <tr key={index}>
+                          <td>{payment.id}</td>
+                          <td>{payment.invoiceId}</td>
+                          <td>{payment.location}</td>
+                          <td>{payment.duration}</td>
+                          <td>{payment.type}</td>
+                          <td>{payment.date}</td>
+                          <td>{payment.amount}</td>
+                          <td>{payment.expiryDate}</td>
+                          <td>
+                            <span
+                              className={`badge ${
+                                payment.status === "success"
+                                  ? "bg-success"
+                                  : payment.status === "pending"
+                                  ? "bg-warning text-dark"
+                                  : "bg-danger"
                               }`}
-                          >
-                            {payment.status}
-                          </span>
+                            >
+                              {payment.status}
+                            </span>
+                          </td>
+                        </tr>
+                      ))
+                    ) : (
+                      <tr>
+                        <td colSpan="9" className="text-center">
+                          No payment records found.
                         </td>
                       </tr>
-                    ))}
+                    )}
                   </tbody>
                 </table>
               </div>
             </Tab>
-            <Tab eventKey="RefundHistory" title="Refund History">
-              <div className="table-responsive ">
-                <table className="table table-bordered table-hover ">
+            <Tab eventKey="Renew" title="Renew">
+              <div className="table-responsive">
+                <table className="table table-bordered table-hover">
                   <thead className="table-primary">
                     <tr>
-                      <th scope="col" style={{minWidth:"120px"}}>Payment ID</th>
-                      <th scope="col" style={{minWidth:"120px"}}>Invoice ID</th>
-                      <th scope="col" style={{minWidth:"200px"}}>Subscription</th>
-                      <th scope="col" style={{minWidth:"100px"}}>Type </th>
-                      <th scope="col" style={{minWidth:"120px"}}>Paid at</th>
-                      <th scope="col" style={{minWidth:"120px"}}>Amount</th>
-                      <th scope="col" style={{minWidth:"120px"}}>Status</th>
+                      <th>Edition</th>
+                      <th>Duration</th>
+                      <th>Type</th>
+                      <th>Paid At</th>
+                      <th>Amount</th>
+                      <th>Expiry Date</th>
+                      <th>Action</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {refundhistory.map((payment, index) => (
-                      <tr key={index}>
-                        <td>{payment.id}</td>
-                        <td>{payment.invoiceid}</td>
-                        <td>{payment.Service}</td>
-                        <td>{payment.type}</td>
-                        <td>{payment.date}</td>
-                        <td>{payment.amount}</td>
-                        <td>
-                          <span
-                            className={`badge ${payment.status === 'success'
-                                ? 'bg-success'
-                                : payment.status === 'Pending'
-                                  ? 'bg-warning text-dark'
-                                  : 'bg-danger'
-                              }`}
-                          >
-                            {payment.status}
-                          </span>
+                    {renewableSubscriptions.length > 0 ? (
+                      renewableSubscriptions.map((payment, index) => (
+                        <tr key={index}>
+                          <td>{payment.location}</td>
+                          <td>{payment.duration}</td>
+                          <td>{payment.type}</td>
+                          <td>{payment.date}</td>
+                          <td>{payment.amount}</td>
+                          <td>{payment.expiryDate}</td>
+                          <td>
+                            <button
+                              className="btn btn-primary btn-sm"
+                              onClick={() => handleRenewClick(payment)}
+                            >
+                              Renew
+                            </button>
+                          </td>
+                        </tr>
+                      ))
+                    ) : (
+                      <tr>
+                        <td colSpan="7" className="text-center">
+                          No subscriptions available for renewal.
                         </td>
                       </tr>
-                    ))}
+                    )}
                   </tbody>
                 </table>
               </div>

@@ -196,8 +196,7 @@ const VideoGalleryNews = () => {
                     <div className="col-md-3 mb-3">
                         <div className="w-100 mt-2 mb-2">
                             <Swiper
-                                modules={[Pagination, Autoplay]}
-                                pagination={{ clickable: true }}
+                                modules={[Autoplay]}
                                 autoplay={{ delay: 3000 }}
                                 loop={true}
                             >

@@ -150,8 +150,7 @@ const NewsDetails = () => {
 
                     {NewsDetailsMedia.length > 0 ? (
                         <Swiper
-                            modules={[Pagination, Autoplay]}
-                            pagination={{ clickable: true }}
+                            modules={[Autoplay]}
                             autoplay={{ delay: 3000 }}
                             loop={true}
                         >

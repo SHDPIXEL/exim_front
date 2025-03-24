@@ -192,8 +192,7 @@
 
 //                     {VideoDetailsMedia.length > 0 ? (
 //                         <Swiper
-//                             modules={[Pagination, Autoplay]}
-//                             pagination={{ clickable: true }}
+//                             modules={[Autoplay]}
 //                             autoplay={{ delay: 3000 }}
 //                         >
 //                             {VideoDetailsMedia.map((media, index) => (
@@ -365,8 +364,7 @@ const VideoGalleryDetails = () => {
                 {hasAds && (
                     <div className="col-lg-3">
                         <Swiper
-                            modules={[Pagination, Autoplay]}
-                            pagination={{ clickable: true }}
+                            modules={[Autoplay]}
                             autoplay={{ delay: 3000 }}
                             loop={true}
                         >

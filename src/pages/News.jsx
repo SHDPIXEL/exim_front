@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import DatePicker from 'react-datepicker';
 import { Link, useNavigate } from 'react-router-dom';
@@ -9,7 +8,6 @@ import BottomAds from "../components/BottomAds";
 
 
 const News = () => {
-
     const navigate = useNavigate();
     const [selectedDate, setSelectedDate] = useState(null);
     const [searchTerm, setSearchTerm] = useState("");
@@ -20,22 +18,13 @@ const News = () => {
     const [headlines, SetHeadlines] = useState([]);
     const { selectedAds } = useAds();
 
-
-
-
-    // const { headlines } = location.state || {};
-
-    const handleSearch = () => {
-        console.log("Search Term:", searchTerm);
-        // Add your search logic here
-    };
-
+    // Fetch Top Headlines
     useEffect(() => {
         const fetchHeadlines = async () => {
             try {
                 const response = await API.post("/news/get_news_recent");
                 const data = response.data.data;
-                SetHeadlines(data.slice(11));
+                SetHeadlines(data.slice(0, 10));
             } catch (error) {
                 console.error("Error in fetching Headlines", error);
             }
@@ -43,21 +32,17 @@ const News = () => {
         fetchHeadlines();
     }, []);
 
-
-    const fetchNews = async (pageNumber) => {
+    // Fetch Paginated News
+    const fetchNews = async (pageNumber = 1) => {
         if (pageNumber > totalPages && totalPages !== 0) return;
 
         setLoading(true);
         try {
             const response = await API.post(`/news/get_news_pagination`, {
-                page: pageNumber
+                page: pageNumber,
             });
-            setRepeatedNews((prev) => {
-                if (pageNumber === 1) {
-                    return response.data.data;
-                }
-                return [...prev, ...response.data.data];
-            });
+
+            setRepeatedNews((prev) => (pageNumber === 1 ? response.data.data : [...prev, ...response.data.data]));
             setPage(pageNumber);
             setTotalPages(response.data.totalPages);
         } catch (error) {
@@ -66,8 +51,6 @@ const News = () => {
             setLoading(false);
         }
     };
-
-
 
     useEffect(() => {
         fetchNews(1);
@@ -79,132 +62,141 @@ const News = () => {
         }
     };
 
+    // Search Function with Pagination
+    const handleSearch = async (pageNumber = 1) => {
+        if (!searchTerm && !selectedDate) {
+            alert("Please select a date or enter a search term.");
+            return;
+        }
+
+        setLoading(true);
+        try {
+            const response = await API.post("/news/search", {
+                date: selectedDate ? selectedDate.toISOString().split("T")[0] : null,
+                query: searchTerm,
+                page: pageNumber,
+            });
+            console.log("Search data", response.data)
+
+            if (pageNumber === 1) {
+                setRepeatedNews(response.data.data);
+            } else {
+                setRepeatedNews((prev) => [...prev, ...response.data.data]);
+            }
+
+            setPage(pageNumber);
+            setTotalPages(response.data.totalPages || 1);
+        } catch (error) {
+            console.error("Error in finding your search:", error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleViewMoreSearch = () => {
+        if (page < totalPages) {
+            handleSearch(page + 1);
+        }
+    };
 
     return (
-        <div className='container mt-3'>
+        <div className="container mt-3">
             <div className="row mb-4">
+                <div className="col-md-9">
+                    <h2 className="text-center mb-3 fw-bold">News</h2>
 
-                <div className='col-md-9'>
+                    <div className="shadow-sm p-4 pb-2 border rounded-3 bg-white mb-4">
+                        <div className="row align-items-center">
+                            <div className="col-md-2 mb-1">
+                                <h5 className="fw-bold">Pick a Date -</h5>
+                            </div>
 
-                    <div className="row mb-4">
-                        <div className="col-md-12 mt-4 mb-2">
-                            <h2 className='text-center mb-3 fw-bold'>News</h2>
+                            <div className="col-md-4 mb-3">
+                                <DatePicker
+                                    selected={selectedDate}
+                                    onChange={(date) => setSelectedDate(date)}
+                                    placeholderText="Select a date"
+                                    dateFormat="dd/MM/yyyy"
+                                    className="form-control webinput"
+                                />
+                            </div>
+
+                            <div className="col-md-4 mb-3">
+                                <InputGroup>
+                                    <Form.Control
+                                        type="text"
+                                        placeholder="Search..."
+                                        value={searchTerm}
+                                        onChange={(e) => setSearchTerm(e.target.value)}
+                                        className="webinput"
+                                    />
+                                    <InputGroup.Text className="bg-transparent border-dark">
+                                        <i className="bi bi-search"></i>
+                                    </InputGroup.Text>
+                                </InputGroup>
+                            </div>
+
+                            <div className="col-md-2 mb-3">
+                                <button onClick={() => handleSearch(1)} className="dailySubscribebtn p-2">
+                                    Search
+                                </button>
+                            </div>
                         </div>
-                        <div className="shadow-sm p-4 pb-2 border rounded-3 bg-white">
-                            <div className="row align-items-center ">
-                                <div className="col-md-2 mb-1">
-                                    <h5 className='fw-bold'>Pick a Date  -</h5>
-                                </div>
-                                <div className="col-md-4 mb-3">
-                                    <div className="datepicker-container w-100">
-                                        <DatePicker
-                                            selected={selectedDate}
-                                            onChange={(date) => setSelectedDate(date)}
-                                            placeholderText="Select a date"
-                                            dateFormat="DD/MM/YYYY"
-                                            className="form-control webinput w-100 dateiconimg"
-                                        />
-                                    </div>
-                                </div>
 
-                                <div className="col-md-4 mb-3 ">
-                                    <div className="d-flex justify-content-center ">
-                                        <InputGroup>
-
-                                            <Form.Control
-                                                type="text"
-                                                placeholder="Search..."
-                                                value={searchTerm}
-                                                onChange={(e) => setSearchTerm(e.target.value)}
-                                                className='webinput border-end-0'
-                                            />
-                                            <InputGroup.Text className='bg-transparent border-dark border-start-0'>
-                                                <i className="bi bi-search"></i> {/* Bootstrap Icon */}
-                                            </InputGroup.Text>
-
-                                        </InputGroup>
-                                    </div>
-
-                                </div>
-                                <div className="col-md-2 mb-3 col-4">
-                                    <button onClick={handleSearch} className='dailySubscribebtn mx-auto p-2'>Search</button>
-
-                                </div>
-                            </div>
-
-                            <div className='row mt-4'>
-                                <div className="col-md-12">
-                                    {/* <h5 className='text-webColor fw-bolder mb-3'>Date : 10 Jan 2025</h5> */}
-                                    {repeatedNews.map((item) => (
-                                        <div className="righttopStory topleftimgcard newsArchive" key={item._id} onClick={() => navigate(`/newsDetails/${item._id}`)}>
-                                            {item.imgUrl && <div className="imgside">
-                                                <img src={item.imgUrl} width="" height="100%" alt={item.headline} />
-                                            </div>}
-                                            <div className="textside">
-                                                <h4>{item.headline}</h4>
-                                                <p>{new Date(item.date).toLocaleDateString(
-                                                    "en-US", {
-                                                    year: "numeric",
-                                                    month: "long",
-                                                    day: "numeric"
-                                                }
-                                                )}</p>
-                                            </div>
+                        <div className="mt-4">
+                            {repeatedNews.map((item) => (
+                                <div
+                                    key={item._id}
+                                    className="righttopStory topleftimgcard newsArchive"
+                                    onClick={() => navigate(`/newsDetails/${item._id}`)}
+                                >
+                                    {item.imgUrl && (
+                                        <div className="imgside">
+                                            <img src={item.imgUrl} alt={item.headline} />
                                         </div>
-                                    ))}
-                                    <button
-                                        className='dailySubscribebtn mx-auto p-2'
-                                        style={{ width: "200px" }}
-                                        onClick={handleViewMore}
-                                        disabled={loading || page >= totalPages}
-                                    >
-                                        {loading ? "Loading..." : "View More"}
-                                    </button>
+                                    )}
+                                    <div className="textside">
+                                        <h4>{item.headline}</h4>
+                                        <p>{new Date(item.date).toLocaleDateString("en-US", {
+                                            year: "numeric",
+                                            month: "long",
+                                            day: "numeric"
+                                        })}</p>
+                                    </div>
                                 </div>
+                            ))}
 
-                            </div>
-
+                            {loading && <p>Loading...</p>}
+                            {page < totalPages && (
+                                <button
+                                    className="dailySubscribebtn mx-auto p-2"
+                                    style={{ width: "200px" }}
+                                    onClick={searchTerm || selectedDate ? handleViewMoreSearch : handleViewMore}
+                                    disabled={loading}
+                                >
+                                    View More
+                                </button>
+                            )}
                         </div>
                     </div>
                 </div>
-                <div className='col-md-3' >
 
+                <div className="col-md-3">
                     <div className="mt-5 p-3 pt-5 pb-1">
-                        <div className="HeadlineList">
-                            <div className="categorybtn d-inline-block p-2 px-3 mx-auto w-auto mb-4"><i className="bi bi-fire me-2"></i> Top Headlines</div>
-                            <ul>
-                                {
-                                    headlines.map((headlineItem, index) => (
-                                        <li key={index}>
-                                            <div className="Headlinesingle" onClick={() => navigate(`/newsDetails/${headlineItem._id}`)}>
-                                                <h3>{index + 1}</h3>
-                                                <h5>{headlineItem.headline}</h5>
-                                            </div>
-                                        </li>
-                                    ))
-                                }
-                            </ul>
-                        </div>
+                        <h4>Top Headlines</h4>
+                        <ul>
+                            {headlines.map((headlineItem, index) => (
+                                <li key={index} onClick={() => navigate(`/newsDetails/${headlineItem._id}`)}>
+                                    {index + 1}. {headlineItem.headline}
+                                </li>
+                            ))}
+                        </ul>
                     </div>
-                    {/* <div className="mb-4  p-3">
-                        <div className="col-md-12 mb-3">
-                            <div className="webTittle"><i className="bi bi-chevron-right"></i>Popular Tags</div>
-                        </div>
-                        <div className="tagcloud"><Link to="/#">Trade</Link>  <Link to="/#">Shipping</Link><Link to="/#">Exports</Link> <Link to="/#">Special Reports</Link><Link to="/#">Indian Economy </Link> <Link to="/#">Tarnsport & logistic</Link><Link to="/#">Port</Link></div>
-
-                    </div> */}
-
                 </div>
             </div>
-
-            <div className="borderbg"></div>
-            <BottomAds leftPosition={"News_Bottom_Left"} rightPosition={"News_Bottom_Right"} />
-
-
+            <BottomAds leftPosition="News_Bottom_Left" rightPosition="News_Bottom_Right" />
         </div>
-
-
-    )
-}
+    );
+};
 
 export default News;

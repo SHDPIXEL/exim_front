@@ -7,6 +7,7 @@ import API from "../../api";
 const ProfilePage = () => {
   const [show, setShow] = useState(false);
   const { user, loading, userSubscription } = useUser();
+  const [buttonLoading, setButtonLoading] = useState(false);
 
   const handleClose = () => setShow(false);
   const handleShow = () => {
@@ -14,40 +15,31 @@ const ProfilePage = () => {
     setShow(true);
   };
 
-  const [oldPassword, setOldPassword] = useState("");
-  const [newPassword, setNewPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+  const [email, setEmail] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    if (newPassword !== confirmPassword) {
-      alert("New Password and Confirm Password do not match!");
-      return;
-    }
-
+    setButtonLoading(true);
+  
     try {
-      const response = await API.post('/services/change_password', {
-        oldPassword,
-        newPassword,
-        confirmPassword,
-      }, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("authToken")}`,
-        },
-      });
-
+      const response = await API.post("/services/forgot-password", { email });
+  
       if (response.data.success) {
-        alert("Password changed successfully!");
-        handleClose();
+        alert("Password reset instructions sent to your email!");
+        handleClose();  // Close the modal
+        setEmail("");    // Clear the email field
       } else {
-        alert(response.data.message || "Failed to change password.");
+        alert(response.data.message || "Failed to send reset instructions.");
       }
     } catch (error) {
-      alert(error.response?.data?.message || "An error occurred while changing the password.");
-      console.error("Password change error:", error);
+      alert(error?.message || "An error occurred while sending the reset request.");
+      console.error("Forgot password error:", error);
     }
+  
+    setButtonLoading(false); // Stop loading
   };
+
+
 
   return (
 
@@ -167,46 +159,30 @@ const ProfilePage = () => {
         <Modal.Header closeButton className="py-2">
           <Modal.Title>Change Password</Modal.Title>
         </Modal.Header>
-        <Modal.Body className="RegistrationForm border p-md-5 py-md-4  p-3 pt-3  bg-light">
+        <Modal.Body className="p-md-5 py-md-4 p-3 bg-light">
           <Form onSubmit={handleSubmit}>
-            <Form.Group className="mb-3" controlId="formOldPassword">
-              <Form.Label>Old Password</Form.Label>
+            <Form.Group className="mb-3" controlId="formEmail">
+              <Form.Label>Enter your Email</Form.Label>
               <Form.Control
-                type="password"
-                placeholder="Enter old password"
-                value={oldPassword}
-                onChange={(e) => setOldPassword(e.target.value)}
+                type="email"
+                placeholder="Enter your registered email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 required
-                className="webinput "
+                className="webinput"
               />
             </Form.Group>
-            <Form.Group className="mb-3" controlId="formNewPassword">
-              <Form.Label>New Password</Form.Label>
-              <Form.Control
-                type="password"
-                placeholder="Enter new password"
-                value={newPassword}
-                onChange={(e) => setNewPassword(e.target.value)}
-                required
-                className="webinput "
-              />
-            </Form.Group>
-            <Form.Group className="mb-3" controlId="formConfirmPassword">
-              <Form.Label>Confirm Password</Form.Label>
-              <Form.Control
-                type="password"
-                placeholder="Confirm new password"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                required
-                className="webinput "
-              />
-            </Form.Group>
-            <button className="mt-4 mb-4 dailySubscribebtn p-2 w-50 w-100 mx-auto d-table" type="submit">
-              Change Password
+            <button
+              className="mt-4 mb-4 dailySubscribebtn p-2 w-50 w-100 mx-auto d-table"
+              type="submit"
+              disabled={buttonLoading}
+            >
+              {buttonLoading ? "Submitting..." : "Submit"}
             </button>
+
           </Form>
         </Modal.Body>
+
       </Modal>
 
     </div>

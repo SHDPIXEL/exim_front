@@ -94,7 +94,7 @@ const EventsPage = () => {
                                     </div>
                                 </div>
                             </div>
-                        ))}
+                        ))}htto
                         <div className="borderbg"></div>
 
                     </div>
