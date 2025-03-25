@@ -127,11 +127,11 @@ const Login = () => {
                           <span className="mt-1">Remember me</span>
                         </Form.Group>
                       </Col>
-                      {/* <Col md={6} className="justify-content-end d-md-flex">
+                      <Col md={6} className="justify-content-end d-md-flex">
                         <Link to="/Forgotpass" className="d-flex forgotPass mt-4">
                           Forgot Password
                         </Link>
-                      </Col> */}
+                      </Col>
                     </Row>
                     <Row>
                       <Col md={12}>

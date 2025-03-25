@@ -5,7 +5,6 @@ import TopStorySlider from "./HomeBannerSlider/TopStorySlider";
 import Newsletter from "./Newsletter";
 import EximEventsSlider from "./HomeBannerSlider/EximEventSlider";
 import homenewpaper from "../assets/images/homenewpaper.png";
-import ads6 from "../assets/images/ads6.png";
 import NewsFocus from "./HomeBannerSlider/NewsFocus";
 import NewCategories from "./HomeBannerSlider/NewCategories";
 import EximPolls from "./HomeBannerSlider/EximPolls";
@@ -30,6 +29,7 @@ const Home = () => {
     const navigate = useNavigate();
     const [headlines, SetHeadlines] = useState([]);
     const [TopNews, setTopNews] = useState([]);
+
 
     // Get active media for top right and top left ads
     const topRightAd = selectedAds?.find(ad =>
@@ -80,6 +80,7 @@ const Home = () => {
             try {
                 const response = await API.post("/news/get_news_recent");
                 const data = response.data.data;
+                console.log("news data", response.data)
                 setTopNews(data.slice(0, 11));
                 SetHeadlines(data.slice(11));
             } catch (error) {
@@ -88,6 +89,7 @@ const Home = () => {
         };
         fetchHeadlines();
     }, []);
+
 
     return (
         <>

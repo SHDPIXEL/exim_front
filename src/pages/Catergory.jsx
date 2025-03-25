@@ -7,14 +7,15 @@ import { Form, InputGroup } from 'react-bootstrap';
 import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
 import API from '../api';
-import banner4 from "../assets/images/banner4.png"
+import banner4 from "../assets/images/banner4.png";
 import dataFormatter from '../helper/DateFormatter';
 import { useLocation } from "react-router-dom";
+import BottomAds from "../components/BottomAds";
 
-
-const Catergory = () => {
+const Category = () => {
     const navigate = useNavigate();
-    
+    const { pathname } = useLocation();
+
     const categories = [
         { id: 1, name: "ShippingNews", title: "Shipping News" },
         { id: 2, name: "TradeNews", title: "Trade News" },
@@ -33,25 +34,23 @@ const Catergory = () => {
     const [loading, setLoading] = useState(false);
     const [page, setPage] = useState(1);
     const [totalPages, setTotalPages] = useState(0);
-    const { pathname } = useLocation();
 
     useEffect(() => {
         window.scrollTo(0, 0);
     }, [pathname]);
 
-    const fetchNews = async (categoryId, pageNumber) => {
+    // Fetch news by category (initial load or tab switch)
+    const fetchNews = async (categoryId, pageNumber = 1) => {
         if (pageNumber > totalPages && totalPages !== 0) return;
 
         setLoading(true);
         try {
-            const response = await API.post(`/news/get_news_by_category`,{
+            const response = await API.post(`/news/get_news_by_category`, {
                 categoryId: categoryId,
                 page: pageNumber
             });
             setNewsData((prev) => {
-                if (pageNumber === 1) {
-                    return response.data.data;
-                }
+                if (pageNumber === 1) return response.data.data;
                 return [...prev, ...response.data.data];
             });
             setPage(pageNumber);
@@ -64,24 +63,73 @@ const Catergory = () => {
         }
     };
 
+    // Search news with category, date, and term
+    const handleSearch = async (categoryId, pageNumber = 1) => {
+        if (!searchTerm && !selectedDate) {
+            alert("Please select a date or enter a search term.");
+            return;
+        }
+
+        setLoading(true);
+        try {
+            const response = await API.post("/news/get_search_news_categoryId", {
+                categoryId: categoryId,
+                date: selectedDate ? selectedDate.toISOString().split("T")[0] : null,
+                query: searchTerm,
+                page: pageNumber,
+            });
+
+            setNewsData((prev) => {
+                if (pageNumber === 1) return response.data.data;
+                return [...prev, ...response.data.data];
+            });
+            setPage(pageNumber);
+            setTotalPages(response.data.totalPages || 1);
+        } catch (error) {
+            console.error("Error in finding your search:", error);
+            setNewsData([]);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    // Initial fetch for the first category
     useEffect(() => {
         const firstCategoryId = categories[0].id;
         fetchNews(firstCategoryId, 1);
     }, []);
 
+    // Handle category tab change
     const handleCategoryChange = (categoryName) => {
         setActiveCategory(categoryName);
         const selectedCategory = categories.find(cat => cat.name === categoryName);
-        setNewsData([]); // Clear existing news
-        setPage(1); // Reset page to 1
+        setNewsData([]);
+        setPage(1);
+        setTotalPages(0);
+        setSearchTerm(""); // Reset search term
+        setSelectedDate(null); // Reset date
         fetchNews(selectedCategory.id, 1);
     };
 
+    // Handle "View More" for both fetchNews and handleSearch
     const handleViewMore = () => {
+        const selectedCategory = categories.find(cat => cat.name === activeCategory);
         if (page < totalPages) {
-            const selectedCategory = categories.find(cat => cat.name === activeCategory);
-            fetchNews(selectedCategory.id, page + 1);
+            if (searchTerm || selectedDate) {
+                handleSearch(selectedCategory.id, page + 1);
+            } else {
+                fetchNews(selectedCategory.id, page + 1);
+            }
         }
+    };
+
+    // Handle search button click
+    const handleSearchClick = () => {
+        const selectedCategory = categories.find(cat => cat.name === activeCategory);
+        setNewsData([]);
+        setPage(1);
+        setTotalPages(0);
+        handleSearch(selectedCategory.id, 1);
     };
 
     return (
@@ -115,7 +163,7 @@ const Catergory = () => {
                                                     selected={selectedDate}
                                                     onChange={(date) => setSelectedDate(date)}
                                                     placeholderText="Select a date"
-                                                    dateFormat="DD/MM/YYYY"
+                                                    dateFormat="dd/mm/yyyy"
                                                     className="form-control webinput w-100 dateiconimg"
                                                 />
                                             </div>
@@ -136,6 +184,7 @@ const Catergory = () => {
                                             <div className="col-md-2 mb-3 col-4">
                                                 <button 
                                                     className='dailySubscribebtn mx-auto p-2'
+                                                    onClick={handleSearchClick}
                                                     disabled={loading}
                                                 >
                                                     Search
@@ -156,10 +205,10 @@ const Catergory = () => {
                                                             key={item.id} 
                                                             onClick={() => navigate(`/newsDetails/${item._id}`)}
                                                         >
-                                                            {item.imgUrl && (
+                                                            {item.image && (
                                                                 <div className="imgside">
                                                                     <img 
-                                                                        src={banner4} 
+                                                                        src={item.image} 
                                                                         width="" 
                                                                         height="100%" 
                                                                         alt={item.headline} 
@@ -197,16 +246,9 @@ const Catergory = () => {
             </div>
 
             <div className="borderbg"></div>
-            <div className="row mb-4">
-                <div className="col-md-6 mt-4 mb-2">
-                    <img src={ads4} alt="adsv" className="w-100" />
-                </div>
-                <div className="col-md-6 my-4 mb-2">
-                    <img src={ads5} alt="adsv" className="w-100" />
-                </div>
-            </div>
+            <BottomAds leftPosition={"Category_Bottom_Left"} rightPosition={"Category_Bottom_Right"} />
         </div>
     );
-}
+};
 
-export default Catergory;
+export default Category;

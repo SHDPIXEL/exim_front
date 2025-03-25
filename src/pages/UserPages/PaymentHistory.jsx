@@ -22,8 +22,6 @@ const PaymentHistory = () => {
           }
         );
 
-        console.log("Payment history:", response.data);
-
         // Map payment data
         const mappedPayments = response.data.userSubscription.map((payment) => ({
           id: payment.razorpayPaymentId || "N/A",

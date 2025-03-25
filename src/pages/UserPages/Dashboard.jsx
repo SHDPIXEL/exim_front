@@ -93,14 +93,12 @@ const Dashboard = () => {
                     },
                 }
             );
-            console.log(response.data)
             if (response.data.success && response.data.data) {
                 setEditionUrl(response.data.data.url);
                 setEditionImage(response.data.data.image);
             } else {
                 setEditionUrl(null);
                 setEditionImage(null);
-                console.log(response.data.message || "No data found.");
             }
         } catch (error) {
             console.error("Error fetching edition data:", error);
@@ -135,13 +133,6 @@ const Dashboard = () => {
             alert("No edition available for the selected date and edition.");
             return;
         }
-
-        console.log("Navigating with:", {
-            url: editionUrl,
-            location: selectedEdition.location,
-            date: formatDateToLocal(selectedDate),
-            image: editionImage,
-        });
 
         navigate("/viewpage", {
             state: {

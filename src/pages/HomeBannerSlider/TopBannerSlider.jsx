@@ -78,7 +78,7 @@ const TopBannerSlider = ({ topNews, headlines }) => {
                 {topNews.slice(3).map((item, index) => (
                     <div className="col-md-3 mb-3 col-6" key={item._id} onClick={() => navigate(`/newsDetails/${item._id}`)}>
                         <div className="topleftimgcard">
-                            <img src={banner3} />
+                            <img src={item.image || banner3} />
                             <h4>{item.headline}</h4>
                             <p>{new Date(item.date).toLocaleDateString("en-US", {
                                 day: "numeric",

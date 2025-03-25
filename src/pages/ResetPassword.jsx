@@ -26,7 +26,6 @@ const ResetPasswordPage = () => {
       return;
     }
 
-    console.log(token)
     try {
       const response = await API.post(`/services/reset-password/${token}?expires=${expires}`, {
         newPassword,

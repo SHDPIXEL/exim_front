@@ -81,8 +81,6 @@ const Appointments = () => {
                 page: pageNumber,
             });
 
-            console.log("Search Response:", response.data); // Double-check the response structure
-
             // Access the correct field for appointments
             const results = response.data.appointments || []; // Fallback to an empty array
 

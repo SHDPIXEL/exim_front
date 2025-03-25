@@ -76,7 +76,6 @@ const News = () => {
                 query: searchTerm,
                 page: pageNumber,
             });
-            console.log("Search data", response.data)
 
             if (pageNumber === 1) {
                 setRepeatedNews(response.data.data);
@@ -150,9 +149,9 @@ const News = () => {
                                     className="righttopStory topleftimgcard newsArchive"
                                     onClick={() => navigate(`/newsDetails/${item._id}`)}
                                 >
-                                    {item.imgUrl && (
+                                    {item.image && (
                                         <div className="imgside">
-                                            <img src={item.imgUrl} alt={item.headline} />
+                                            <img src={item.image} alt={item.headline} />
                                         </div>
                                     )}
                                     <div className="textside">

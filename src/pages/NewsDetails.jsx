@@ -70,7 +70,7 @@ const NewsDetails = () => {
                         <div className="blog-meta"><Link to="/#"><i className="far fa-calendar-days"></i>{dataFormatter(newsDetails.date)}</Link>
 
                         </div>
-                        <div className="blog-img"><img src={blogdetailsimg} alt="Blog" width={"100%"} /></div>
+                        <div className="blog-img"><img src={newsDetails.image || blogdetailsimg} alt="Blog" width={"100%"} /></div>
                         <div className="blog-content-wrap">
                             <div className="share-links-wrap">
                                 <div className="share-links"><span className="share-links-title">Share Post:</span>
@@ -121,7 +121,7 @@ const NewsDetails = () => {
                             >
                                 <div className="imgside" style={{ width: '150px', height: '100px', overflow: 'hidden' }}>
                                     <img
-                                        src={banner4}
+                                        src={item.image || banner4}
                                         alt={item.title}
                                         style={{
                                             width: '100%',

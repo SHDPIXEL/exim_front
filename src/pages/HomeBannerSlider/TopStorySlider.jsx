@@ -55,7 +55,7 @@ const TopStorySlider = () => {
 
                                     <div className="leftTopbannerSlider">
                                         <div className="position-relative mb-2">
-                                            <img src={banner4} width="100%" height="100%" alt={slider.headline} />
+                                            <img src={slider.image || banner4} width="100%" height="100%" alt={slider.headline} />
                                             <div className="storycat">
                                                 <div className="categorybtn">{slider.category_name}</div>
                                             </div>
@@ -84,7 +84,7 @@ const TopStorySlider = () => {
                             >
                                 <div className="imgside" style={{ width: '150px', height: '100px', overflow: 'hidden' }}>
                                     <img
-                                        src={banner4}
+                                        src={item.image || banner4}
                                         alt={item.headline}
                                         style={{
                                             width: '100%',
