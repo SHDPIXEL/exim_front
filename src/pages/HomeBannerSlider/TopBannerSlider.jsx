@@ -7,9 +7,6 @@ import { Autoplay, FreeMode, Navigation } from "swiper/modules";
 import { htmlToText } from "html-to-text";
 
 // Import images dynamically
-import banner1 from "../../assets/images/banner1.png";
-import banner2 from "../../assets/images/banner2.png";
-import banner3 from "../../assets/images/banner3.png";
 import { useNavigate } from "react-router-dom";
 
 
@@ -68,7 +65,7 @@ const TopBannerSlider = ({ topNews, headlines }) => {
                                         </div>
                                     </div>
                                     <div className="col-md-6 order-0 order-md-1 mb-3 mb-md-0">
-                                        <img src={slider.image || banner1} width="100%" height="100%" alt={slider.title} />
+                                        <img src={slider.image || "https://placehold.co/600x400"} width="100%" height="100%" alt={slider.title} />
                                     </div>
                                 </div>
                             </div>
@@ -80,7 +77,7 @@ const TopBannerSlider = ({ topNews, headlines }) => {
                 {topNews.slice(3).map((item, index) => (
                     <div className="col-md-3 mb-3 col-6" key={item._id} onClick={() => navigate(`/newsDetails/${item._id}`)}>
                         <div className="topleftimgcard">
-                            <img src={item.image || banner3} />
+                            <img src={item.image || "https://placehold.co/600x400"} />
                             <h4>{item.headline}</h4>
                             <p>{new Date(item.date).toLocaleDateString("en-US", {
                                 day: "numeric",

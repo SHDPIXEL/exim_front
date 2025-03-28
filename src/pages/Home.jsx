@@ -29,6 +29,7 @@ const Home = () => {
     const navigate = useNavigate();
     const [headlines, SetHeadlines] = useState([]);
     const [TopNews, setTopNews] = useState([]);
+    const [appointments, setAppointments] = useState([]);
 
 
     // Get active media for top right and top left ads
@@ -90,6 +91,19 @@ const Home = () => {
         fetchHeadlines();
     }, []);
 
+    useEffect(() => {
+        const fetchAppointments = async () => {
+            try {
+                const response = await API.post("/appointments/get_latest_appointments");
+                console.log("response appointments", response.data.appointments)
+                setAppointments(response.data.appointments)
+            } catch (error) {
+                console.log("Error in fetching appointments")
+            }
+        };
+        fetchAppointments();
+    }, [])
+
 
     return (
         <>
@@ -107,14 +121,16 @@ const Home = () => {
                                 >
                                     {topLeftMedia.map((media, index) => (
                                         <SwiperSlide key={index}>
-                                            {media.type === "image" ? (
-                                                <img src={media.src} alt="Advertisement" className="w-100 ad-image-top" />
-                                            ) : (
-                                                <video controls={false} autoPlay loop muted className="w-100 ad-image-top">
-                                                    <source src={media.src} type="video/mp4" />
-                                                    Your browser does not support the video tag.
-                                                </video>
-                                            )}
+                                            <a href={media.url} target="_blank" rel="noopener noreferrer">
+                                                {media.type === "image" ? (
+                                                    <img src={media.src} alt="Advertisement" className="w-100 ad-image-top" />
+                                                ) : (
+                                                    <video controls={false} autoPlay loop muted className="w-100 ad-image-top">
+                                                        <source src={media.src} type="video/mp4" />
+                                                        Your browser does not support the video tag.
+                                                    </video>
+                                                )}
+                                            </a>
                                         </SwiperSlide>
                                     ))}
                                 </Swiper>
@@ -130,14 +146,16 @@ const Home = () => {
                                 >
                                     {topRightMedia.map((media, index) => (
                                         <SwiperSlide key={index}>
-                                            {media.type === "image" ? (
-                                                <img src={media.src} alt="Advertisement" className="w-100 ad-image-top" />
-                                            ) : (
-                                                <video controls={false} autoPlay muted className="w-100 ad-image-top">
-                                                    <source src={media.src} type="video/mp4" />
-                                                    Your browser does not support the video tag.
-                                                </video>
-                                            )}
+                                            <a href={media.url} target="_blank" rel="noopener noreferrer">
+                                                {media.type === "image" ? (
+                                                    <img src={media.src} alt="Advertisement" className="w-100 ad-image-top" />
+                                                ) : (
+                                                    <video controls={false} autoPlay muted className="w-100 ad-image-top">
+                                                        <source src={media.src} type="video/mp4" />
+                                                        Your browser does not support the video tag.
+                                                    </video>
+                                                )}
+                                            </a>
                                         </SwiperSlide>
                                     ))}
                                 </Swiper>
@@ -201,14 +219,16 @@ const Home = () => {
                                 >
                                     {aboveEventsLeftMedia.map((media, index) => (
                                         <SwiperSlide key={index}>
-                                            {media.type === "image" ? (
-                                                <img src={media.src} alt="Advertisement" className="w-100 ad-image-top" />
-                                            ) : (
-                                                <video controls={false} autoPlay muted className="w-100 ad-image-top">
-                                                    <source src={media.src} type="video/mp4" />
-                                                    Your browser does not support the video tag.
-                                                </video>
-                                            )}
+                                            <a href={media.url} target="_blank" rel="noopener noreferrer">
+                                                {media.type === "image" ? (
+                                                    <img src={media.src} alt="Advertisement" className="w-100 ad-image-top" />
+                                                ) : (
+                                                    <video controls={false} autoPlay muted className="w-100 ad-image-top">
+                                                        <source src={media.src} type="video/mp4" />
+                                                        Your browser does not support the video tag.
+                                                    </video>
+                                                )}
+                                            </a>
                                         </SwiperSlide>
                                     ))}
                                 </Swiper>
@@ -224,14 +244,16 @@ const Home = () => {
                                 >
                                     {aboveEventsRightMedia.map((media, index) => (
                                         <SwiperSlide key={index}>
-                                            {media.type === "image" ? (
-                                                <img src={media.src} alt="Advertisement" className="w-100 ad-image-top" />
-                                            ) : (
-                                                <video controls={false} autoPlay muted className="w-100 ad-image-top">
-                                                    <source src={media.src} type="video/mp4" />
-                                                    Your browser does not support the video tag.
-                                                </video>
-                                            )}
+                                            <a href={media.url} target="_blank" rel="noopener noreferrer">
+                                                {media.type === "image" ? (
+                                                    <img src={media.src} alt="Advertisement" className="w-100 ad-image-top" />
+                                                ) : (
+                                                    <video controls={false} autoPlay muted className="w-100 ad-image-top">
+                                                        <source src={media.src} type="video/mp4" />
+                                                        Your browser does not support the video tag.
+                                                    </video>
+                                                )}
+                                            </a>
                                         </SwiperSlide>
                                     ))}
                                 </Swiper>
@@ -240,7 +262,7 @@ const Home = () => {
                     </div>
                 </div>
 
-                    <div className="borderbg"></div>
+                <div className="borderbg"></div>
 
                 <div className="row my-4 ">
                     <EximEventsSlider />
@@ -282,19 +304,21 @@ const Home = () => {
                                 >
                                     {SubscribeMedia.map((media, index) => (
                                         <SwiperSlide key={index}>
-                                            {media.type === "image" ? (
-                                                <img src={media.src} alt="Advertisement" className="ad-image-between w-100" />
-                                            ) : (
-                                                <video
-                                                    controls={false}
-                                                    autoPlay
-                                                    muted
-                                                    className="ad-image-between w-100"
-                                                >
-                                                    <source src={media.src} type="video/mp4" />
-                                                    Your browser does not support the video tag.
-                                                </video>
-                                            )}
+                                            <a href={media.url} target="_blank" rel="noopener noreferrer">
+                                                {media.type === "image" ? (
+                                                    <img src={media.src} alt="Advertisement" className="ad-image-between w-100" />
+                                                ) : (
+                                                    <video
+                                                        controls={false}
+                                                        autoPlay
+                                                        muted
+                                                        className="ad-image-between w-100"
+                                                    >
+                                                        <source src={media.src} type="video/mp4" />
+                                                        Your browser does not support the video tag.
+                                                    </video>
+                                                )}
+                                            </a>
                                         </SwiperSlide>
                                     ))}
                                 </Swiper>
@@ -376,19 +400,21 @@ const Home = () => {
                                 >
                                     {videoHomeMedia.map((media, index) => (
                                         <SwiperSlide key={index}>
-                                            {media.type === "image" ? (
-                                                <img src={media.src} alt="Advertisement" className="ad-image-between w-100" />
-                                            ) : (
-                                                <video
-                                                    controls={false}
-                                                    autoPlay
-                                                    muted
-                                                    className="ad-image-between w-100"
-                                                >
-                                                    <source src={media.src} type="video/mp4" />
-                                                    Your browser does not support the video tag.
-                                                </video>
-                                            )}
+                                            <a href={media.url} target="_blank" rel="noopener noreferrer">
+                                                {media.type === "image" ? (
+                                                    <img src={media.src} alt="Advertisement" className="ad-image-between w-100" />
+                                                ) : (
+                                                    <video
+                                                        controls={false}
+                                                        autoPlay
+                                                        muted
+                                                        className="ad-image-between w-100"
+                                                    >
+                                                        <source src={media.src} type="video/mp4" />
+                                                        Your browser does not support the video tag.
+                                                    </video>
+                                                )}
+                                            </a>
                                         </SwiperSlide>
                                     ))}
                                 </Swiper>
@@ -426,34 +452,15 @@ const Home = () => {
                             <img src={jobimg} alt="msg" />
                             <h4>EXIM Appointments</h4>
                             <p>Join us in the extraordinary journey of a reputed and all-India recognised premier publishing house.</p>
-                            <div className="EximAppoBox">
-                                <h6>Mumbai</h6>
-                                <p>CUSTOMER SERVICE ( AIR & SEA IMPORTS )</p>
-                            </div>
-                            <div className="EximAppoBox">
-                                <h6>Chennai</h6>
-                                <p>Senior Accounts Executive</p>
-                            </div>
-                            <div className="EximAppoBox">
-                                <h6>Gujarat</h6>
-                                <p>Billing Executive</p>
-                            </div>
-                            <div className="EximAppoBox">
-                                <h6>Kolkata</h6>
-                                <p>Marketing Manager</p>
-                            </div>
-                            <div className="EximAppoBox">
-                                <h6>Delhi</h6>
-                                <p>Senior Sale Manager</p>
-                            </div>
-                            <div className="EximAppoBox">
-                                <h6>Kochi</h6>
-                                <p>Branch Head - Sales</p>
-                            </div>
-                            <div className="EximAppoBox">
-                                <h6>Tutikorin</h6>
-                                <p>No appointments yet!</p>
-                            </div>
+                            {
+                                appointments.map(appointment => (
+                                    <div className="EximAppoBox">
+                                        <h6>{appointment.edition}</h6>
+                                        <p>{appointment.job_title}</p>
+                                    </div>
+                                ))
+                            }
+
                             <button className="viewResultbtn mb-0 mt-1" onClick={() => navigate("/appointments")}>View all appointments</button>
                         </div>
                     </div>
@@ -471,14 +478,16 @@ const Home = () => {
                                 >
                                     {bottomLeftMedia.map((media, index) => (
                                         <SwiperSlide key={index}>
-                                            {media.type === "image" ? (
-                                                <img src={media.src} alt="Advertisement" className="w-100 ad-image-top" />
-                                            ) : (
-                                                <video controls={false} autoPlay muted className="w-100 ad-image-top">
-                                                    <source src={media.src} type="video/mp4" />
-                                                    Your browser does not support the video tag.
-                                                </video>
-                                            )}
+                                            <a href={media.url} target="_blank" rel="noopener noreferrer">
+                                                {media.type === "image" ? (
+                                                    <img src={media.src} alt="Advertisement" className="w-100 ad-image-top" />
+                                                ) : (
+                                                    <video controls={false} autoPlay muted className="w-100 ad-image-top">
+                                                        <source src={media.src} type="video/mp4" />
+                                                        Your browser does not support the video tag.
+                                                    </video>
+                                                )}
+                                            </a>
                                         </SwiperSlide>
                                     ))}
                                 </Swiper>
@@ -494,14 +503,16 @@ const Home = () => {
                                 >
                                     {bottomRightMedia.map((media, index) => (
                                         <SwiperSlide key={index}>
-                                            {media.type === "image" ? (
-                                                <img src={media.src} alt="Advertisement" className="w-100 ad-image-top" />
-                                            ) : (
-                                                <video controls={false} autoPlay muted className="w-100 ad-image-top">
-                                                    <source src={media.src} type="video/mp4" />
-                                                    Your browser does not support the video tag.
-                                                </video>
-                                            )}
+                                            <a href={media.url} target="_blank" rel="noopener noreferrer">
+                                                {media.type === "image" ? (
+                                                    <img src={media.src} alt="Advertisement" className="w-100 ad-image-top" />
+                                                ) : (
+                                                    <video controls={false} autoPlay muted className="w-100 ad-image-top">
+                                                        <source src={media.src} type="video/mp4" />
+                                                        Your browser does not support the video tag.
+                                                    </video>
+                                                )}
+                                            </a>
                                         </SwiperSlide>
                                     ))}
                                 </Swiper>

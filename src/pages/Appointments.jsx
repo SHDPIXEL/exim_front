@@ -191,13 +191,16 @@ const Appointments = () => {
                         <Swiper modules={[Autoplay]} autoplay={{ delay: 3000 }} loop={true}>
                             {appointmentMedia.map((media, index) => (
                                 <SwiperSlide key={index}>
-                                    {media.type === "image" ? (
-                                        <img src={media.src} alt="Advertisement" className="ad-image-between w-100" />
-                                    ) : (
-                                        <video src={media.src} muted autoPlay loop className="ad-image-between w-100" />
-                                    )}
+                                    <a href={media.url} target="_blank" rel="noopener noreferrer">
+                                        {media.type === "image" ? (
+                                            <img src={media.src} alt="Advertisement" className="ad-image-between w-100" />
+                                        ) : (
+                                            <video src={media.src} muted autoPlay loop className="ad-image-between w-100" />
+                                        )}
+                                    </a>
                                 </SwiperSlide>
                             ))}
+
                         </Swiper>
                     </div>
                 )}

@@ -370,14 +370,16 @@ const VideoGalleryDetails = () => {
                         >
                             {VideoDetailsMedia.map((media, index) => (
                                 <SwiperSlide key={index}>
-                                    {media.type === "image" ? (
-                                        <img src={media.src} alt="Advertisement" className="w-100 ad-image-between" style={{ height: "348px" }} />
-                                    ) : (
-                                        <video style={{ height: "348px" }} controls={false} autoPlay muted loop className="w-100 ad-image-between">
-                                            <source src={media.src} type="video/mp4" />
-                                            Your browser does not support the video tag.
-                                        </video>
-                                    )}
+                                    <a href={media.url} target="_blank" rel="noopener noreferrer">
+                                        {media.type === "image" ? (
+                                            <img src={media.src} alt="Advertisement" className="w-100 ad-image-between" style={{ height: "348px" }} />
+                                        ) : (
+                                            <video style={{ height: "348px" }} controls={false} autoPlay muted loop className="w-100 ad-image-between">
+                                                <source src={media.src} type="video/mp4" />
+                                                Your browser does not support the video tag.
+                                            </video>
+                                        )}
+                                    </a>
                                 </SwiperSlide>
                             ))}
                         </Swiper>

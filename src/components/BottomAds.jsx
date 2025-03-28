@@ -28,14 +28,16 @@ const BottomAds = ({ leftPosition, rightPosition }) => {
             <Swiper modules={[Autoplay]} autoplay={{ delay: 3000 }} loop={true} >
               {leftMedia.map((media, index) => (
                 <SwiperSlide key={index}>
-                  {media.type === 'image' ? (
-                    <img src={media.src} alt="Advertisement" className="w-100 ad-image-top" />
-                  ) : (
-                    <video controls={false} autoPlay loop muted className="w-100 ad-image-top">
-                      <source src={media.src} type="video/mp4" />
-                      Your browser does not support the video tag.
-                    </video>
-                  )}
+                  <a href={media.url} target="_blank" rel="noopener noreferrer">
+                    {media.type === 'image' ? (
+                      <img src={media.src} alt="Advertisement" className="w-100 ad-image-top" />
+                    ) : (
+                      <video controls={false} autoPlay loop muted className="w-100 ad-image-top">
+                        <source src={media.src} type="video/mp4" />
+                        Your browser does not support the video tag.
+                      </video>
+                    )}
+                  </a>
                 </SwiperSlide>
               ))}
             </Swiper>
@@ -48,14 +50,16 @@ const BottomAds = ({ leftPosition, rightPosition }) => {
             <Swiper modules={[Pagination, Autoplay]} autoplay={{ delay: 3000 }} loop={true}>
               {rightMedia.map((media, index) => (
                 <SwiperSlide key={index}>
-                  {media.type === 'image' ? (
-                    <img src={media.src} alt="Advertisement" className="w-100 ad-image-top" />
-                  ) : (
-                    <video controls={false} autoPlay muted loop className="w-100 ad-image-top">
-                      <source src={media.src} type="video/mp4" />
-                      Your browser does not support the video tag.
-                    </video>
-                  )}
+                  <a href={media.url} target="_blank" rel="noopener noreferrer">
+                    {media.type === 'image' ? (
+                      <img src={media.src} alt="Advertisement" className="w-100 ad-image-top" />
+                    ) : (
+                      <video controls={false} autoPlay muted loop className="w-100 ad-image-top">
+                        <source src={media.src} type="video/mp4" />
+                        Your browser does not support the video tag.
+                      </video>
+                    )}
+                  </a>
                 </SwiperSlide>
               ))}
             </Swiper>

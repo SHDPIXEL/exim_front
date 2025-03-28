@@ -36,19 +36,21 @@ const HomeAdvertise = () => {
             {activeMedia.length > 0 ? (
                 activeMedia.map((media, index) => (
                     <SwiperSlide key={index}>
-                        {media.type === "image" ? (
-                            <img src={media.src} className="w-100" alt="Advertisement" style={{ height: "348px", objectFit: "cover" }} />
-                        ) : (
-                            <video controls={false} autoPlay muted loop className="w-100" style={{ height: "348px", objectFit: "cover" }}>
-                                <source src={media.src} type="video/mp4" />
-                                Your browser does not support the video tag.
-                            </video>
-                        )}
+                        <a href={media.url} target="_blank" rel="noopener noreferrer">
+                            {media.type === "image" ? (
+                                <img src={media.src} className="w-100" alt="Advertisement" style={{ height: "348px", objectFit: "cover" }} />
+                            ) : (
+                                <video controls={false} autoPlay muted loop className="w-100" style={{ height: "348px", objectFit: "cover" }}>
+                                    <source src={media.src} type="video/mp4" />
+                                    Your browser does not support the video tag.
+                                </video>
+                            )}
+                        </a>
                     </SwiperSlide>
                 ))
             ) : (
                 "")}
-        </Swiper>
+        </Swiper >
     );
 };
 

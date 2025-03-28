@@ -1,15 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import blogdetailsimg from "../assets/images/blogdetails.jpg";
-import adsleftbannerimg from "../assets/images/topleftads.png";
-import banner4 from "../assets/images/banner7.png";
 import { useParams } from "react-router-dom";
 import API from "../api";
 import { useLocation, useNavigate } from "react-router-dom";
 import dataFormatter from "../helper/DateFormatter";
 import { useAds } from "../context/AdContext";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation, Pagination, Autoplay } from "swiper/modules";
+import { Autoplay } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
@@ -70,7 +68,7 @@ const NewsDetails = () => {
                         <div className="blog-meta"><Link to="/#"><i className="far fa-calendar-days"></i>{dataFormatter(newsDetails.date)}</Link>
 
                         </div>
-                        <div className="blog-img"><img src={newsDetails.image || blogdetailsimg} alt="Blog" width={"100%"} /></div>
+                        <div className="blog-img"><img src={newsDetails.image || "https://placehold.co/600x400"} alt="Blog" width={"100%"} /></div>
                         <div className="blog-content-wrap">
                             <div className="share-links-wrap">
                                 <div className="share-links"><span className="share-links-title">Share Post:</span>
@@ -121,7 +119,7 @@ const NewsDetails = () => {
                             >
                                 <div className="imgside" style={{ width: '150px', height: '100px', overflow: 'hidden' }}>
                                     <img
-                                        src={item.image || banner4}
+                                        src={item.image || "https://placehold.co/600x400"}
                                         alt={item.title}
                                         style={{
                                             width: '100%',
@@ -156,14 +154,16 @@ const NewsDetails = () => {
                         >
                             {NewsDetailsMedia.map((media, index) => (
                                 <SwiperSlide key={index}>
-                                    {media.type === "image" ? (
-                                        <img src={media.src} alt="Advertisement" className="w-100 ad-image-between" style={{ height: "348px" }} />
-                                    ) : (
-                                        <video style={{ height: "348px" }} controls={false} autoPlay loop muted className="w-100 ad-image-between">
-                                            <source src={media.src} type="video/mp4" />
-                                            Your browser does not support the video tag.
-                                        </video>
-                                    )}
+                                    <a href={media.url} target="_blank" rel="noopener noreferrer">
+                                        {media.type === "image" ? (
+                                            <img src={media.src} alt="Advertisement" className="w-100 ad-image-between" style={{ height: "348px" }} />
+                                        ) : (
+                                            <video style={{ height: "348px" }} controls={false} autoPlay loop muted className="w-100 ad-image-between">
+                                                <source src={media.src} type="video/mp4" />
+                                                Your browser does not support the video tag.
+                                            </video>
+                                        )}
+                                    </a>
                                 </SwiperSlide>
                             ))}
                         </Swiper>

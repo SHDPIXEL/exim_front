@@ -50,7 +50,7 @@ const NewsFocus = () => {
                     <SwiperSlide key={news._id} onClick={() => navigate(`/newsDetails/${news._id}`)}>
                         <div className="row">
                             <div className="col-md-4 mb-3 mb-md-0">
-                                <img src={news.image || banner1} alt="news" width="100%" height="100%" />
+                                <img src={news.image || "https://placehold.co/600x400"} alt="news" width="100%" height="100%" />
                             </div>
                             <div className="col-md-8">
                                 <div className="leftTopbannerSlider leftnewfocus">
