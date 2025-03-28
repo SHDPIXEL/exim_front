@@ -7,7 +7,8 @@ const getActiveMedia = (ad) => {
             .sort((a, b) => a.sequenceNumber - b.sequenceNumber)
             .map(item => ({
                 type: item.mediaType,
-                src: item.filePath
+                src: item.filePath,
+                url: item.url
             }));
     }
     return [];

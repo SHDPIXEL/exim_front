@@ -112,30 +112,28 @@ const Home = () => {
                 <div className="container">
                     <div className="row mb-4">
                         {/* Left Swiper */}
-                        {topLeftMedia.length > 0 && (
-                            <div className="col-md-6 mt-2 mb-2">
-                                <Swiper
-                                    modules={[Autoplay]}
-                                    autoplay={{ delay: 3000 }}
-                                    loop={true}
-                                >
-                                    {topLeftMedia.map((media, index) => (
-                                        <SwiperSlide key={index}>
-                                            <a href={media.url} target="_blank" rel="noopener noreferrer">
-                                                {media.type === "image" ? (
-                                                    <img src={media.src} alt="Advertisement" className="w-100 ad-image-top" />
-                                                ) : (
-                                                    <video controls={false} autoPlay loop muted className="w-100 ad-image-top">
-                                                        <source src={media.src} type="video/mp4" />
-                                                        Your browser does not support the video tag.
-                                                    </video>
-                                                )}
-                                            </a>
-                                        </SwiperSlide>
-                                    ))}
-                                </Swiper>
-                            </div>
-                        )}
+                        {topLeftMedia.map((media, index) => (
+                            <SwiperSlide key={index}>
+                                <a href={media.url} target="_blank" rel="noopener noreferrer">
+                                    {media.type === "image" ? (
+                                        <>
+                                            <img
+                                                src={media.src}
+                                                alt="Advertisement"
+                                                className="w-full ad-image-top"
+                                                onError={() => console.error("Image failed to load:", media.src)}
+                                            />
+                                        </>
+                                    ) : (
+                                        <video controls={false} autoPlay loop muted className="w-full ad-image-top">
+                                            <source src={media.src} type="video/mp4" />
+                                            Your browser does not support the video tag.
+                                        </video>
+                                    )}
+                                </a>
+                            </SwiperSlide>
+                        ))}
+
 
                         {/* Right Swiper */}
                         {topRightMedia.length > 0 && (

@@ -157,7 +157,7 @@ const Appointments = () => {
                         {/* Job Listings */}
                         <div className="row mt-3">
                             <div className="col-md-12">
-                                <h5 className="text-webColor fw-bolder">Mumbai</h5>
+                                <h5 className="text-webColor fw-bolder">{selectedCity || ""}</h5>
                                 {displayedAppointments.map((job) => (
                                     <div className="AppointBox" key={job._id}>
                                         <h5>{job.job_title || "Job Position"}</h5>

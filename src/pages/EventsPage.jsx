@@ -16,7 +16,7 @@ const EventsPage = () => {
 
     const fetchEvents = async (pageNumber) => {
         if (pageNumber > totalPages && totalPages !== 0) return;
-
+    
         setLoading(true);
         setError(null);
         try {
@@ -24,26 +24,33 @@ const EventsPage = () => {
                 page: pageNumber
             });
             const eventsData = response.data.data;
-
+    
             const now = new Date();
+            now.setHours(0, 0, 0, 0); // Remove time for accurate day comparison
+    
             const current = eventsData.filter(event => {
                 const eventDate = new Date(event.date);
+                eventDate.setHours(0, 0, 0, 0);
                 const diffDays = (eventDate - now) / (1000 * 60 * 60 * 24);
-                return diffDays >= 0 && diffDays <= 7 && event.status === "current"; // Within 7 days
+                return diffDays >= 0 && diffDays <= 7; // Within the next 7 days
             });
+    
             const upcoming = eventsData.filter(event => {
                 const eventDate = new Date(event.date);
-                return eventDate > now || event.status === "upcoming";
+                eventDate.setHours(0, 0, 0, 0);
+                return eventDate > now; // Future events
             });
+    
             const past = eventsData.filter(event => {
                 const eventDate = new Date(event.date);
-                return eventDate < now && event.status !== "upcoming";
+                eventDate.setHours(0, 0, 0, 0);
+                return eventDate < now; // Past events
             });
-
+    
             setCurrentEvents(prev => pageNumber === 1 ? current : [...prev, ...current]);
             setUpcomingEvents(prev => pageNumber === 1 ? upcoming : [...prev, ...upcoming]);
             setPastEvents(prev => pageNumber === 1 ? past : [...prev, ...past]);
-
+    
             setPage(pageNumber);
             setTotalPages(Math.ceil(response.data.recordsTotal / eventsData.length));
         } catch (error) {
@@ -53,6 +60,7 @@ const EventsPage = () => {
             setLoading(false);
         }
     };
+    
 
     useEffect(() => {
         fetchEvents(1);
@@ -94,7 +102,7 @@ const EventsPage = () => {
                                     </div>
                                 </div>
                             </div>
-                        ))}htto
+                        ))}
                         <div className="borderbg"></div>
 
                     </div>
