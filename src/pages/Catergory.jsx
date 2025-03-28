@@ -163,7 +163,7 @@ const Category = () => {
                                                     selected={selectedDate}
                                                     onChange={(date) => setSelectedDate(date)}
                                                     placeholderText="Select a date"
-                                                    dateFormat="dd/mm/yyyy"
+                                                    dateFormat="dd/MM/yyyy"
                                                     className="form-control webinput w-100 dateiconimg"
                                                 />
                                             </div>

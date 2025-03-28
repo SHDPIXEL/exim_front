@@ -17,7 +17,6 @@ const Dashboard = () => {
     const navigate = useNavigate();
     const { logout } = useAuth();
     const { user, loading } = useUser();
-
     const [selectedDate, setSelectedDate] = useState(new Date()); // Default to today
     const [selectedEdition, setSelectedEdition] = useState(null);
     const [pastDates, setPastDates] = useState([]);

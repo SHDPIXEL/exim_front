@@ -22,6 +22,8 @@ const TopBannerSlider = ({ topNews, headlines }) => {
         setCurrentSlide(swiper.realIndex);
     };
 
+
+
     return (
         <>
             <div className="customerReview m-0 mb-3">
@@ -66,7 +68,7 @@ const TopBannerSlider = ({ topNews, headlines }) => {
                                         </div>
                                     </div>
                                     <div className="col-md-6 order-0 order-md-1 mb-3 mb-md-0">
-                                        <img src={banner1} width="100%" height="100%" alt={slider.title} />
+                                        <img src={slider.image || banner1} width="100%" height="100%" alt={slider.title} />
                                     </div>
                                 </div>
                             </div>

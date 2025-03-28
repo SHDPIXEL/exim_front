@@ -179,15 +179,19 @@ const News = () => {
                         </div>
                     </div>
                 </div>
-
+                
                 <div className="col-md-3">
-                    <div className="mt-5 p-3 pt-5 pb-1">
-                        <h4>Top Headlines</h4>
+                    <div className="mt-5 p-3 pt-5 pb-1 HeadlineList">
+                        {/* <h4>Top Headlines</h4> */}
+                        <div className="categorybtn d-inline-block p-2 px-3 mx-auto w-auto mb-4"><i className="bi bi-fire me-2"></i> Top Headlines</div>
                         <ul>
                             {headlines.map((headlineItem, index) => (
-                                <li key={index} onClick={() => navigate(`/newsDetails/${headlineItem._id}`)}>
-                                    {index + 1}. {headlineItem.headline}
-                                </li>
+                                  <li key={index}>
+                                  <div className="Headlinesingle" onClick={() => navigate(`/newsDetails/${headlineItem._id}`)}>
+                                      <h3>{index + 1}</h3>
+                                      <h5>{headlineItem.headline}</h5>
+                                  </div>
+                              </li>
                             ))}
                         </ul>
                     </div>
