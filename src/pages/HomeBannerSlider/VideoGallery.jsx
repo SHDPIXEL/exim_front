@@ -26,7 +26,7 @@ const VideoGallery = () => {
     useEffect(() => {
         const fetchVideoNews = async () => {
             try {
-                const response = await API.post("/videoNews/get_videoNews");
+                const response = await API.post("/videoNews/get_videoNewsUser");
                 setVideoNewsData(response.data);
             } catch (error) {
                 console.error("Error in fetching Video news", error);

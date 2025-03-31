@@ -66,18 +66,18 @@ const Appointments = () => {
     };
 
     const handleSearch = async (pageNumber = 1) => {
-        if (!searchTerm || !selectedCity) {
-            setSearchResults([]);
-            return;
-        }
+        // if (!searchTerm || !selectedCity) {
+        //     setSearchResults([]);
+        //     return;
+        // }
 
         if (pageNumber > searchTotalPages && searchTotalPages !== 0) return;
 
         setLoading(true);
         try {
             const response = await API.post("/appointments/search_appointments", {
-                edition: selectedCity,
-                query: searchTerm,
+                edition: selectedCity || "",
+                query: searchTerm || "",
                 page: pageNumber,
             });
 
@@ -98,7 +98,7 @@ const Appointments = () => {
 
 
 
-    const displayedAppointments = searchTerm && searchResults.length > 0 ? searchResults : appointments;
+    const displayedAppointments = searchTerm || searchResults.length > 0 ? searchResults : appointments;
 
     return (
         <div className='container mt-3'>
@@ -146,7 +146,7 @@ const Appointments = () => {
                                 <button
                                     onClick={() => handleSearch(1)}  // Ensure it always starts from page 1
                                     className="dailySubscribebtn mx-auto p-2"
-                                    disabled={!searchTerm || !selectedCity}  // Disable button if no input
+                                    // disabled={!searchTerm || !selectedCity}  // Disable button if no input
                                 >
                                     Search
                                 </button>
