@@ -1,23 +1,12 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import ads4 from "../../assets/images/ads4.png";
 import ads5 from "../../assets/images/ads5.png";
 import BottomAds from "../../components/BottomAds";
+import API from "../../api";
 
 const EximIndia = () => {
 
-    return (
-
-        <div className="container  p-md-5 py-md-3">
-            <div className="row mt-4">
-                <div className="col-md-12 mt-4  text-center">
-                    <h2 className='text-center  fw-bold'>About Exim India </h2>
-
-                </div>
-            </div>
-            <div className="row my-3">
-                <div className="col-md-12 ">
-                    <div className="card p-md-5 p-3 border shadow-sm" >
-
+    const [aboutDescription, setAboutDescription] = useState(`
                         <p>
                             EXIM INDIA is a reputed and all-India recognised premier publishing house. It publishes a daily newspaper "Exim Newsletter" from Mumbai &amp; Western India, Gujarat, New Delhi &amp; North India and Exim India - 'Shipping Times' from Kolkata, Chennai, Cochin and Tuticorin for the last 47 years.</p>
                         <p>
@@ -48,25 +37,53 @@ const EximIndia = () => {
                             </ul>
                         </div>
                         <p>
-                            &nbsp;</p>
+                            &nbsp;</p>`)
+    
+    useEffect(() => {
+        const fetchAboutData = async () => {
+            try {
+                const response = await API.get("/about/get_about");
+                console.log(response);
+                setAboutDescription(response.data?.description || "No data available.");
+            } catch (error) {
+                console.error("Error fetching about data:", error.response?.data || error.message);
+            } 
+        };
+
+        fetchAboutData();
+    }, []);
+
+    return (
+
+        <div className="container  p-md-5 py-md-3">
+            <div className="row mt-4">
+                <div className="col-md-12 mt-4  text-center">
+                    <h2 className='text-center  fw-bold'>About Exim India </h2>
+
+                </div>
+            </div>
+            <div className="row my-3">
+                <div className="col-md-12 ">
+                    <div className="card p-md-5 p-3 border shadow-sm" >
+                        <div dangerouslySetInnerHTML={{ __html: aboutDescription }} />
                     </div>
                 </div>
-                
+
             </div>
 
-            <div className="col-md-12  text-white p-3 rounded-2 mb-4" style={{background:"#102694"}} ><div className="row"><div className="col-md-12"><p>
+            <div className="col-md-12  text-white p-3 rounded-2 mb-4" style={{ background: "#102694" }} ><div className="row"><div className="col-md-12"><p>
+                &nbsp;</p>
+                <div>
+                    <span >Besides, EXIM INDIA also brings out regular Special Issues on all Major Ports in India.</span></div>
+                <div>
+                    &nbsp;</div>
+                <div>
+                    <span >The other publications of EXIM INDIA include Port Directory, and exclusive 'World Route Maps' and 'Pocket Atlas' for the use of Importers-Exporters, Shipping lines, Freight forwarders and other Logistics sector players. Besides, EXIM INDIA also brings out regular Special Issues on all Major Ports in India!</span></div>
+                <p>
                     &nbsp;</p>
-                    <div>
-                        <span >Besides, EXIM INDIA also brings out regular Special Issues on all Major Ports in India.</span></div>
-                    <div>
-                        &nbsp;</div>
-                    <div>
-                        <span >The other publications of EXIM INDIA include Port Directory, and exclusive 'World Route Maps' and 'Pocket Atlas' for the use of Importers-Exporters, Shipping lines, Freight forwarders and other Logistics sector players. Besides, EXIM INDIA also brings out regular Special Issues on all Major Ports in India!</span></div>
-                    <p>
-                        &nbsp;</p>
-                </div></div></div>
-                <div className="borderbg"></div>
-                {/* <div className="row mb-4">
+            </div></div></div>
+            <div className="borderbg"></div>
+            {/* <div className="row mb-4">
                     <div className="col-md-6 mt-4 mb-2">
                         <img src={ads4} alt="adsv" className="w-100" />
                     </div>
@@ -75,7 +92,7 @@ const EximIndia = () => {
                     </div>
                 </div> */}
 
-                <BottomAds leftPosition={"EximIndia_Bottom_Left"} rightPosition={"EximIndia_Bottom_Right"} />
+            <BottomAds leftPosition={"EximIndia_Bottom_Left"} rightPosition={"EximIndia_Bottom_Right"} />
         </div>)
 }
 

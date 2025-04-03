@@ -3,9 +3,11 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import API from '../api';
 import { useUser } from '../context/UserContext';
+import { useNotification } from '../context/NotificationContext';
 
 const PaymentSummary = () => {
   const navigate = useNavigate();
+  const { showNotification } = useNotification();
   const { state } = useLocation();
   const { user } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
@@ -20,7 +22,7 @@ const PaymentSummary = () => {
   useEffect(() => {
     if (!user || !user.token) {
       console.error('Auth token is missing!');
-      alert('Authentication error! Please log in again.');
+      showNotification("Authentication error! Please log in again.", "danger")
       navigate('/login');
       return;
     }
@@ -30,7 +32,7 @@ const PaymentSummary = () => {
       userData &&
       packages.some(pkg => pkg.location !== userData.state && pkg.location !== userData.city)
     ) {
-      alert('Subscription location does not match your state or city. Please choose a valid subscription.');
+      showNotification("Subscription location does not match your state or city. Please choose a valid subscription.", "info")
       navigate('/subscribePage');
     }
   }, [state, user, userData, navigate, subscriptionType, packages]);
@@ -59,14 +61,13 @@ const PaymentSummary = () => {
     const res = await loadScript('https://checkout.razorpay.com/v1/checkout.js');
   
     if (!res) {
-      alert('Razorpay SDK failed to load. Please check your internet connection.');
+      showNotification("Razorpay SDK failed to load. Please check your internet connection.", "danger");
       navigate('/subscribePage');
       return;
     }
   
     if (!window.Razorpay) {
-      alert('Razorpay SDK is not available. Please try again.');
-      console.error('window.Razorpay is undefined');
+      showNotification("Razorpay SDK is not available. Please try again.", "danger");
       navigate('/subscribePage');
       return;
     }
@@ -124,13 +125,13 @@ const PaymentSummary = () => {
                 state: { order_id: order_id, amount: amount / 100 },
               });
             } else {
-              alert('Payment verification failed. Please contact support.');
+              showNotification("Payment verification failed. Please contact support.", "danger");
               closeRazorpayModal();
               navigate('/subscribePage');
             }
           } catch (error) {
             console.error('Error verifying payment:', error);
-            alert('Error verifying payment. Please try again.');
+            showNotification("Error verifying payment. Please try again.", "danger");
             closeRazorpayModal();
             navigate('/subscribePage');
           } finally {
@@ -138,9 +139,9 @@ const PaymentSummary = () => {
           }
         },
         prefill: {
-          name: userData?.name || 'John Doe',
-          email: userData?.email || 'user@example.com',
-          contact: userData?.mobile ? `+91${userData.mobile}` : '+919999999999',
+          name: userData?.name,
+          email: userData?.email,
+          contact: userData?.mobile ? `+91${userData.mobile}` : null,
         },
         notes: {
           address: 'Exim',
@@ -148,13 +149,21 @@ const PaymentSummary = () => {
         theme: {
           color: '#61dafb',
         },
+        method: {
+          netbanking: '1', // Enable Net Banking
+          card: '1',       // Enable Credit/Debit Cards
+          upi: '1',        // Enable UPI
+          wallet: '1',     // Disable Wallets
+          emi: '0',        // Disable EMI
+          paylater: '0',   // Disable PayLater options
+      },
       };
   
       const razorpayInstance = new window.Razorpay(options);
       setPaymentObject(razorpayInstance); // Store the payment object
   
       razorpayInstance.on('payment.failed', function (response) {
-        alert('Payment failed: ' + response.error.description);
+        showNotification('Payment failed: ' + response.error.description, "danger");
         setIsLoading(false);
         closeRazorpayModal(); // Close modal on payment failure
         navigate('/subscribePage');
@@ -162,8 +171,7 @@ const PaymentSummary = () => {
   
       razorpayInstance.open();
     } catch (error) {
-      console.error('Payment initiation error:', error);
-      alert(error?.message);
+      showNotification(error?.message, "danger");
       setIsLoading(false);
       closeRazorpayModal(); // Close modal if it was opened
       navigate('/subscribePage');

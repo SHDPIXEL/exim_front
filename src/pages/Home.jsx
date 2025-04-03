@@ -375,7 +375,6 @@ const Home = () => {
                             </div>
                             <EximPolls />
                         </div>
-
                     </div>
                 </div>
                 <div className="borderbg"></div>

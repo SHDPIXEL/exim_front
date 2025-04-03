@@ -34,7 +34,7 @@ const OurEditors = () => {
                 {maps.map((map, index) => (
                     <div key={index} className="col-md-4 mb-4">
                         <div className="card p-3 border shadow-sm rounded-2 zoom-card">
-                            <img src={map.src} alt={map.alt} className="w-100" />
+                            <img src={map.src} alt={map.alt} className="w-100 zoom-card-sm" />
                         </div>
                     </div>
                 ))}

@@ -7,20 +7,22 @@ import 'swiper/css/free-mode';
 import 'swiper/css/navigation';
 import { Autoplay, FreeMode, Navigation } from 'swiper/modules';
 import API from "../../api";
+import { useNotification } from "../../context/NotificationContext";
 
 
 const EximPolls = (props) => {
 
+    const { showNotification } = useNotification();
     const [selectedAnswers, setSelectedAnswers] = useState({});
     const [pollsData, setPollsData] = useState([]);
     const [pollResults, setPollResults] = useState({});
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     useEffect(() => {
         const fetchPolls = async () => {
             try {
                 const response = await API.post("/polls/get_poll");
                 setPollsData(response.data);
-
             } catch (error) {
                 console.error("Error in fetching polls", error)
             }
@@ -35,11 +37,10 @@ const EximPolls = (props) => {
         });
     };
 
-
-
     const handleSubmit = async () => {
+        
         if (Object.keys(selectedAnswers).length === 0) {
-            alert("Please select at least one option before submitting.");
+            showNotification("Please select at least one option before submitting.", "warning")
             return;
         }
     
@@ -47,21 +48,24 @@ const EximPolls = (props) => {
             id: questionId,
             optionIndex: optionIndex
         }));
+
+        setIsSubmitting(true);
     
         try {
             const response = await API.post("/polls/submit_polls", { responses: formattedResponses });
-            alert("Responses Submitted!");
-            
             // Store poll results for displaying vote counts
             const resultsData = response.data.polls.reduce((acc, poll) => {
                 acc[poll._id] = poll;
                 return acc;
             }, {});
+            showNotification("Your answer submitted!", "success")
             setPollResults(resultsData);
     
         } catch (error) {
+            showNotification("Failed To Submit Your Answer, Try Again Later!", "danger")
             console.error("Error submitting answers", error);
-            alert("Error submitting answers");
+        } finally {
+            setIsSubmitting(false); 
         }
     };
     
@@ -133,7 +137,12 @@ const EximPolls = (props) => {
 
                     </Swiper>
                 </Form>
-                <button className="viewResultbtn" onClick={handleSubmit}>View Results</button>
+                <button 
+                    className="viewResultbtn"
+                    onClick={handleSubmit}
+                    disabled={isSubmitting}
+                    style={{ opacity: isSubmitting ? 0.7 : 1, pointerEvents: isSubmitting ? "none" : "auto" }}>
+                        {isSubmitting ? 'Submitting' : 'View Results' }</button>
                 <div className='swiperbtn d-flex justify-content-center mt-4'>
                     <button className="Eximcustom-prev"><i className="bi bi-chevron-left"></i></button>
                     <button className="Eximcustom-next"><i className="bi bi-chevron-right"></i></button>

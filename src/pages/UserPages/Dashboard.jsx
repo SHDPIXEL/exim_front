@@ -29,20 +29,31 @@ const Dashboard = () => {
     const generatePastDates = () => {
         const dates = [];
         const today = new Date();
-        for (let i = 0; i < 10; i++) {
-            const pastDate = new Date(today);
-            pastDate.setDate(today.getDate() - i);
-            dates.push({
-                id: i + 1,
-                dateU: pastDate.toLocaleDateString("en-US", {
-                    day: "numeric",
-                    month: "short",
-                    year: "numeric"
-                })
-            });
+        let count = 0; // Tracks total working days added
+        let currentDate = new Date(today); // Start from today
+
+        while (count < 30) {
+            const dayOfWeek = currentDate.getDay(); // 0 = Sunday, 6 = Saturday
+
+            if (dayOfWeek !== 0 && dayOfWeek !== 6) { // Only add weekdays
+                dates.push({
+                    id: count + 1,
+                    dateU: currentDate.toLocaleDateString("en-US", {
+                        day: "numeric",
+                        month: "short",
+                        year: "numeric"
+                    })
+                });
+                count++; // Increase only if it's a working day
+            }
+
+            // Move to the previous day
+            currentDate.setDate(currentDate.getDate() - 1);
         }
+
         return dates;
     };
+
 
     // Format date to YYYY-MM-DD in local timezone
     const formatDateToLocal = (date) => {
@@ -101,7 +112,6 @@ const Dashboard = () => {
             }
         } catch (error) {
             console.error("Error fetching edition data:", error);
-            alert(error?.message)
             setEditionUrl(null);
             setEditionImage(null);
         } finally {
@@ -152,7 +162,7 @@ const Dashboard = () => {
                     <h3>Welcome to, <span className="text-webColor">{user?.name}</span></h3>
                 </div>
                 <div className="col-md-6 d-flex justify-content-md-end justify-content-center">
-                    <p>{user?.login_history?.[0]?.timestamp || "No login history available"}</p>
+                    <p><b>Last Login : </b>{user?.login_history?.[0]?.timestamp || "No login history available"}</p>
                 </div>
             </div>
 
@@ -193,20 +203,26 @@ const Dashboard = () => {
                         {isFetching ? (
                             <p>Loading edition...</p>
                         ) : (
-                            <img
-                                alt="edition"
-                                className="w-100 border shadow-sm rounded-3"
-                                src={editionImage || demoimg}
-                            />
+                            editionImage && (
+                                <img
+                                    alt="edition"
+                                    className="w-100 border shadow-sm rounded-3"
+                                    src={editionImage}
+                                />
+                            )
                         )}
-                        <button
-                            className="dailySubscribebtn mt-3 mx-auto p-2"
-                            onClick={handleViewClick}
-                            style={{ width: "200px" }}
-                            disabled={isFetching || !editionUrl} // Disable during fetch or if no URL
-                        >
-                            View
-                        </button>
+
+                        {
+                        editionUrl &&
+                            <button
+                                className="dailySubscribebtn mt-3 mx-auto p-2"
+                                onClick={handleViewClick}
+                                style={{ width: "200px" }}
+                                disabled={isFetching || !editionUrl} // Disable during fetch or if no URL
+                            >
+                                View
+                            </button>
+                        }
                     </div>
                 </div>
             </div>
@@ -224,6 +240,10 @@ const Dashboard = () => {
                             dateFormat="MMMM d, yyyy"
                             className="form-control webinput w-100 dateiconimg"
                             maxDate={new Date()} // Prevent future dates
+                            filterDate={(date) => {
+                                const day = date.getDay();
+                                return day !== 0 && day !== 6; // Disable weekends (0 = Sunday, 6 = Saturday)
+                            }}
                         />
                     </div>
                 </div>
@@ -231,7 +251,7 @@ const Dashboard = () => {
 
             <div className="row mb-5">
                 <div className="col-md-10 mb-3 col-8">
-                    <div className="webTittle"><i className="bi bi-chevron-right"></i> Last 10 Days</div>
+                    <div className="webTittle"><i className="bi bi-chevron-right"></i> Last 30 Days</div>
                 </div>
                 <div className="col-md-2 mb-3 col-4">
                     <div className='swiperbtn d-flex justify-content-end'>

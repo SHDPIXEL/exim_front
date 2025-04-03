@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 import Tab from "react-bootstrap/Tab";
 import Tabs from "react-bootstrap/Tabs";
 import API from "../../api";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
+
 
 const PaymentHistory = () => {
   const navigate = useNavigate();
@@ -60,6 +61,7 @@ const PaymentHistory = () => {
     fetchDetails();
   }, []);
 
+
   const handleRenewClick = (payment) => {
     navigate("/paymentSummary", {
       state: {
@@ -100,7 +102,11 @@ const PaymentHistory = () => {
                       payments.map((payment, index) => (
                         <tr key={index}>
                           <td>{payment.id}</td>
-                          <td>{payment.invoiceId}</td>
+                          <td>
+                            <Link target="_new" to={`/invoice/${payment.invoiceId}`} className="text-primary">
+                              {payment.invoiceId}
+                            </Link>
+                          </td>
                           <td>{payment.location}</td>
                           <td>{payment.duration}</td>
                           <td>{payment.type}</td>
@@ -109,13 +115,12 @@ const PaymentHistory = () => {
                           <td>{payment.expiryDate}</td>
                           <td>
                             <span
-                              className={`badge ${
-                                payment.status === "success"
+                              className={`badge ${payment.status === "success"
                                   ? "bg-success"
                                   : payment.status === "pending"
-                                  ? "bg-warning text-dark"
-                                  : "bg-danger"
-                              }`}
+                                    ? "bg-warning text-dark"
+                                    : "bg-danger"
+                                }`}
                             >
                               {payment.status}
                             </span>
@@ -133,7 +138,7 @@ const PaymentHistory = () => {
                 </table>
               </div>
             </Tab>
-            <Tab eventKey="Renew" title="Renew">
+            <Tab eventKey="Renew" title="Renewal">
               <div className="table-responsive">
                 <table className="table table-bordered table-hover">
                   <thead className="table-primary">
@@ -162,7 +167,7 @@ const PaymentHistory = () => {
                               className="btn btn-primary btn-sm"
                               onClick={() => handleRenewClick(payment)}
                             >
-                              Renew
+                              Renewal
                             </button>
                           </td>
                         </tr>

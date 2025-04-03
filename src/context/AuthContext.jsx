@@ -6,7 +6,7 @@ const EXPIRATION_TIME = 60 * 60 * 1000; // 1 hour in milliseconds
 
 export function AuthProvider({ children }) {
   const navigate = useNavigate();
-  
+
   const [user, setUser] = useState(() => {
     const token = localStorage.getItem('authToken');
     const loginTime = localStorage.getItem('loginTime');
@@ -19,6 +19,7 @@ export function AuthProvider({ children }) {
       }
       return { token };
     }
+
     return null;
   });
 
@@ -30,7 +31,7 @@ export function AuthProvider({ children }) {
     // Optional: Trigger a manual storage event to sync across tabs
     window.dispatchEvent(new Event("storage"));
     navigate('/dashboard');
-};
+  };
 
   const logout = () => {
     localStorage.clear();

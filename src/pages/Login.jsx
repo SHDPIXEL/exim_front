@@ -6,10 +6,12 @@ import gicon from '../assets/images/gicon.png';
 import API from '../api';
 import { useAuth } from '../context/AuthContext';
 import { useForm } from 'react-hook-form';
+import { useNotification } from '../context/NotificationContext';
 
 const Login = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { showNotification } = useNotification();
   const { login, user } = useAuth();
 
   useEffect(() => {
@@ -63,7 +65,7 @@ const Login = () => {
       }
     } catch (error) {
       console.error('Error logging in:', error.response?.data || error.message);
-      alert(error.response?.data?.message || 'Login failed. Please check your credentials.');
+      showNotification('Login failed. Please check your credentials.', "danger");
     }
   };
   
@@ -84,9 +86,9 @@ const Login = () => {
                           <Form.Label>Email *</Form.Label>
                           <Form.Control
                             type="email"
-                            placeholder="Enter username"
+                            placeholder="Enter Email"
                             {...register('username', {
-                              required: 'Username (email) is required',
+                              required: 'Email is required',
                               pattern: {
                                 value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
                                 message: 'Please enter a valid email address',

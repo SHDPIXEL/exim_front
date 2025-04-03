@@ -15,6 +15,7 @@ import Login from './pages/Login.jsx';
 import ForgotPass from './pages/ForgotPass.jsx';
 import ViewPage from './pages/UserPages/ViewPage.jsx';
 import ContactPage from './pages/ContactPage.jsx';
+import InvoicePage from './pages/InvoicePage.jsx'
 import NewsDetails from './pages/NewsDetails.jsx';
 import EventsPage from './pages/EventsPage.jsx';
 import ExchangeRates from './pages/ExchangeRates.jsx';
@@ -38,10 +39,11 @@ import Catergory from './pages/Catergory.jsx';
 import ProtectedRoute from './pages/ProtectedRoute.jsx';
 import { AuthProvider } from './context/AuthContext.jsx';
 import { UserProvider } from './context/UserContext.jsx';
+import { NotificationProvider } from "./context/NotificationContext";
 import DownloadFiles from './pages/DownloadFiles.jsx';
 import { AdProvider } from './context/AdContext.jsx';
 import ResetPasswordPage from './pages/ResetPassword.jsx';
-
+import { ToastContainer } from "react-toastify";
 
 function Layout({ children }) {
   return (
@@ -58,11 +60,19 @@ function App() {
     <BrowserRouter>
       <AuthProvider>
         <UserProvider>
+          <NotificationProvider>
           <AdProvider>
+            <ToastContainer 
+              newestOnTop
+              closeOnClick
+              pauseOnHover
+              position="top-right" 
+              autoClose={3000} />
             <ScrollToTop />
             <Routes>
               <Route path="/" element={<Layout><Home /></Layout>} />
               <Route path="/subscribePage" element={<Layout><SubscribePage /></Layout>} />
+              <Route path="/invoice/:id" element={<Layout><InvoicePage /></Layout>} />
               <Route path="/newsDetails/:id" element={<Layout><NewsDetails /></Layout>} />
               <Route path="/videoGallery" element={<Layout><VideoGalleryNews /></Layout>} />
               <Route path="/videoGalleryDetails/:id" element={<Layout><VideGalleryDetails /></Layout>} />
@@ -95,6 +105,7 @@ function App() {
               <Route path='/reset-password/:token' element={<Layout><ResetPasswordPage /></Layout>} /> 
             </Routes>
           </AdProvider>
+          </NotificationProvider>
         </UserProvider>
       </AuthProvider>
     </BrowserRouter>

@@ -3,12 +3,15 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import demo from '../assets/images/demo.jpg';
 import { useUser } from '../context/UserContext';
+import { useNotification } from '../context/NotificationContext';
 import API from '../api';
+
 
 const SubscribePage = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { user } = useAuth();
+  const { showNotification } = useNotification();
   const { user: userData, loading } = useUser();
 
   const [activeType, setActiveType] = useState('digital');
