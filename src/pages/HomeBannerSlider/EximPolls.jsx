@@ -17,6 +17,7 @@ const EximPolls = (props) => {
     const [pollsData, setPollsData] = useState([]);
     const [pollResults, setPollResults] = useState({});
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [currentSlide, SetCurrentSlide] = useState(0);
 
     useEffect(() => {
         const fetchPolls = async () => {
@@ -31,43 +32,51 @@ const EximPolls = (props) => {
     }, [])
 
     const handleChange = (questionId, optionIndex) => {
-        setSelectedAnswers({
-            ...selectedAnswers,
-            [questionId]: optionIndex,
-        });
+        setSelectedAnswers((prev) => ({
+            ...prev,
+            [questionId]: optionIndex, // Store selected option index for each question
+        }));
     };
+    
 
     const handleSubmit = async () => {
-        
-        if (Object.keys(selectedAnswers).length === 0) {
-            showNotification("Please select at least one option before submitting.", "warning")
+        const activePoll = pollsData[currentSlide]; // Get the active poll based on the current slide index
+    
+        if (!activePoll || selectedAnswers[activePoll._id] === undefined) {
+            showNotification("Please select an option before submitting.", "warning");
             return;
         }
     
-        const formattedResponses = Object.entries(selectedAnswers).map(([questionId, optionIndex]) => ({
-            id: questionId,
-            optionIndex: optionIndex
-        }));
-
+        const formattedResponse = {
+            id: activePoll._id, // The poll ID
+            optionIndex: selectedAnswers[activePoll._id], // The selected option index
+        };
+    
         setIsSubmitting(true);
     
         try {
-            const response = await API.post("/polls/submit_polls", { responses: formattedResponses });
-            // Store poll results for displaying vote counts
-            const resultsData = response.data.polls.reduce((acc, poll) => {
-                acc[poll._id] = poll;
-                return acc;
-            }, {});
-            showNotification("Your answer submitted!", "success")
-            setPollResults(resultsData);
+            const response = await API.post("/polls/submit_polls", formattedResponse);
+    
+            // Extract the updated poll data from the response
+            const updatedPoll = response.data.poll;
+
+            // Update the pollResults state with the new data
+            setPollResults((prevResults) => ({
+                ...prevResults,
+                [updatedPoll._id]: updatedPoll, // Replace only the submitted poll data
+            }));
+
+            showNotification("Your answer has been submitted!", "success");
     
         } catch (error) {
-            showNotification("Failed To Submit Your Answer, Try Again Later!", "danger")
+            showNotification("Failed to submit your answer. Try again later!", "danger");
             console.error("Error submitting answers", error);
         } finally {
-            setIsSubmitting(false); 
+            setIsSubmitting(false);
         }
     };
+    
+    
     
 
     return (
@@ -92,6 +101,7 @@ const EximPolls = (props) => {
                         }}
                         modules={[Autoplay, Navigation, FreeMode]}
                         className="mySwiper"
+                        onSlideChange={(Swiper) => {SetCurrentSlide(Swiper.activeIndex)}}
                     >
                         {pollsData.map((pol) => {
                             const pollResult = pollResults[pol._id]; // Get result data if available
@@ -123,7 +133,7 @@ const EximPolls = (props) => {
                                                         {pollResult && (
                                                             <div className="vote-bar-container">
                                                                 <div className="vote-bar" style={{ width: `${percentage}%` }}></div>
-                                                                <span className="vote-count">{percentage.toFixed(2)} %</span>
+                                                                <span className="vote-count d-none">{percentage.toFixed(2)} %</span>
                                                             </div>
                                                         )}
                                                     </div>

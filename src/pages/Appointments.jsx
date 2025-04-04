@@ -54,8 +54,8 @@ const Appointments = () => {
     };
 
     useEffect(() => {
-       handleSearch(1);
-    }, []);
+       handleSearch(searchPage);
+    }, [selectedCity, searchTerm ]);
 
     const handleViewMore = () => {
         if (searchTerm) {
@@ -144,7 +144,7 @@ const Appointments = () => {
                                     </InputGroup.Text>
                                 </InputGroup>
                             </div>
-                            <div className="col-md-2 mb-3 col-4">
+                            <div className="col-md-2 mb-3 col-4 d-none">
                                 <button
                                     onClick={() => handleSearch(1)}  // Ensure it always starts from page 1
                                     className="dailySubscribebtn mx-auto p-2"

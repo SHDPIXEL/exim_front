@@ -69,8 +69,9 @@ const News = () => {
 
         setLoading(true);
         try {
+            const adjustedDate = selectedDate ? new Date(selectedDate.getTime() - selectedDate.getTimezoneOffset() * 60000) : null;
             const response = await API.post("/news/search", {
-                date: selectedDate ? selectedDate.toISOString().split("T")[0] : null,
+                date: adjustedDate ? adjustedDate.toISOString().split("T")[0] : null,
                 query: searchTerm,
                 page: pageNumber,
             });

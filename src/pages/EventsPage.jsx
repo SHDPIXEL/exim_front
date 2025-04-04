@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import eventimg4 from "../assets/images/eventnew.jpg";
-import ReviewSlider from './ReviewSlider';
 import { Form } from 'react-bootstrap';
 import API from '../api';
 
@@ -13,74 +12,90 @@ const EventsPage = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [selectedEventType, setSelectedEventType] = useState("");
+    const [options, setOptions] = useState([]);
 
-    const fetchEvents = async (pageNumber) => {
+    const createOption = async () => {
+        const optionResponse = await API.post("/event_categories/get_event_categories_website");
+        console.log(optionResponse.data.data);
+        setOptions(optionResponse.data.data);
+    }
+    // Fetch Events Function
+    const fetchEvents = async (type, pageNumber) => {
         if (pageNumber > totalPages && totalPages !== 0) return;
-    
+
         setLoading(true);
         setError(null);
         try {
             const response = await API.post("/events/get_events_website", {
-                page: pageNumber
+                page: pageNumber,
+                name: type || null, // Send null if no filter is applied
             });
-            const eventsData = response.data.data;
-    
+
+            const eventsData = response.data.data || [];
             const now = new Date();
-            now.setHours(0, 0, 0, 0); // Remove time for accurate day comparison
-    
+            now.setHours(0, 0, 0, 0);
+
             const current = eventsData.filter(event => {
                 const eventDate = new Date(event.date);
                 eventDate.setHours(0, 0, 0, 0);
-                const diffDays = (eventDate - now) / (1000 * 60 * 60 * 24);
-                return diffDays >= 0 && diffDays <= 7; // Within the next 7 days
+                return (eventDate - now) / (1000 * 60 * 60 * 24) >= 0 && (eventDate - now) / (1000 * 60 * 60 * 24) <= 7;
             });
-    
+
             const upcoming = eventsData.filter(event => {
                 const eventDate = new Date(event.date);
                 eventDate.setHours(0, 0, 0, 0);
-                return eventDate > now; // Future events
+                return eventDate > now;
             });
-    
+
             const past = eventsData.filter(event => {
                 const eventDate = new Date(event.date);
                 eventDate.setHours(0, 0, 0, 0);
-                return eventDate < now; // Past events
+                return eventDate < now;
             });
-    
-            setCurrentEvents(prev => pageNumber === 1 ? current : [...prev, ...current]);
-            setUpcomingEvents(prev => pageNumber === 1 ? upcoming : [...prev, ...upcoming]);
-            setPastEvents(prev => pageNumber === 1 ? past : [...prev, ...past]);
-    
+
+            if (pageNumber === 1) {
+                setCurrentEvents(current);
+                setUpcomingEvents(upcoming);
+                setPastEvents(past);
+            } else {
+                setCurrentEvents(prev => [...prev, ...current]);
+                setUpcomingEvents(prev => [...prev, ...upcoming]);
+                setPastEvents(prev => [...prev, ...past]);
+            }
+
             setPage(pageNumber);
-            setTotalPages(Math.ceil(response.data.recordsTotal / eventsData.length));
+            setTotalPages(response.data.totalPages || 1);
         } catch (error) {
-            console.error("Error in fetching events", error);
+            console.error("Error fetching events", error);
             setError("Failed to load events. Please try again later.");
         } finally {
             setLoading(false);
         }
     };
-    
 
+    // Fetch events on page load and when event type changes
     useEffect(() => {
-        fetchEvents(1);
-    }, []);
+        async function init() {
+            await createOption();
+            setPage(1); // Reset page to 1 when event type changes
+            fetchEvents(selectedEventType, 1);
+        }
+        init();
+    }, [selectedEventType]);
 
+    // Fetch more events when "View More" is clicked
     const handleViewMore = () => {
         if (page < totalPages) {
-            fetchEvents(page + 1);
+            fetchEvents(selectedEventType, page + 1);
         }
     };
-
-    const filteredPastEvents = selectedEventType
-        ? pastEvents.filter(event => event.name.includes(selectedEventType))
-        : pastEvents;
 
     return (
         <>
             <div className='container'>
                 {error && <div className="alert alert-danger">{error}</div>}
 
+                {/* Current Events */}
                 {currentEvents.length > 0 && (
                     <div className='row my-5'>
                         <div className="col-md-12 mb-4">
@@ -103,12 +118,10 @@ const EventsPage = () => {
                                 </div>
                             </div>
                         ))}
-                        <div className="borderbg"></div>
-
                     </div>
                 )}
 
-
+                {/* Upcoming Events */}
                 {upcomingEvents.length > 0 && (
                     <div className='row my-5'>
                         <div className="col-md-12 mb-4">
@@ -135,32 +148,32 @@ const EventsPage = () => {
                 )}
             </div>
 
+            {/* Past Events */}
             <div className='container my-5'>
-                {pastEvents.length > 0 && (
-                    <>
-                        <div className="row mt-5 align-items-center mb-3">
-                            <div className="col-md-2 mb-1">
-                                <h4>Past Events -</h4>
-                            </div>
-                            <div className="col-md-3 mb-1">
-                                <Form.Select
-                                    aria-label="Default select example"
-                                    className='webinput'
-                                    value={selectedEventType}
-                                    onChange={(e) => setSelectedEventType(e.target.value)}
-                                >
-                                    <option value="">Select Events</option>
-                                    <option value="ECMF">ECMF</option>
-                                    <option value="MALA">MALA</option>
-                                    <option value="Conquest">Conquest</option>
-                                    <option value="Gujrat Junction">Gujrat Junction</option>
-                                    <option value="SECC">SECC</option>
-                                    <option value="GMH">GMH</option>
-                                </Form.Select>
-                            </div>
+
+                <>
+                    <div className="row mt-5 align-items-center mb-3">
+                        <div className="col-md-2 mb-1">
+                            <h4>Past Events -</h4>
                         </div>
+                        <div className="col-md-3 mb-1">
+                            <Form.Select
+                                aria-label="Select Event"
+                                className='webinput'
+                                value={selectedEventType}
+                                onChange={(e) => setSelectedEventType(e.target.value)}
+                            >
+                                <option value="">All Events</option>
+                                {options.map(option => (
+                                    <option key={option._id} value={option.category}>{option.category}</option>
+                                ))}
+                            </Form.Select>
+                        </div>
+                    </div>
+
+                    {pastEvents.length > 0 ? (
                         <div className='row'>
-                            {filteredPastEvents.map(event => (
+                            {pastEvents.map(event => (
                                 <div className='col-md-3 col-6 mt-3' key={event._id}>
                                     <div className='EventBox'>
                                         <img src={event.image || eventimg4} alt={event.name} className='w-100' />
@@ -171,24 +184,29 @@ const EventsPage = () => {
                                 </div>
                             ))}
                         </div>
-                    </>
-                )}
+                    ) : (
+                        <p>No Event Found</p>
+                    )}
+                </>
 
-                <div className="row mt-4">
-                    <div className="col-12 text-center">
-                        <button
-                            className="dailySubscribebtn mx-auto p-2"
-                            style={{ width: "200px" }}
-                            onClick={handleViewMore}
-                            disabled={loading || page >= totalPages}
-                        >
-                            {loading ? "Loading..." : "View More"}
-                        </button>
+                {/* View More Button */}
+                {page < totalPages && (
+                    <div className="row mt-4">
+                        <div className="col-12 text-center">
+                            <button
+                                className="dailySubscribebtn mx-auto p-2"
+                                style={{ width: "200px" }}
+                                onClick={handleViewMore}
+                                disabled={loading}
+                            >
+                                {loading ? "Loading..." : "View More"}
+                            </button>
+                        </div>
                     </div>
-                </div>
+                )}
             </div>
         </>
     );
-}
+};
 
 export default EventsPage;
