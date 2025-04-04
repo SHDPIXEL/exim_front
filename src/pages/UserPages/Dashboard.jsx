@@ -4,18 +4,15 @@ import 'swiper/css';
 import 'swiper/css/free-mode';
 import 'swiper/css/navigation';
 import { Autoplay, FreeMode, Navigation } from 'swiper/modules';
-import demoimg from "../../assets/images/demo.jpg";
 import { useNavigate } from "react-router-dom";
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import { useAuth } from "../../context/AuthContext";
 import { useUser } from "../../context/UserContext";
 import API from "../../api";
 import dataFormatter from "../../helper/DateFormatter";
 
 const Dashboard = () => {
     const navigate = useNavigate();
-    const { logout } = useAuth();
     const { user, loading } = useUser();
     const [selectedDate, setSelectedDate] = useState(new Date()); // Default to today
     const [selectedEdition, setSelectedEdition] = useState(null);
@@ -24,6 +21,7 @@ const Dashboard = () => {
     const [editionUrl, setEditionUrl] = useState(null);
     const [editionImage, setEditionImage] = useState(null); // Renamed for consistency
     const [isFetching, setIsFetching] = useState(false); // Track fetch status
+
 
     // Generate last 10 days dynamically
     const generatePastDates = () => {

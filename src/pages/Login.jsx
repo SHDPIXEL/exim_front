@@ -65,7 +65,7 @@ const Login = () => {
       }
     } catch (error) {
       console.error('Error logging in:', error.response?.data || error.message);
-      showNotification('Login failed. Please check your credentials.', "danger");
+      showNotification('Login failed. ' + error.response?.data, "danger");
     }
   };
   

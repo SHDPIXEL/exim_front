@@ -5,6 +5,21 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import getActiveMedia from '../helper/GetActiveMedia';
+import ReactGA from "react-ga4";
+
+const handleAdClick = (adName, link) => {
+  ReactGA.event({
+    category: "Ads",
+    action: "Click",
+    label: adName,
+    value: 1,
+  });
+
+  console.log(adName, link);
+
+  // Redirect or perform any other action after click
+  window.open(link, "_blank");
+};
 
 const BottomAds = ({ leftPosition, rightPosition }) => {
   const { selectedAds } = useAds();
@@ -28,7 +43,7 @@ const BottomAds = ({ leftPosition, rightPosition }) => {
             <Swiper modules={[Autoplay]} autoplay={{ delay: 3000 }} loop={true} >
               {leftMedia.map((media, index) => (
                 <SwiperSlide key={index}>
-                  <a href={media.url} target="_blank" rel="noopener noreferrer">
+                  <div onClick={() => handleAdClick(index,media.url)} target="_blank" rel="noopener noreferrer">
                     {media.type === 'image' ? (
                       <img src={media.src} alt="Advertisement" className="w-100 ad-image-top" />
                     ) : (
@@ -37,7 +52,7 @@ const BottomAds = ({ leftPosition, rightPosition }) => {
                         Your browser does not support the video tag.
                       </video>
                     )}
-                  </a>
+                  </div>
                 </SwiperSlide>
               ))}
             </Swiper>
@@ -50,7 +65,7 @@ const BottomAds = ({ leftPosition, rightPosition }) => {
             <Swiper modules={[Pagination, Autoplay]} autoplay={{ delay: 3000 }} loop={true}>
               {rightMedia.map((media, index) => (
                 <SwiperSlide key={index}>
-                  <a href={media.url} target="_blank" rel="noopener noreferrer">
+                  <div onClick={() => handleAdClick(index,media.url)} target="_blank" rel="noopener noreferrer">
                     {media.type === 'image' ? (
                       <img src={media.src} alt="Advertisement" className="w-100 ad-image-top" />
                     ) : (
@@ -59,7 +74,7 @@ const BottomAds = ({ leftPosition, rightPosition }) => {
                         Your browser does not support the video tag.
                       </video>
                     )}
-                  </a>
+                  </div>
                 </SwiperSlide>
               ))}
             </Swiper>

@@ -8,7 +8,7 @@ import { useAds } from "../../context/AdContext";
 import getActiveMedia from "../../helper/GetActiveMedia";
 
 const HomeAdvertise = () => {
-    const { selectedAds } = useAds();
+    const { selectedAds, handleAdClick } = useAds();
 
 
     const ads = selectedAds?.find(ad =>
@@ -36,7 +36,7 @@ const HomeAdvertise = () => {
             {activeMedia.length > 0 ? (
                 activeMedia.map((media, index) => (
                     <SwiperSlide key={index}>
-                        <a href={media.url} target="_blank" rel="noopener noreferrer">
+                        <div onClick={() => handleAdClick(index, media.url)} rel="noopener noreferrer">
                             {media.type === "image" ? (
                                 <img src={media.src} className="w-100" alt="Advertisement" style={{ height: "348px", objectFit: "cover" }} />
                             ) : (
@@ -45,7 +45,7 @@ const HomeAdvertise = () => {
                                     Your browser does not support the video tag.
                                 </video>
                             )}
-                        </a>
+                        </div>
                     </SwiperSlide>
                 ))
             ) : (

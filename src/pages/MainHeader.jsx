@@ -101,7 +101,7 @@ const MainHeader = () => {
                       {/* <Dropdown.Item as={Link} to="/mydevice" ><i className="bi bi-phone"></i> My Device</Dropdown.Item> */}
                       <Dropdown.Item as={Link} to="/paymentHistory"><i className="bi bi-receipt"></i> Billing</Dropdown.Item>
                       <Dropdown.Item as={Link} to="/profile"><i className="bi bi-person-badge"></i> My Profile</Dropdown.Item>
-                      <Dropdown.Item onClick={logout} to="/"><i className="bi bi-power"></i> Logout</Dropdown.Item>
+                      <Dropdown.Item onClick={logout}><i className="bi bi-power"></i> Logout</Dropdown.Item>
                     </Dropdown.Menu>
                   </Dropdown>)}
 

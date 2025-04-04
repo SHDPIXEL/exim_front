@@ -263,7 +263,7 @@ const VideoGalleryDetails = () => {
     const [loading, setLoading] = useState(true);
     const [VideoNewsDetails, setVideoNewsData] = useState({});
     const [topHeadlines, setTopHeadlines] = useState([]);
-    const { selectedAds } = useAds();
+    const { selectedAds, handleAdClick } = useAds();
 
     const VideoDetailsAds = selectedAds?.find(ad =>
         ad.selectedMedia.some(media => media.position === "Video_Gallery_Details")
@@ -370,7 +370,7 @@ const VideoGalleryDetails = () => {
                         >
                             {VideoDetailsMedia.map((media, index) => (
                                 <SwiperSlide key={index}>
-                                    <a href={media.url} target="_blank" rel="noopener noreferrer">
+                                    <div onClick={() => handleAdClick(index, media)} target="_blank" rel="noopener noreferrer">
                                         {media.type === "image" ? (
                                             <img src={media.src} alt="Advertisement" className="w-100 ad-image-between" style={{ height: "348px" }} />
                                         ) : (
@@ -379,7 +379,7 @@ const VideoGalleryDetails = () => {
                                                 Your browser does not support the video tag.
                                             </video>
                                         )}
-                                    </a>
+                                    </div>
                                 </SwiperSlide>
                             ))}
                         </Swiper>

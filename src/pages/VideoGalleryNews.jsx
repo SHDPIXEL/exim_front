@@ -21,7 +21,7 @@ const getYouTubeVideoId = (url) => {
 
 const VideoGalleryNews = () => {
     const navigate = useNavigate();
-    const { selectedAds } = useAds();
+    const { selectedAds, handleAdClick } = useAds();
 
     const [videoItems, setVideoItems] = useState([]);
     const [page, setPage] = useState(1);
@@ -202,6 +202,7 @@ const VideoGalleryNews = () => {
                             >
                                 {videoHomeMedia.map((media, index) => (
                                     <SwiperSlide key={index}>
+                                        <div onClick={() => handleAdClick(index, media)}>
                                         {media.type === "image" ? (
                                             <img src={media.src} alt="Advertisement" className="ad-image-between w-100" />
                                         ) : (
@@ -216,6 +217,7 @@ const VideoGalleryNews = () => {
                                                 Your browser does not support the video tag.
                                             </video>
                                         )}
+                                        </div>
                                     </SwiperSlide>
                                 ))}
                             </Swiper>

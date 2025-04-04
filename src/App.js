@@ -44,6 +44,9 @@ import DownloadFiles from './pages/DownloadFiles.jsx';
 import { AdProvider } from './context/AdContext.jsx';
 import ResetPasswordPage from './pages/ResetPassword.jsx';
 import { ToastContainer } from "react-toastify";
+import ReactGA from "react-ga4";
+
+ReactGA.initialize("G-GF2XVZCZ5K");
 
 function Layout({ children }) {
   return (

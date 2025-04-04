@@ -8,9 +8,10 @@ import { Autoplay } from "swiper/modules";
 import "swiper/css";
 import getActiveMedia from "../helper/GetActiveMedia";
 
+
 const Appointments = () => {
     const [searchTerm, setSearchTerm] = useState("");
-    const { selectedAds } = useAds();
+    const { selectedAds, handleAdClick } = useAds();
     const [appointments, setAppointments] = useState([]);
     const [searchResults, setSearchResults] = useState([]);
     const [page, setPage] = useState(1);
@@ -20,7 +21,8 @@ const Appointments = () => {
     const [selectedJob, setSelectedJob] = useState(null);
     const [searchPage, setSearchPage] = useState(1);
     const [searchTotalPages, setSearchTotalPages] = useState(1);
-    const [selectedCity, setSelectedCity] = useState("");
+    const [selectedCity, setSelectedCity] = useState("Mumbai");
+    const [searchedCity, setSearchedCity] = useState("Mumbai");
 
     const appointmentMain = selectedAds?.find(ad =>
         ad.selectedMedia.some(media => media.position === "Appointment_Main")
@@ -52,7 +54,7 @@ const Appointments = () => {
     };
 
     useEffect(() => {
-        fetchAppointments(1);
+       handleSearch(1);
     }, []);
 
     const handleViewMore = () => {
@@ -71,6 +73,7 @@ const Appointments = () => {
         //     return;
         // }
 
+        console.log(searchPage, searchTotalPages);
         if (pageNumber > searchTotalPages && searchTotalPages !== 0) return;
 
         setLoading(true);
@@ -87,6 +90,7 @@ const Appointments = () => {
             setSearchResults((prev) =>
                 pageNumber === 1 ? results : [...prev, ...results]
             );
+            setSearchedCity(selectedCity);
             setSearchPage(pageNumber);
             setSearchTotalPages(response.data.totalPages || 1);
         } catch (error) {
@@ -95,8 +99,6 @@ const Appointments = () => {
             setLoading(false);
         }
     };
-
-
 
     const displayedAppointments = searchTerm || searchResults.length > 0 ? searchResults : appointments;
 
@@ -121,7 +123,7 @@ const Appointments = () => {
                                     onChange={(e) => setSelectedCity(e.target.value)}
                                 >
                                     <option value="">Select City</option>
-                                    <option value="Mumbai">Mumbai</option>
+                                    <option selected value="Mumbai">Mumbai</option>
                                     <option value="Chennai">Chennai</option>
                                     <option value="Delhi">Delhi</option>
                                     <option value="Gujarat">Gujarat</option>
@@ -132,7 +134,7 @@ const Appointments = () => {
                                 <InputGroup>
                                     <Form.Control
                                         type="text"
-                                        placeholder="Search..."
+                                        placeholder="title/keyword"
                                         value={searchTerm}
                                         onChange={(e) => setSearchTerm(e.target.value)}
                                         className="webinput border-end-0"
@@ -146,7 +148,7 @@ const Appointments = () => {
                                 <button
                                     onClick={() => handleSearch(1)}  // Ensure it always starts from page 1
                                     className="dailySubscribebtn mx-auto p-2"
-                                    // disabled={!searchTerm || !selectedCity}  // Disable button if no input
+                                // disabled={!searchTerm || !selectedCity}  // Disable button if no input
                                 >
                                     Search
                                 </button>
@@ -157,7 +159,7 @@ const Appointments = () => {
                         {/* Job Listings */}
                         <div className="row mt-3">
                             <div className="col-md-12">
-                                <h5 className="text-webColor fw-bolder">{selectedCity || ""}</h5>
+                                <h5 className="text-webColor fw-bolder">{searchedCity || ""}</h5>
                                 {displayedAppointments.map((job) => (
                                     <div className="AppointBox" key={job._id}>
                                         <h5>{job.job_title || "Job Position"}</h5>
@@ -170,14 +172,17 @@ const Appointments = () => {
                                     <p className="text-center mt-3">No appointments found.</p>
                                 )}
                                 <div className="col-12 text-center mt-4 mb-3 d-flex justify-content-center">
-                                    <button
-                                        className="dailySubscribebtn p-2"
-                                        style={{ width: "200px" }}  // Fixed width
-                                        onClick={handleViewMore}
-                                        disabled={loading || (searchTerm ? searchPage >= searchTotalPages : page >= totalPages)}
-                                    >
-                                        {loading ? "Loading..." : "View More"}
-                                    </button>
+                                    { searchPage < searchTotalPages ?
+                                        (<button
+                                            className="dailySubscribebtn p-2"
+                                            style={{ width: "200px" }}  // Fixed width
+                                            onClick={handleViewMore}
+                                            disabled={loading || (searchTerm ? searchPage >= searchTotalPages : page >= totalPages)}
+                                        >
+                                            {loading ? "Loading..." : "View More"}
+                                        </button>
+                                        ) : ''
+                                    }
                                 </div>
 
                             </div>
@@ -191,13 +196,13 @@ const Appointments = () => {
                         <Swiper modules={[Autoplay]} autoplay={{ delay: 3000 }} loop={true}>
                             {appointmentMedia.map((media, index) => (
                                 <SwiperSlide key={index}>
-                                    <a href={media.url} target="_blank" rel="noopener noreferrer">
+                                    <div onClick={() => handleAdClick(media.name, media)} target="_blank" rel="noopener noreferrer">
                                         {media.type === "image" ? (
                                             <img src={media.src} alt="Advertisement" className="ad-image-between w-100" />
                                         ) : (
                                             <video src={media.src} muted autoPlay loop className="ad-image-between w-100" />
                                         )}
-                                    </a>
+                                    </div>
                                 </SwiperSlide>
                             ))}
 

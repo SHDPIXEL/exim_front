@@ -3,7 +3,6 @@ import DatePicker from 'react-datepicker';
 import { Link, useNavigate } from 'react-router-dom';
 import { Form, InputGroup } from 'react-bootstrap';
 import API from '../api';
-import { useAds } from "../context/AdContext";
 import BottomAds from "../components/BottomAds";
 
 
@@ -16,7 +15,6 @@ const News = () => {
     const [totalPages, setTotalPages] = useState(1);
     const [loading, setLoading] = useState(false);
     const [headlines, SetHeadlines] = useState([]);
-    const { selectedAds } = useAds();
 
     // Fetch Top Headlines
     useEffect(() => {

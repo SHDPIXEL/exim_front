@@ -1,5 +1,6 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import API from '../api';
 
 const AuthContext = createContext();
 const EXPIRATION_TIME = 60 * 60 * 1000; // 1 hour in milliseconds
@@ -33,10 +34,23 @@ export function AuthProvider({ children }) {
     navigate('/dashboard');
   };
 
-  const logout = () => {
-    localStorage.clear();
-    setUser(null);
-    navigate('/login');
+  const logout = async () => {
+    try {
+      const response = await API.post("/services/logout", {},{
+        headers: {
+            Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+        },
+    });
+      
+      if (response.status === 200) {  // Ensure the API call was successful
+        localStorage.clear();
+        setUser(null);
+        navigate('/login');
+      }
+    } catch (error) {
+      console.error("Logout failed:", error);
+      // Optionally, show an error message to the user if logout fails
+    }
   };
 
   // Auto logout on expiration (even after refresh)

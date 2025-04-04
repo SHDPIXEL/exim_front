@@ -14,24 +14,22 @@ import FacebookPost from "./HomeBannerSlider/FacebookPost";
 import TwitterPost from "./HomeBannerSlider/TwitterPost";
 import HomeAdvertise from "./HomeBannerSlider/HomeAdvertise";
 import API from "../api";
-import { useAds } from "../context/AdContext";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination, Autoplay } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import getActiveMedia from "../helper/GetActiveMedia";
-
+import { useAds } from "../context/AdContext";
 
 const Home = () => {
-    const { selectedAds } = useAds();
-
+    
     const navigate = useNavigate();
     const [headlines, SetHeadlines] = useState([]);
     const [TopNews, setTopNews] = useState([]);
     const [appointments, setAppointments] = useState([]);
 
-
+    const { selectedAds, handleAdClick } = useAds();
     // Get active media for top right and top left ads
     const topRightAd = selectedAds?.find(ad =>
         ad.selectedMedia.some(media => media.position === "Home_Top_Right")
@@ -120,7 +118,7 @@ const Home = () => {
                                 >
                                     {topLeftMedia.map((media, index) => (
                                         <SwiperSlide key={index}>
-                                            <a href={media.url} target="_blank" rel="noopener noreferrer">
+                                            <div onClick={() => handleAdClick(media?.name, media.url)} target="_blank" rel="noopener noreferrer">
                                                 {media.type === "image" ? (
                                                     <img src={media.src} alt="Advertisement" className="w-100 ad-image-top" />
                                                 ) : (
@@ -129,7 +127,7 @@ const Home = () => {
                                                         Your browser does not support the video tag.
                                                     </video>
                                                 )}
-                                            </a>
+                                            </div>
                                         </SwiperSlide>
                                     ))}
                                 </Swiper>
@@ -145,7 +143,7 @@ const Home = () => {
                                 >
                                     {topRightMedia.map((media, index) => (
                                         <SwiperSlide key={index}>
-                                            <a href={media.url} target="_blank" rel="noopener noreferrer">
+                                            <div onClick={() => handleAdClick(media?.name, media.url)} target="_blank" rel="noopener noreferrer">
                                                 {media.type === "image" ? (
                                                     <img src={media.src} alt="Advertisement" className="w-100 ad-image-top" />
                                                 ) : (
@@ -154,7 +152,7 @@ const Home = () => {
                                                         Your browser does not support the video tag.
                                                     </video>
                                                 )}
-                                            </a>
+                                            </div>
                                         </SwiperSlide>
                                     ))}
                                 </Swiper>
@@ -219,7 +217,7 @@ const Home = () => {
                                 >
                                     {aboveEventsLeftMedia.map((media, index) => (
                                         <SwiperSlide key={index}>
-                                            <a href={media.url} target="_blank" rel="noopener noreferrer">
+                                            <div onClick={() => handleAdClick(media?.name, media.url)} target="_blank" rel="noopener noreferrer">
                                                 {media.type === "image" ? (
                                                     <img src={media.src} alt="Advertisement" className="w-100 ad-image-top" />
                                                 ) : (
@@ -228,7 +226,7 @@ const Home = () => {
                                                         Your browser does not support the video tag.
                                                     </video>
                                                 )}
-                                            </a>
+                                            </div>
                                         </SwiperSlide>
                                     ))}
                                 </Swiper>
@@ -244,7 +242,7 @@ const Home = () => {
                                 >
                                     {aboveEventsRightMedia.map((media, index) => (
                                         <SwiperSlide key={index}>
-                                            <a href={media.url} target="_blank" rel="noopener noreferrer">
+                                            <div onClick={() => handleAdClick(media?.name, media.url)} target="_blank" rel="noopener noreferrer">
                                                 {media.type === "image" ? (
                                                     <img src={media.src} alt="Advertisement" className="w-100 ad-image-top" />
                                                 ) : (
@@ -253,7 +251,7 @@ const Home = () => {
                                                         Your browser does not support the video tag.
                                                     </video>
                                                 )}
-                                            </a>
+                                            </div>
                                         </SwiperSlide>
                                     ))}
                                 </Swiper>
@@ -304,7 +302,7 @@ const Home = () => {
                                 >
                                     {SubscribeMedia.map((media, index) => (
                                         <SwiperSlide key={index}>
-                                            <a href={media.url} target="_blank" rel="noopener noreferrer">
+                                            <div onClick={() => handleAdClick(media?.name, media.url)} target="_blank" rel="noopener noreferrer">
                                                 {media.type === "image" ? (
                                                     <img src={media.src} alt="Advertisement" className="ad-image-between w-100" />
                                                 ) : (
@@ -318,7 +316,7 @@ const Home = () => {
                                                         Your browser does not support the video tag.
                                                     </video>
                                                 )}
-                                            </a>
+                                            </div>
                                         </SwiperSlide>
                                     ))}
                                 </Swiper>
@@ -399,7 +397,7 @@ const Home = () => {
                                 >
                                     {videoHomeMedia.map((media, index) => (
                                         <SwiperSlide key={index}>
-                                            <a href={media.url} target="_blank" rel="noopener noreferrer">
+                                            <div onClick={() => handleAdClick(media?.name, media.url)} target="_blank" rel="noopener noreferrer">
                                                 {media.type === "image" ? (
                                                     <img src={media.src} alt="Advertisement" className="ad-image-between w-100" />
                                                 ) : (
@@ -413,7 +411,7 @@ const Home = () => {
                                                         Your browser does not support the video tag.
                                                     </video>
                                                 )}
-                                            </a>
+                                            </div>
                                         </SwiperSlide>
                                     ))}
                                 </Swiper>
@@ -477,7 +475,7 @@ const Home = () => {
                                 >
                                     {bottomLeftMedia.map((media, index) => (
                                         <SwiperSlide key={index}>
-                                            <a href={media.url} target="_blank" rel="noopener noreferrer">
+                                            <div onClick={() => handleAdClick(media?.name, media.url)} target="_blank" rel="noopener noreferrer">
                                                 {media.type === "image" ? (
                                                     <img src={media.src} alt="Advertisement" className="w-100 ad-image-top" />
                                                 ) : (
@@ -486,7 +484,7 @@ const Home = () => {
                                                         Your browser does not support the video tag.
                                                     </video>
                                                 )}
-                                            </a>
+                                            </div>
                                         </SwiperSlide>
                                     ))}
                                 </Swiper>
@@ -502,7 +500,7 @@ const Home = () => {
                                 >
                                     {bottomRightMedia.map((media, index) => (
                                         <SwiperSlide key={index}>
-                                            <a href={media.url} target="_blank" rel="noopener noreferrer">
+                                            <div onClick={() => handleAdClick(media?.name, media.url)} rel="noopener noreferrer">
                                                 {media.type === "image" ? (
                                                     <img src={media.src} alt="Advertisement" className="w-100 ad-image-top" />
                                                 ) : (
@@ -511,7 +509,7 @@ const Home = () => {
                                                         Your browser does not support the video tag.
                                                     </video>
                                                 )}
-                                            </a>
+                                            </div>
                                         </SwiperSlide>
                                     ))}
                                 </Swiper>
