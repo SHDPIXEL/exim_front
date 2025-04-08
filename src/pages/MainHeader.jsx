@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import logo from "../assets/images/logo-exim.png";
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import Darkmode from '../assets/images/Darkmode.svg';
@@ -7,15 +7,18 @@ import { Dropdown } from 'react-bootstrap';
 import playStore from "../assets/images/playstore.png"
 import AppStore from "../assets/images/appstore.png"
 import { useAuth } from '../context/AuthContext';
+import { useAppContext } from '../context/AppContext';
 
 const MainHeader = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const [time, setTime] = useState("");
 
   const subscribeClick = () => {
     navigate('/subscribePage');
   }
 
+  const { lastUpdatedTime } = useAppContext();
   const {logout, user} = useAuth();
 
   return (
@@ -26,14 +29,11 @@ const MainHeader = () => {
             <div className='col-md-8 text-center text-md-start'>
               <div> <ul>
               <li>{new Date().toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' })}</li>
-                <li>|</li>
-                <li><i className="bi bi-geo-alt-fill"></i> Mumbai <i className="bi bi-sun-fill"></i> 21° C</li>
-                <li>|</li>
-                <li>Updated 08.14PM IST</li>
+                
+                 <li>|</li>
+                 <li>Updated {lastUpdatedTime} IST</li>
                 {/* <li>|</li>
                 <li><Link><img src={Darkmode} alt='' className='p-0' /></Link></li> */}
-                <li>|</li>
-                <li><div className='toptypolink'><Link>A -</Link><Link>A</Link><Link>A+</Link></div></li>
               </ul></div>
             </div>
             <div className='col-md-4'>

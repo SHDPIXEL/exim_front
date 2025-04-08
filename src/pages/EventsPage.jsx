@@ -35,23 +35,11 @@ const EventsPage = () => {
             const now = new Date();
             now.setHours(0, 0, 0, 0);
 
-            const current = eventsData.filter(event => {
-                const eventDate = new Date(event.date);
-                eventDate.setHours(0, 0, 0, 0);
-                return (eventDate - now) / (1000 * 60 * 60 * 24) >= 0 && (eventDate - now) / (1000 * 60 * 60 * 24) <= 7;
-            });
+            const current = eventsData.current;
 
-            const upcoming = eventsData.filter(event => {
-                const eventDate = new Date(event.date);
-                eventDate.setHours(0, 0, 0, 0);
-                return eventDate > now;
-            });
+            const upcoming = eventsData.upcoming;
 
-            const past = eventsData.filter(event => {
-                const eventDate = new Date(event.date);
-                eventDate.setHours(0, 0, 0, 0);
-                return eventDate < now;
-            });
+            const past = eventsData.past;
 
             if (pageNumber === 1) {
                 setCurrentEvents(current);
@@ -103,19 +91,25 @@ const EventsPage = () => {
                         </div>
                         {currentEvents.map(event => (
                             <div className='col-md-4 mb-3' key={event._id}>
-                                <div className='EventBox'>
-                                    <img src={event.image || eventimg4} alt={event.name} className='w-100' />
-                                    <div className='Event-content'>
-                                        <h4>{event.name}</h4>
-                                        <h5>{new Date(event.date).toLocaleDateString('en-US', {
-                                            weekday: 'short',
-                                            day: 'numeric',
-                                            month: 'short',
-                                            year: 'numeric'
-                                        })}</h5>
-                                        <p>{event.venue}</p>
+                                <a
+                                    href={event.url}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    style={{ textDecoration: "none", color: "inherit" }} >
+                                    <div className='EventBox'>
+                                        <img src={event.image || eventimg4} alt={event.name} className='w-100' />
+                                        <div className='Event-content'>
+                                            <h4>{event.name}</h4>
+                                            <h5>{new Date(event.date).toLocaleDateString('en-US', {
+                                                weekday: 'short',
+                                                day: 'numeric',
+                                                month: 'short',
+                                                year: 'numeric'
+                                            })}</h5>
+                                            <p>{event.venue}</p>
+                                        </div>
                                     </div>
-                                </div>
+                                </a>
                             </div>
                         ))}
                     </div>
@@ -129,19 +123,25 @@ const EventsPage = () => {
                         </div>
                         {upcomingEvents.map(event => (
                             <div className='col-md-3 mb-4' key={event._id}>
-                                <div className='EventBox'>
-                                    <img src={event.image || eventimg4} alt={event.name} className='w-100' />
-                                    <div className='Event-content upcoming'>
-                                        <h4>{event.name}</h4>
-                                        <h5>{new Date(event.date).toLocaleDateString('en-US', {
-                                            weekday: 'short',
-                                            day: 'numeric',
-                                            month: 'short',
-                                            year: 'numeric'
-                                        })}</h5>
-                                        <p>{event.venue}</p>
+                                <a
+                                    href={event.url}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    style={{ textDecoration: "none", color: "inherit" }} >
+                                    <div className='EventBox'>
+                                        <img src={event.image || eventimg4} alt={event.name} className='w-100' />
+                                        <div className='Event-content upcoming'>
+                                            <h4>{event.name}</h4>
+                                            <h5>{new Date(event.date).toLocaleDateString('en-US', {
+                                                weekday: 'short',
+                                                day: 'numeric',
+                                                month: 'short',
+                                                year: 'numeric'
+                                            })}</h5>
+                                            <p>{event.venue}</p>
+                                        </div>
                                     </div>
-                                </div>
+                                </a>
                             </div>
                         ))}
                     </div>
@@ -175,12 +175,18 @@ const EventsPage = () => {
                         <div className='row'>
                             {pastEvents.map(event => (
                                 <div className='col-md-3 col-6 mt-3' key={event._id}>
-                                    <div className='EventBox'>
-                                        <img src={event.image || eventimg4} alt={event.name} className='w-100' />
-                                        <div className='Event-content'>
-                                            <h4>{event.name}</h4>
+                                    <a
+                                        href={event.url}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        style={{ textDecoration: "none", color: "inherit" }} >
+                                        <div className='EventBox'>
+                                            <img src={event.image || eventimg4} alt={event.name} className='w-100' />
+                                            <div className='Event-content'>
+                                                <h4>{event.name}</h4>
+                                            </div>
                                         </div>
-                                    </div>
+                                    </a>
                                 </div>
                             ))}
                         </div>

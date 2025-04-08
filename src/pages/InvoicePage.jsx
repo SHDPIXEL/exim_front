@@ -67,7 +67,7 @@ const Invoice = () => {
           <div className="logo-section" style={{ textAlign: "left", width: "100%" }}>
             <img
               src="https://exim.demo.shdpixel.com/static/media/logo-exim.14c9676bee1b10e8401a.png"
-              alt="Breboot Logo"
+              alt="Exim Logo"
               style={{ maxHeight: "60px" }}
             />
           </div>

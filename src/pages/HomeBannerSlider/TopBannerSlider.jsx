@@ -41,7 +41,7 @@ const TopBannerSlider = ({ topNews, headlines }) => {
                     className="mySwiper"
                     onSlideChange={handleSlideChange}
                 >
-                    {topNews.slice(0, 3).map((slider) => (
+                    {topNews.slice(0, 7).map((slider) => (
                         <SwiperSlide key={slider._id}>
                             <div role="button" onClick={() => navigate(`/newsDetails/${slider._id}`)}>
                                 <div className="row">
@@ -50,7 +50,7 @@ const TopBannerSlider = ({ topNews, headlines }) => {
                                             <div className="d-flex mb-3">
                                                 <div className="categorybtn">{slider.category_name}</div>
                                                 <div className="Slidercountbtn ms-2">
-                                                    {currentSlide + 1} / {topNews.slice(0,3).length}
+                                                    {currentSlide + 1} / {topNews.slice(0,7).length}
                                                 </div>
                                             </div>
                                             <h3>{slider.headline}</h3>
@@ -64,8 +64,13 @@ const TopBannerSlider = ({ topNews, headlines }) => {
                                             })}</small></p>
                                         </div>
                                     </div>
-                                    <div className="col-md-6 order-0 order-md-1 mb-3 mb-md-0">
-                                        <img src={slider.image || "https://placehold.co/600x400"} width="100%" height="100%" alt={slider.title} />
+                                    <div className="col-md-6 order-0 order-md-1">
+                                        <div className="slider-image-box">
+                                            <img
+                                                src={slider.image || "https://placehold.co/600x400"}
+                                                alt="slider"
+                                            />
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -74,10 +79,12 @@ const TopBannerSlider = ({ topNews, headlines }) => {
                 </Swiper>
             </div>
             <div className="row">
-                {topNews.slice(3).map((item, index) => (
+                {topNews.slice(7).map((item, index) => (
                     <div className="col-md-3 mb-3 col-6" key={item._id} onClick={() => navigate(`/newsDetails/${item._id}`)}>
                         <div className="topleftimgcard">
-                            <img src={item.image || "https://placehold.co/600x400"} />
+                            <div className="image-box">
+                                <img src={item.image || "https://placehold.co/600x400"} alt="news" />
+                            </div>
                             <h4>{item.headline}</h4>
                             <p>{new Date(item.date).toLocaleDateString("en-US", {
                                 day: "numeric",

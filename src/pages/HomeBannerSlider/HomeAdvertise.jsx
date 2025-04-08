@@ -36,7 +36,8 @@ const HomeAdvertise = () => {
             {activeMedia.length > 0 ? (
                 activeMedia.map((media, index) => (
                     <SwiperSlide key={index}>
-                        <div onClick={() => handleAdClick(index, media.url)} rel="noopener noreferrer">
+                        <a title='View More' onClick={() => handleAdClick("Home Top " + media.name,media.url)} className='cursor-pointer' target="_blank" rel="noopener noreferrer">
+                                            
                             {media.type === "image" ? (
                                 <img src={media.src} className="w-100" alt="Advertisement" style={{ height: "348px", objectFit: "cover" }} />
                             ) : (
@@ -45,7 +46,7 @@ const HomeAdvertise = () => {
                                     Your browser does not support the video tag.
                                 </video>
                             )}
-                        </div>
+                        </a>
                     </SwiperSlide>
                 ))
             ) : (

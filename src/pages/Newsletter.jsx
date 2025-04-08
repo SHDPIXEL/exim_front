@@ -15,12 +15,12 @@ const Newsletter = () => {
                 <div className="row ">
 
                     <div className="col-md-12 mb-3">
-                        <Form.Control size="lg" type="email" className="customInput" placeholder="*Your email address" />
+                        <Form.Control size="lg" type="email" className="customInput" required placeholder="*Your email address" />
                     </div>
 
                     <div className="col-md-12 mb-3 text-dark">
                         <Form.Group controlId="formBasicCheckbox" className="d-flex chekmarh">
-                            <Form.Check size="lg" type="checkbox" /><span>I have read and agree to the  <Link to="/">terms & conditions </Link></span>
+                            <Form.Check size="lg" type="checkbox" required /><span>I have read and agree to the  <Link to="/">terms & conditions </Link></span>
                         </Form.Group>
                     </div>
                     <div className="col-md-12 mb-3 text-dark">

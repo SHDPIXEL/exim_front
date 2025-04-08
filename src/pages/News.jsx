@@ -154,6 +154,7 @@ const News = () => {
                                         </div>
                                     )}
                                     <div className="textside">
+                                        <span className='categorybtn_1 mb-1'>{item.category_name}</span>
                                         <h4>{item.headline}</h4>
                                         <p>{new Date(item.date).toLocaleDateString("en-US", {
                                             year: "numeric",

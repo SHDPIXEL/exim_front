@@ -12,17 +12,16 @@ const MainFooter = () => {
         <>
             <div className="footersection">
                 <div className="container-fluid">
-
                     <div className='row border-bottom pb-4 align-items-center'>
                         <div className='col-md-6'>
                             <div className='footerimgcontain'>
                                 <img src={logo} alt='logo' className='mb-4' />
                                 <div className='footsociallink'>
-                                    <Link to="/"><i className="bi bi-instagram"></i></Link>
+                                    <Link target='_blank' to="https://www.instagram.com/eximindia_"><i className="bi bi-instagram"></i></Link>
                                     <Link target='_blank' to="https://www.facebook.com/people/Exim-India/100064039290498/"><i className="bi bi-facebook"></i></Link>
-
+                                    <Link target='_blank' to=" https://www.linkedin.com/company/eximindia/" ><i className='bi bi-linkedin'></i></Link>
                                     <Link to="https://x.com/Exim_India" target='_blank'><i className="bi bi-twitter-x"></i></Link>
-                                    <Link to="/"><i className="bi bi-youtube"></i></Link>
+                                    <Link target='_blank'  to="https://www.youtube.com/@eximindia9046"><i className="bi bi-youtube"></i></Link>
 
                                 </div>
 
@@ -31,19 +30,11 @@ const MainFooter = () => {
                             </div>
                         </div>
                         <div className='col-md-6 d-flex justify-content-md-end justify-content-center '>
-                            <div className='footerNewseltter mt-3 pt-0 text-white'>
-                                <h5>Subscribe to our newsletter for free!</h5>
-                                <Form>
-                                    <div className='footerNewseltterINput'>
-                                        <Form.Group controlId="formEmail" className='w-100'>
-                                            <Form.Control
-                                                type="email"
-                                                placeholder="Enter your email here"
-                                                className="netsettlerInput" />
-                                        </Form.Group>
-                                        <Button className='sendbtn' type="submit"> <img src={sendicon} alt='' /> </Button>
-                                    </div>
-                                </Form>
+                            <div className='footerNewseltter mt-3 pt-0 text-white d-flex justify-content-end flex-column align-items-end' >
+                                <h5>Quick Contact</h5>
+                                <Link to="tel:02267571400" className='d-flex justify-content-end flex-column align-items-end text-white'>
+                                    <span>Call Us</span>(022) 67571400
+                                </Link>
                             </div>
                         </div>
 

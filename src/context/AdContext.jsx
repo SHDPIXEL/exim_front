@@ -34,15 +34,21 @@ export function AdProvider({ children }) {
     fetchAds();
   }, []);
 
-  const handleAdClick = (adName, link) => {
-    ReactGA.event({
-      category: "Ads",
-      action: "Click",
-      label: adName,
-      value: 1,
-    });
+  const handleAdClick = (details, link) => {
+    // ReactGA.event({
+    //   category: "Ads",
+    //   action: "Click",
+    //   label: adName,
+    //   value: 1,
+    // });
 
-    console.log("Ad Clicked:", adName, link);
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push({
+      event: 'ad_click',
+      company_name: details.company,
+      ad_id: details.id,
+      debug_mode : true,
+    });
 
     // Open ad link in new tab
     window.open(link, "_blank");

@@ -17,7 +17,7 @@ const EximEventsSlider = (props) => {
         const fetchEvents = async () => {
             try {
                 const response = await API.post("/events/get_events_website");
-                setEvents(response.data.data)
+                setEvents(response.data.data?.past)
             } catch (error) {
                 console.error("Error in fetching events", error)
             }

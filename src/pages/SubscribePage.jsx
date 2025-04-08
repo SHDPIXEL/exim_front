@@ -5,7 +5,7 @@ import demo from '../assets/images/demo.jpg';
 import { useUser } from '../context/UserContext';
 import { useNotification } from '../context/NotificationContext';
 import API from '../api';
-
+import { Modal, Button } from 'react-bootstrap';
 
 const SubscribePage = () => {
   const navigate = useNavigate();
@@ -14,6 +14,7 @@ const SubscribePage = () => {
   const { showNotification } = useNotification();
   const { user: userData, loading } = useUser();
 
+  const [showModal, setShowModal] = useState(false);
   const [activeType, setActiveType] = useState('digital');
   const [selectedPackages, setSelectedPackages] = useState([]);
   const [subscribedPackages, setSubscribedPackages] = useState([]); // Store user's subscribed packages
@@ -27,6 +28,15 @@ const SubscribePage = () => {
     { location: 'Tuticorin', options: [{ duration: '1 year', price: 1000 }] },
     { location: 'Kochi', options: [{ duration: '1 year', price: 1000 }] },
   ];
+
+
+  useEffect(() => {
+    const hasSeenModal = sessionStorage.getItem('hasSeenSubscribeModal');
+    if (!hasSeenModal) {
+      setShowModal(true);
+      sessionStorage.setItem('hasSeenSubscribeModal', 'true');
+    }
+  }, []);
 
   // Fetch user's subscribed packages
   useEffect(() => {
@@ -167,6 +177,16 @@ const SubscribePage = () => {
 
   return (
     <>
+      <Modal show={showModal} onHide={() => setShowModal(false)} centered>
+       
+        <Modal.Header closeButton>
+          <span className='modal-head-text'>📢 All Editions Now Available!</span>
+        </Modal.Header>
+        <Modal.Body closeButton>
+          <span className='modal-text'>Subscribe today by choosing your preferred format: <b> Digital Copy, Hard Copy, or Both. </b> </span>
+        </Modal.Body>
+      </Modal>
+
       <div className="container mt-4 mb-4 border1 shadow-sm1 rounded-3">
         <div className="row">
           <div className="col-lg-12 text-center">
@@ -229,11 +249,11 @@ const SubscribePage = () => {
                       <div className="col-md-4">
                         <div className="newspaper-container mt-3 text-center">
                           <img alt="home" className="w-100 border shadow-sm rounded-3" src={demo} />
-                          <h6 role="button" onClick={() => navigate('/viewpage')} className="mt-3">
+                          <h6 role="button" onClick={() => navigate('/demo/viewpage')} className="mt-3">
                             Exim Digital Copy Demo
                           </h6>
                           <button
-                            onClick={() => navigate('/viewpage')}
+                            onClick={() => navigate('/demo/viewpage')}
                             className="dailySubscribebtn mt-3 mx-auto p-2"
                             style={{ width: '200px' }}
                           >

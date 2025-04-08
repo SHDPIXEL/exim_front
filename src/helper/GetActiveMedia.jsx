@@ -8,7 +8,10 @@ const getActiveMedia = (ad) => {
             .map(item => ({
                 type: item.mediaType,
                 src: item.filePath,
-                url: item.url
+                company_name: item.company_name,
+                name: item.name,
+                url: item.url,
+                sequenceNumber: item.sequenceNumber,
             }));
     }
     return [];

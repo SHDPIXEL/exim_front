@@ -202,7 +202,8 @@ const VideoGalleryNews = () => {
                             >
                                 {videoHomeMedia.map((media, index) => (
                                     <SwiperSlide key={index}>
-                                        <div onClick={() => handleAdClick(index, media)}>
+                                       <a title='View More' onClick={() => handleAdClick("VideoGalleryNew " + media.name,media.url)} className='cursor-pointer' target="_blank" rel="noopener noreferrer">
+                                            
                                         {media.type === "image" ? (
                                             <img src={media.src} alt="Advertisement" className="ad-image-between w-100" />
                                         ) : (
@@ -217,7 +218,7 @@ const VideoGalleryNews = () => {
                                                 Your browser does not support the video tag.
                                             </video>
                                         )}
-                                        </div>
+                                        </a>
                                     </SwiperSlide>
                                 ))}
                             </Swiper>

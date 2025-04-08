@@ -7,22 +7,28 @@ import 'swiper/css/pagination';
 import getActiveMedia from '../helper/GetActiveMedia';
 import ReactGA from "react-ga4";
 
-const handleAdClick = (adName, link) => {
-  ReactGA.event({
-    category: "Ads",
-    action: "Click",
-    label: adName,
-    value: 1,
-  });
+const handleAdClick = (details, link) => {
+  // ReactGA.event({
+  //   category: "Ads",
+  //   action: "Click",
+  //   label: adName,
+  //   value: 1,
+  // });
 
-  console.log(adName, link);
+  window.dataLayer = window.dataLayer || [];
+  window.dataLayer.push({
+    event: 'ad_click',
+    company_name: details.company,
+    ad_id: details.id,
+    debug_mode : true,
+  });
 
   // Redirect or perform any other action after click
   window.open(link, "_blank");
 };
 
 const BottomAds = ({ leftPosition, rightPosition }) => {
-  const { selectedAds } = useAds();
+  const { selectedAds, handleAdClick } = useAds();
 
   const getMedia = (position) => {
     const ad = selectedAds?.find(ad =>
@@ -43,8 +49,8 @@ const BottomAds = ({ leftPosition, rightPosition }) => {
             <Swiper modules={[Autoplay]} autoplay={{ delay: 3000 }} loop={true} >
               {leftMedia.map((media, index) => (
                 <SwiperSlide key={index}>
-                  <div onClick={() => handleAdClick(index,media.url)} target="_blank" rel="noopener noreferrer">
-                    {media.type === 'image' ? (
+                 <a title='View More' onClick={() => handleAdClick({company : media.company_name, id : media.name + media.sequenceNumber},media.url)} className='cursor-pointer' target="_blank" rel="noopener noreferrer">
+                 {media.type === 'image' ? (
                       <img src={media.src} alt="Advertisement" className="w-100 ad-image-top" />
                     ) : (
                       <video controls={false} autoPlay loop muted className="w-100 ad-image-top">
@@ -52,7 +58,7 @@ const BottomAds = ({ leftPosition, rightPosition }) => {
                         Your browser does not support the video tag.
                       </video>
                     )}
-                  </div>
+                  </a>
                 </SwiperSlide>
               ))}
             </Swiper>
@@ -65,7 +71,8 @@ const BottomAds = ({ leftPosition, rightPosition }) => {
             <Swiper modules={[Pagination, Autoplay]} autoplay={{ delay: 3000 }} loop={true}>
               {rightMedia.map((media, index) => (
                 <SwiperSlide key={index}>
-                  <div onClick={() => handleAdClick(index,media.url)} target="_blank" rel="noopener noreferrer">
+                <a title='View More' onClick={() => handleAdClick({company : media.company_name, id : media.name + media.sequenceNumber},media.url)} className='cursor-pointer' target="_blank" rel="noopener noreferrer">
+                  
                     {media.type === 'image' ? (
                       <img src={media.src} alt="Advertisement" className="w-100 ad-image-top" />
                     ) : (
@@ -74,7 +81,7 @@ const BottomAds = ({ leftPosition, rightPosition }) => {
                         Your browser does not support the video tag.
                       </video>
                     )}
-                  </div>
+                  </a>
                 </SwiperSlide>
               ))}
             </Swiper>

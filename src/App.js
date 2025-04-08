@@ -45,6 +45,7 @@ import { AdProvider } from './context/AdContext.jsx';
 import ResetPasswordPage from './pages/ResetPassword.jsx';
 import { ToastContainer } from "react-toastify";
 import ReactGA from "react-ga4";
+import { AppProvider } from './context/AppContext.jsx';
 
 ReactGA.initialize("G-GF2XVZCZ5K");
 
@@ -61,6 +62,7 @@ function Layout({ children }) {
 function App() {
   return (
     <BrowserRouter>
+    <AppProvider>
       <AuthProvider>
         <UserProvider>
           <NotificationProvider>
@@ -99,6 +101,7 @@ function App() {
               <Route path="/paymentHistory" element={<ProtectedRoute><Layout><PaymentHistory /></Layout></ProtectedRoute>} />
               <Route path="/profile" element={<ProtectedRoute><Layout><ProfilePage /></Layout></ProtectedRoute>} />
               <Route path="/viewpage" element={<ProtectedRoute><Layout><ViewPage /></Layout></ProtectedRoute>} />
+              <Route path="/demo/viewpage" element={<Layout><ViewPage /></Layout>} />
               <Route path="/contact" element={<Layout><ContactPage /></Layout>} />
               <Route path="/privacypolicy" element={<Layout><PrivacyPolicy /></Layout>} />
               <Route path="/termsandconditions" element={<Layout><TermsAndConditions /></Layout>} />
@@ -111,6 +114,7 @@ function App() {
           </NotificationProvider>
         </UserProvider>
       </AuthProvider>
+      </AppProvider>
     </BrowserRouter>
   );
 }

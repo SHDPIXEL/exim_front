@@ -370,7 +370,8 @@ const VideoGalleryDetails = () => {
                         >
                             {VideoDetailsMedia.map((media, index) => (
                                 <SwiperSlide key={index}>
-                                    <div onClick={() => handleAdClick(index, media)} target="_blank" rel="noopener noreferrer">
+                                    <a title='View More' onClick={() => handleAdClick("VideoGallery Right " + media.name,media.url)} className='cursor-pointer' target="_blank" rel="noopener noreferrer">
+                                            
                                         {media.type === "image" ? (
                                             <img src={media.src} alt="Advertisement" className="w-100 ad-image-between" style={{ height: "348px" }} />
                                         ) : (
@@ -379,7 +380,7 @@ const VideoGalleryDetails = () => {
                                                 Your browser does not support the video tag.
                                             </video>
                                         )}
-                                    </div>
+                                    </a>
                                 </SwiperSlide>
                             ))}
                         </Swiper>

@@ -63,22 +63,13 @@ const NewsDetails = () => {
             <div className="row">
                 <div className="col-xxl-9 col-lg-9 blog-details">
                     <div className="th-blog blog-single">
-                        <Link to="/#" className="categorybtn" >{newsDetails.category_name}</Link>
+                        <Link to="#" className="categorybtn" >{newsDetails.category_name}</Link>
                         <h2 className="blog-title">{newsDetails.headline}</h2>
                         <div className="blog-meta"><Link to="/#"><i className="far fa-calendar-days"></i>{dataFormatter(newsDetails.date)}</Link>
-
                         </div>
                         <div className="blog-img"><img src={newsDetails.image || "https://placehold.co/600x400"} alt="Blog" width={"100%"} /></div>
                         <div className="blog-content-wrap">
-                            <div className="share-links-wrap">
-                                <div className="share-links"><span className="share-links-title">Share Post:</span>
-                                    <div className="multi-social"><Link to="https://facebook.com/" target="_blank"><i className="fab fa-facebook-f"></i></Link> <Link to="https://twitter.com/" target="_blank"><i className="bi bi-twitter-x"></i></Link> <Link to="https://linkedin.com/" target="_blank"><i className="fab fa-linkedin-in"></i></Link>                    <Link to="https://pinterest.com/" target="_blank"><i className="fab fa-pinterest-p"></i></Link> <Link to="https://instagram.com/" target="_blank"><i className="fab fa-instagram"></i></Link></div>
-                                </div>
-                            </div>
                             <div className="blog-content">
-                                <div className="blog-info-wrap">
-                                    <button className="blog-info print_btn">Print : <i className="fas fa-print"></i></button> <Link className="blog-info" href="mailto:">Email : <i className="fas fa-envelope"></i> </Link>
-                                    <button className="blog-info ms-sm-auto">15k <i className="fas fa-thumbs-up"></i></button> <span className="blog-info">126k <i className="fas fa-eye"></i></span> <span className="blog-info">12k <i className="fas fa-share-nodes"></i></span></div>
                                 <div className="content">
                                     <div className="blog-content">
                                         <p dangerouslySetInnerHTML={{ __html: newsDetails.description }}></p>
@@ -154,7 +145,7 @@ const NewsDetails = () => {
                         >
                             {NewsDetailsMedia.map((media, index) => (
                                 <SwiperSlide key={index}>
-                                    <div onClick={() => handleAdClick(index, media)} target="_blank" rel="noopener noreferrer">
+                                    <a title='View More' onClick={() => handleAdClick("NewDetails Right" + media.name,media.url)} className='cursor-pointer' target="_blank" rel="noopener noreferrer">
                                         {media.type === "image" ? (
                                             <img src={media.src} alt="Advertisement" className="w-100 ad-image-between" style={{ height: "348px" }} />
                                         ) : (
@@ -163,7 +154,7 @@ const NewsDetails = () => {
                                                 Your browser does not support the video tag.
                                             </video>
                                         )}
-                                    </div>
+                                    </a>
                                 </SwiperSlide>
                             ))}
                         </Swiper>

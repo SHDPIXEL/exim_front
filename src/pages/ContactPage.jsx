@@ -6,23 +6,50 @@ import { Link } from "react-router-dom";
 import contact_1 from "../assets/images/contact_1_1.svg";
 import contact_2 from "../assets/images/contact_1_2.svg";
 import contact_3 from "../assets/images/contact_1_3.svg";
+import API from "../api";
+import { useNotification } from '../context/NotificationContext';
 
 const ContactPage = () => {
-    const [formData, setFormData] = useState({
 
-        username: '',
-        password: '',
-    });
+    const { showNotification } = useNotification();
+    const [btnText, setBtnText] = useState('Submit Now');
+    const [formData, setFormData] = useState({
+        name: '',
+        email: '',
+        contactNumber: '',
+        message: ''
+      });
+      
+
+
+      const submitForm = async () => {
+        setBtnText('Submitting');
+        try {
+          const response = await API.post('/services/send-contact-message', formData);
+          showNotification('Form submitted successfully', 'success');
+        } catch (error) {
+          console.error("Error submitting form:", error);
+          showNotification('Failed To Submit', 'danger');
+          showNotification(error, 'danger');
+        } finally {
+            setBtnText('Submit Now');
+        }
+      };
+      
+
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setFormData({ ...formData, [name]: value });
-    };
+        setFormData((prevData) => ({
+          ...prevData,
+          [name]: value
+        }));
+      };
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-
-    };
+      const handleSubmit = (e) => {
+        e.preventDefault(); // prevent default form submission
+        submitForm();       // call the API
+      };
 
     return (
         <>
@@ -36,7 +63,6 @@ const ContactPage = () => {
                             </div>
                             <div className="col-xl-5">
                                 <div className="pe-xxl-4 me-xl-3 text-center text-xl-start mb-40 mb-lg-0">
-
                                     <div className="contact-feature-wrap mt-3">
                                         <div className="contact-feature">
                                             <div className="box-icon">
@@ -105,12 +131,12 @@ const ContactPage = () => {
 
 
                                                     <Col md={12}>
-                                                        <Form.Group controlId="fullName" className="mt-3">
+                                                        <Form.Group controlId="name" className="mt-3">
                                                             <Form.Label>Your Name *</Form.Label>
                                                             <Form.Control
-                                                                type="username"
+                                                                type="name"
                                                                 placeholder="Enter Your Name"
-                                                                name="username"
+                                                                name="name"
                                                                 value={formData.Name}
                                                                 onChange={handleChange}
                                                                 className='webinput'
@@ -132,13 +158,13 @@ const ContactPage = () => {
                                                         </Form.Group>
                                                     </Col>
                                                     <Col md={6}>
-                                                        <Form.Group controlId="mobilno" className="mt-3">
+                                                        <Form.Group controlId="contactNumber" className="mt-3">
                                                             <Form.Label>Conatct No *</Form.Label>
                                                             <Form.Control
                                                                 type="number"
                                                                 placeholder="Enter your Conatct No"
-                                                                name="mobilno"
-                                                                value={formData.mobilno}
+                                                                name="contactNumber"
+                                                                value={formData.contactNumber}
                                                                 onChange={handleChange}
 
                                                                 className='webinput'
@@ -150,12 +176,11 @@ const ContactPage = () => {
                                                             <Form.Label>Message / Queries *</Form.Label>
                                                             <Form.Control
                                                                 as={"textarea"}
-                                                                Row={12}
+                                                                row={12}
                                                                 placeholder="Enter your Message / Queries"
-                                                                name="password"
+                                                                name="message"
                                                                 value={formData.message}
                                                                 onChange={handleChange}
-
                                                                 className='webinput webTextarea'
                                                             />
                                                         </Form.Group>
@@ -168,7 +193,7 @@ const ContactPage = () => {
                                                         <div className='text-start row justify-content-start'>
                                                             <div className='col-md-4'>
                                                                 <button type="submit" className="mt-4 mb-3 dailySubscribebtn p-2 " style={{ height: "50px" }}>
-                                                                    Submit Now
+                                                                    {btnText}
                                                                 </button>
                                                             </div>
                                                         </div>

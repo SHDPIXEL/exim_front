@@ -118,8 +118,8 @@ const Home = () => {
                                 >
                                     {topLeftMedia.map((media, index) => (
                                         <SwiperSlide key={index}>
-                                            <div onClick={() => handleAdClick(media?.name, media.url)} target="_blank" rel="noopener noreferrer">
-                                                {media.type === "image" ? (
+                                           <a title='View More'  onClick={() => handleAdClick({company : media.company_name, id : media.name + media.sequenceNumber},media.url)} className='cursor-pointer' target="_blank" rel="noopener noreferrer">
+                                             {media.type === "image" ? (
                                                     <img src={media.src} alt="Advertisement" className="w-100 ad-image-top" />
                                                 ) : (
                                                     <video controls={false} autoPlay muted className="w-100 ad-image-top">
@@ -127,7 +127,7 @@ const Home = () => {
                                                         Your browser does not support the video tag.
                                                     </video>
                                                 )}
-                                            </div>
+                                            </a>
                                         </SwiperSlide>
                                     ))}
                                 </Swiper>
@@ -143,8 +143,8 @@ const Home = () => {
                                 >
                                     {topRightMedia.map((media, index) => (
                                         <SwiperSlide key={index}>
-                                            <div onClick={() => handleAdClick(media?.name, media.url)} target="_blank" rel="noopener noreferrer">
-                                                {media.type === "image" ? (
+                                           <a title='View More' onClick={() => handleAdClick({company : media.company_name, id : media.name + media.sequenceNumber},media.url)}  className='cursor-pointer' target="_blank" rel="noopener noreferrer">
+                                                 {media.type === "image" ? (
                                                     <img src={media.src} alt="Advertisement" className="w-100 ad-image-top" />
                                                 ) : (
                                                     <video controls={false} autoPlay muted className="w-100 ad-image-top">
@@ -152,7 +152,7 @@ const Home = () => {
                                                         Your browser does not support the video tag.
                                                     </video>
                                                 )}
-                                            </div>
+                                            </a>
                                         </SwiperSlide>
                                     ))}
                                 </Swiper>
@@ -217,8 +217,8 @@ const Home = () => {
                                 >
                                     {aboveEventsLeftMedia.map((media, index) => (
                                         <SwiperSlide key={index}>
-                                            <div onClick={() => handleAdClick(media?.name, media.url)} target="_blank" rel="noopener noreferrer">
-                                                {media.type === "image" ? (
+                                            <a title='View More' onClick={() => handleAdClick({company : media.company_name, id : media.name + media.sequenceNumber},media.url)} className='cursor-pointer' target="_blank" rel="noopener noreferrer">
+                                              {media.type === "image" ? (
                                                     <img src={media.src} alt="Advertisement" className="w-100 ad-image-top" />
                                                 ) : (
                                                     <video controls={false} autoPlay muted className="w-100 ad-image-top">
@@ -226,7 +226,7 @@ const Home = () => {
                                                         Your browser does not support the video tag.
                                                     </video>
                                                 )}
-                                            </div>
+                                            </a>
                                         </SwiperSlide>
                                     ))}
                                 </Swiper>
@@ -242,8 +242,8 @@ const Home = () => {
                                 >
                                     {aboveEventsRightMedia.map((media, index) => (
                                         <SwiperSlide key={index}>
-                                            <div onClick={() => handleAdClick(media?.name, media.url)} target="_blank" rel="noopener noreferrer">
-                                                {media.type === "image" ? (
+                                            <a title='View More' onClick={() => handleAdClick({company : media.company_name, id : media.name + media.sequenceNumber},media.url)} className='cursor-pointer' target="_blank" rel="noopener noreferrer">
+                                                  {media.type === "image" ? (
                                                     <img src={media.src} alt="Advertisement" className="w-100 ad-image-top" />
                                                 ) : (
                                                     <video controls={false} autoPlay muted className="w-100 ad-image-top">
@@ -251,7 +251,7 @@ const Home = () => {
                                                         Your browser does not support the video tag.
                                                     </video>
                                                 )}
-                                            </div>
+                                            </a>
                                         </SwiperSlide>
                                     ))}
                                 </Swiper>
@@ -302,8 +302,8 @@ const Home = () => {
                                 >
                                     {SubscribeMedia.map((media, index) => (
                                         <SwiperSlide key={index}>
-                                            <div onClick={() => handleAdClick(media?.name, media.url)} target="_blank" rel="noopener noreferrer">
-                                                {media.type === "image" ? (
+                                            <a title='View More' onClick={() => handleAdClick({company : media.company_name, id : media.name + media.sequenceNumber},media.url)} className='cursor-pointer' target="_blank" rel="noopener noreferrer">
+                                                  {media.type === "image" ? (
                                                     <img src={media.src} alt="Advertisement" className="ad-image-between w-100" />
                                                 ) : (
                                                     <video
@@ -316,7 +316,7 @@ const Home = () => {
                                                         Your browser does not support the video tag.
                                                     </video>
                                                 )}
-                                            </div>
+                                            </a>
                                         </SwiperSlide>
                                     ))}
                                 </Swiper>
@@ -345,11 +345,11 @@ const Home = () => {
                             </div>
                             <div className="col-md-12 mb-3">
                                 <div className="sociallinks">
-                                    <Link to="https://www.facebook.com/people/Exim-India/100064039290498/" target="_blank"><div><i className="bi bi-facebook"></i> facebook </div><div>Like</div></Link>
+                                    <Link to="https://www.facebook.com/Exim-India-132749816804720" target="_blank"><div><i className="bi bi-facebook"></i> facebook </div><div>Like</div></Link>
                                     <Link to="https://x.com/Exim_India" target="_blank"><div><i className="bi bi-twitter-x"></i> twitter </div><div>Follow</div></Link>
-                                    <Link to="https://www.youtube.com/" target="_blank"><div><i className="bi bi-youtube"></i> youtube</div><div>Subscribe</div></Link>
-                                    <Link to="https://www.instagram.com/" target="_blank"><div><i className="bi bi-instagram"></i> instagram</div><div>Follow</div></Link>
-                                    <Link to="https://in.linkedin.com/" target="_blank"><div><i className="bi bi-linkedin"></i> linkedin</div><div>Follow</div></Link>
+                                    <Link to="https://www.youtube.com/@eximindia9046" target="_blank"><div><i className="bi bi-youtube"></i> youtube</div><div>Subscribe</div></Link>
+                                    <Link to="https://www.instagram.com/eximindia_" target="_blank"><div><i className="bi bi-instagram"></i> instagram</div><div>Follow</div></Link>
+                                    <Link to="https://www.linkedin.com/company/eximindia/" target="_blank"><div><i className="bi bi-linkedin"></i> linkedin</div><div>Follow</div></Link>
                                 </div>
                             </div>
                         </div>
@@ -397,8 +397,8 @@ const Home = () => {
                                 >
                                     {videoHomeMedia.map((media, index) => (
                                         <SwiperSlide key={index}>
-                                            <div onClick={() => handleAdClick(media?.name, media.url)} target="_blank" rel="noopener noreferrer">
-                                                {media.type === "image" ? (
+                                            <a title='View More' onClick={() => handleAdClick({company : media.company_name, id : media.name + media.sequenceNumber},media.url)} className='cursor-pointer' target="_blank" rel="noopener noreferrer">
+                                                  {media.type === "image" ? (
                                                     <img src={media.src} alt="Advertisement" className="ad-image-between w-100" />
                                                 ) : (
                                                     <video
@@ -411,7 +411,7 @@ const Home = () => {
                                                         Your browser does not support the video tag.
                                                     </video>
                                                 )}
-                                            </div>
+                                            </a>
                                         </SwiperSlide>
                                     ))}
                                 </Swiper>
@@ -475,8 +475,8 @@ const Home = () => {
                                 >
                                     {bottomLeftMedia.map((media, index) => (
                                         <SwiperSlide key={index}>
-                                            <div onClick={() => handleAdClick(media?.name, media.url)} target="_blank" rel="noopener noreferrer">
-                                                {media.type === "image" ? (
+                                            <a title='View More' onClick={() => handleAdClick({company : media.company_name, id : media.name + media.sequenceNumber},media.url)} className='cursor-pointer' target="_blank" rel="noopener noreferrer">
+                                                  {media.type === "image" ? (
                                                     <img src={media.src} alt="Advertisement" className="w-100 ad-image-top" />
                                                 ) : (
                                                     <video controls={false} autoPlay muted className="w-100 ad-image-top">
@@ -484,7 +484,7 @@ const Home = () => {
                                                         Your browser does not support the video tag.
                                                     </video>
                                                 )}
-                                            </div>
+                                            </a>
                                         </SwiperSlide>
                                     ))}
                                 </Swiper>
@@ -500,7 +500,7 @@ const Home = () => {
                                 >
                                     {bottomRightMedia.map((media, index) => (
                                         <SwiperSlide key={index}>
-                                            <div onClick={() => handleAdClick(media?.name, media.url)} rel="noopener noreferrer">
+                                            <a title='View More'  onClick={() => handleAdClick({company : media['company_name'], id : media['name'] + media['sequenceNumber']},media.url)} className='cursor-pointer' target="_blank" rel="noopener noreferrer">
                                                 {media.type === "image" ? (
                                                     <img src={media.src} alt="Advertisement" className="w-100 ad-image-top" />
                                                 ) : (
@@ -509,7 +509,7 @@ const Home = () => {
                                                         Your browser does not support the video tag.
                                                     </video>
                                                 )}
-                                            </div>
+                                            </a>
                                         </SwiperSlide>
                                     ))}
                                 </Swiper>

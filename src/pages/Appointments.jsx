@@ -196,13 +196,14 @@ const Appointments = () => {
                         <Swiper modules={[Autoplay]} autoplay={{ delay: 3000 }} loop={true}>
                             {appointmentMedia.map((media, index) => (
                                 <SwiperSlide key={index}>
-                                    <div onClick={() => handleAdClick(media.name, media)} target="_blank" rel="noopener noreferrer">
+                                    <a title='View More' onClick={() => handleAdClick("Appointment " + media.name,media.url)} className='cursor-pointer' target="_blank" rel="noopener noreferrer">
+                  
                                         {media.type === "image" ? (
                                             <img src={media.src} alt="Advertisement" className="ad-image-between w-100" />
                                         ) : (
                                             <video src={media.src} muted autoPlay loop className="ad-image-between w-100" />
                                         )}
-                                    </div>
+                                    </a>
                                 </SwiperSlide>
                             ))}
 
