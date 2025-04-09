@@ -1,5 +1,7 @@
 import React, { useEffect } from "react";
 
+
+
 const FacebookPost = () => {
     useEffect(() => {
         if (!window.FB) {
@@ -13,17 +15,32 @@ const FacebookPost = () => {
         }
     }, []);
 
+
+
+
     return (
-        <div className="fb-page"
-            data-href="https://www.facebook.com/facebookapp"
-            data-tabs="timeline"
-            data-width="470"
-            data-height="700"
-            data-small-header="false"
-            data-adapt-container-width="true"
-            data-hide-cover="false"
-            data-show-facepile="true">
-        </div>
+        // <div className="fb-page"
+        //     data-href="https://www.facebook.com/facebookapp"
+        //     data-tabs="timeline"
+        //     data-width="470"
+        //     data-height="700"
+        //     data-small-header="false"
+        //     data-adapt-container-width="true"
+        //     data-hide-cover="false"
+        //     data-show-facepile="true">
+        // </div>
+
+        <>
+            <iframe src="https://www.facebook.com/plugins/post.php?href=https%3A%2F%2Fwww.facebook.com%2Fshdpixel%2Fposts%2Fpfbid02TKRbnNSUyMTJiFVxwVzMMPrXs2mUocvuBA1dcaKGjJxtHsYQGQqWDCvXEXcn9Sjgl&show_text=true&width=500"
+             width="100%" 
+             height="698" 
+             style={{ border:'none', overflow:'hidden' }}
+             scrolling="no" 
+             frameborder="0" 
+             allowfullscreen="true" 
+             allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"></iframe>
+        </>
+
 
     );
 };
