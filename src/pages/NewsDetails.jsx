@@ -67,7 +67,13 @@ const NewsDetails = () => {
                         <h2 className="blog-title">{newsDetails.headline}</h2>
                         <div className="blog-meta"><Link to="/#"><i className="far fa-calendar-days"></i>{dataFormatter(newsDetails.date)}</Link>
                         </div>
-                        <div className="blog-img"><img src={newsDetails.image || "https://placehold.co/600x400"} alt="Blog" width={"100%"} /></div>
+                        {
+                            newsDetails.image && (
+                                <div className="blog-img"><img src={newsDetails.image || "https://placehold.co/600x400"} style={{ aspectRatio: "3 / 2",
+                                    objectFit: "cover" }} alt="Blog" width={"100%"} />
+                                </div>
+                            )
+                        }
                         <div className="blog-content-wrap">
                             <div className="blog-content">
                                 <div className="content">
@@ -145,7 +151,7 @@ const NewsDetails = () => {
                         >
                             {NewsDetailsMedia.map((media, index) => (
                                 <SwiperSlide key={index}>
-                                    <a title='View More' onClick={() => handleAdClick("NewDetails Right" + media.name,media.url)} className='cursor-pointer' target="_blank" rel="noopener noreferrer">
+                                    <a title='View More' onClick={() => handleAdClick("NewDetails Right" + media.name, media.url)} className='cursor-pointer' target="_blank" rel="noopener noreferrer">
                                         {media.type === "image" ? (
                                             <img src={media.src} alt="Advertisement" className="w-100 ad-image-between" style={{ height: "348px" }} />
                                         ) : (

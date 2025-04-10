@@ -15,6 +15,7 @@ const News = () => {
     const [totalPages, setTotalPages] = useState(1);
     const [loading, setLoading] = useState(false);
     const [headlines, SetHeadlines] = useState([]);
+    
 
     // Fetch Top Headlines
     useEffect(() => {
@@ -63,7 +64,6 @@ const News = () => {
     // Search Function with Pagination
     const handleSearch = async (pageNumber = 1) => {
         if (!searchTerm && !selectedDate) {
-            alert("Please select a date or enter a search term.");
             return;
         }
 

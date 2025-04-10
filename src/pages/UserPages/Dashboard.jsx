@@ -10,6 +10,8 @@ import 'react-datepicker/dist/react-datepicker.css';
 import { useUser } from "../../context/UserContext";
 import API from "../../api";
 import dataFormatter from "../../helper/DateFormatter";
+import { useNotification } from "../../context/NotificationContext";
+
 
 const Dashboard = () => {
     const navigate = useNavigate();
@@ -21,6 +23,9 @@ const Dashboard = () => {
     const [editionUrl, setEditionUrl] = useState(null);
     const [editionImage, setEditionImage] = useState(null); // Renamed for consistency
     const [isFetching, setIsFetching] = useState(false); // Track fetch status
+
+
+    const { showNotification } = useNotification();
 
 
     // Generate last 10 days dynamically
@@ -132,12 +137,12 @@ const Dashboard = () => {
         e.preventDefault();
 
         if (isFetching) {
-            alert("Please wait, fetching edition data...");
+            showNotification("Please wait, fetching edition data...", "info");
             return;
         }
 
         if (!editionUrl || !selectedEdition || !selectedDate) {
-            alert("No edition available for the selected date and edition.");
+            showNotification("No edition available for the selected date and edition.", "info");
             return;
         }
 
@@ -211,7 +216,7 @@ const Dashboard = () => {
                         )}
 
                         {
-                        editionUrl &&
+                            editionUrl &&
                             <button
                                 className="dailySubscribebtn mt-3 mx-auto p-2"
                                 onClick={handleViewClick}

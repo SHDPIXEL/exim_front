@@ -59,7 +59,12 @@ const NewCategories = () => {
 
                                     <div className="leftTopbannerSlider">
                                         <div className="position-relative mb-2">
-                                            <img src={slider.image || "https://placehold.co/600x400"} width="100%" height="100%" alt={slider.headline} />
+                                            <img src={slider.image || "https://placehold.co/600x400"}
+                                            style={{
+                                                aspectRatio: "6 / 4",
+                                                objectFit : "cover"
+                                            }} 
+                                            width="100%" height="100%" alt={slider.headline} />
                                             <div className="storycat">
                                                 <div className="categorybtn">{slider.category_name}</div>
                                             </div>

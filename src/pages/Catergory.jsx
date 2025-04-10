@@ -66,7 +66,6 @@ const Category = () => {
     // Search news with category, date, and term
     const handleSearch = async (categoryId, pageNumber = 1) => {
         if (!searchTerm && !selectedDate) {
-            alert("Please select a date or enter a search term.");
             return;
         }
 

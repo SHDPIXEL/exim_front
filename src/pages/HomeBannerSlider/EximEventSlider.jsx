@@ -16,8 +16,8 @@ const EximEventsSlider = (props) => {
     useEffect(() => {
         const fetchEvents = async () => {
             try {
-                const response = await API.post("/events/get_events_website");
-                setEvents(response.data.data?.past)
+                const response = await API.post("/events/get_home_events");
+                setEvents(response.data.data)
             } catch (error) {
                 console.error("Error in fetching events", error)
             }

@@ -6,6 +6,9 @@ import { useForm } from 'react-hook-form';
 import API from '../api';
 import { useAuth } from '../context/AuthContext';
 
+import { useNotification } from "../context/NotificationContext";
+
+
 const RegistrationForm = () => {
     const navigate = useNavigate();
     const [modalShow, setModalShow] = React.useState(false);
@@ -13,6 +16,9 @@ const RegistrationForm = () => {
 
     const [selectedState, setSelectedState] = React.useState('');
     const [cityOptions, setCityOptions] = React.useState([]);
+
+
+    const { showNotification } = useNotification();
 
     const stateCityData = {
         "Andhra Pradesh": [
@@ -193,9 +199,9 @@ const RegistrationForm = () => {
             console.error('Registration failed:', error.response?.data || error.message);
 
             if (error?.success === 0) {
-                alert(error.response?.data?.message || "User with the same email or mobile already exists.");
+                showNotification(`error.response?.data?.message || "User with the same email or mobile already exists."`, "info");
             } else {
-                alert('Registration failed. Please try again.');
+                showNotification("Registration failed. Please try again.", "error");
             }
         }
     };

@@ -4,19 +4,22 @@ import API from "../api";
 import { Button } from "react-bootstrap";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
+import logo from "../logo.png"
 
 const Invoice = () => {
-  const { invoiceId } = useParams(); // Get invoiceId from the URL
+  const { invoiceId } = useParams();
   const [invoiceData, setInvoiceData] = useState(null);
   const [loading, setLoading] = useState(true);
   const invoiceRef = useRef(); // Reference to the invoice div
 
+  console.log(invoiceId);
   useEffect(() => {
+    console.log(invoiceId);
     const fetchInvoice = async () => {
       try {
         const response = await API.post(
           "/services/get_invoice",
-          { invoiceId },
+          { orderId : invoiceId },
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("authToken")}`,
@@ -41,15 +44,26 @@ const Invoice = () => {
   // Function to download the invoice as a PDF
   const DownloadPDF = () => {
     const input = invoiceRef.current;
-    html2canvas(input, { scale: 2 }).then((canvas) => {
-      const imgData = canvas.toDataURL("image/png");
-      const pdf = new jsPDF("p", "mm", "a4");
-      const imgWidth = 210; // A4 width in mm
-      const imgHeight = (canvas.height * imgWidth) / canvas.width;
-      pdf.addImage(imgData, "PNG", 0, 0, imgWidth, imgHeight);
-      pdf.save(`Invoice_${invoiceId}.pdf`);
+  
+    // Wait for all images inside invoiceRef to load
+    const images = input.querySelectorAll("img");
+    const promises = Array.from(images).map((img) => {
+      if (img.complete) return Promise.resolve();
+      return new Promise((res) => img.onload = img.onerror = res);
+    });
+  
+    Promise.all(promises).then(() => {
+      html2canvas(input, { scale: 2, useCORS: true }).then((canvas) => {
+        const imgData = canvas.toDataURL("image/png");
+        const pdf = new jsPDF("p", "mm", "a4");
+        const width = pdf.internal.pageSize.getWidth();
+        const height = (canvas.height * width) / canvas.width;
+        pdf.addImage(imgData, "PNG", 0, 0, width, height);
+        pdf.save(`invoice_${invoiceId}.pdf`);
+      });
     });
   };
+  
 
   return (
     <div className="invoice-container-m">
@@ -66,7 +80,8 @@ const Invoice = () => {
         >
           <div className="logo-section" style={{ textAlign: "left", width: "100%" }}>
             <img
-              src="https://exim.demo.shdpixel.com/static/media/logo-exim.14c9676bee1b10e8401a.png"
+              crossOrigin="anonymous"
+              src={logo}
               alt="Exim Logo"
               style={{ maxHeight: "60px" }}
             />

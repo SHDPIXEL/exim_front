@@ -77,7 +77,7 @@ function App() {
             <Routes>
               <Route path="/" element={<Layout><Home /></Layout>} />
               <Route path="/subscribePage" element={<Layout><SubscribePage /></Layout>} />
-              <Route path="/invoice/:id" element={<Layout><InvoicePage /></Layout>} />
+              <Route path="/invoice/:invoiceId" element={<Layout><InvoicePage /></Layout>} />
               <Route path="/newsDetails/:id" element={<Layout><NewsDetails /></Layout>} />
               <Route path="/videoGallery" element={<Layout><VideoGalleryNews /></Layout>} />
               <Route path="/videoGalleryDetails/:id" element={<Layout><VideGalleryDetails /></Layout>} />

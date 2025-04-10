@@ -84,52 +84,78 @@ const EventsPage = () => {
                 {error && <div className="alert alert-danger">{error}</div>}
 
                 {/* Current Events */}
-                {currentEvents.length > 0 && (
-                    <div className='row my-5'>
-                        <div className="col-md-12 mb-4">
-                            <div className="webTittle"><i className="bi bi-chevron-right"></i> Current Events</div>
-                        </div>
-                        {currentEvents.map(event => (
-                            <div className='col-md-4 mb-3' key={event._id}>
-                                <a
-                                    href={event.url}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    style={{ textDecoration: "none", color: "inherit" }} >
-                                    <div className='EventBox'>
-                                        <img src={event.image || eventimg4} alt={event.name} className='w-100' />
-                                        <div className='Event-content'>
-                                            <h4>{event.name}</h4>
-                                            <h5>{new Date(event.date).toLocaleDateString('en-US', {
-                                                weekday: 'short',
-                                                day: 'numeric',
-                                                month: 'short',
-                                                year: 'numeric'
-                                            })}</h5>
-                                            <p>{event.venue}</p>
-                                        </div>
-                                    </div>
-                                </a>
-                            </div>
-                        ))}
+
+                <div className='row my-5 align-items-center'>
+                    <div className='col-md-12 mb-5 w-100'>
+                        <Form.Select
+
+                            aria-label="Select Event"
+                            className='webinput w-25 float-end'
+                            value={selectedEventType}
+                            onChange={(e) => setSelectedEventType(e.target.value)}
+                        >
+                            <option value="">All Events</option>
+                            {options.map(option => (
+                                <option key={option._id} value={option.category}>{option.category}</option>
+                            ))}
+                        </Form.Select>
                     </div>
-                )}
+                </div>
+                <div className='row align-items-center'>
+                    {currentEvents.length > 0 && (
+                        <>
+                            <div className="col-md-12 mb-3">
+                                <div className="webTittle"><i className="bi bi-chevron-right"></i> Current Events</div>
+                            </div>
+                            {currentEvents.map(event => (
+                                <div className='col-md-3 col-6 mb-3' key={event._id}>
+                                    <a
+                                        href={event.url}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        style={{ textDecoration: "none", color: "inherit" }} >
+                                        <div className='EventBox'>
+                                            <img src={event.image || eventimg4} alt={event.name} style={{
+                                                aspectRatio: 2,
+                                                objectFit: 'cover'
+                                            }} className='w-100' />
+                                            <div className='Event-content'>
+                                                <h4>{event.name}</h4>
+                                                <h5>{new Date(event.date).toLocaleDateString('en-US', {
+                                                    weekday: 'short',
+                                                    day: 'numeric',
+                                                    month: 'short',
+                                                    year: 'numeric'
+                                                })}</h5>
+                                                <p>{event.venue}</p>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+                            ))}
+                        </>
+                    )}
+                </div>
+
 
                 {/* Upcoming Events */}
                 {upcomingEvents.length > 0 && (
-                    <div className='row my-5'>
-                        <div className="col-md-12 mb-4">
+                    <div className='row my-5 align-items-center'>
+                        <div className="col-md-12 mb-3">
                             <div className="webTittle"><i className="bi bi-chevron-right"></i> Upcoming Events</div>
                         </div>
                         {upcomingEvents.map(event => (
-                            <div className='col-md-3 mb-4' key={event._id}>
+                            <div className='col-md-3 col-1 mb-3' key={event._id}>
                                 <a
                                     href={event.url}
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     style={{ textDecoration: "none", color: "inherit" }} >
                                     <div className='EventBox'>
-                                        <img src={event.image || eventimg4} alt={event.name} className='w-100' />
+                                        <img src={event.image || eventimg4} alt={event.name} style={{
+                                            aspectRatio: 2,
+                                            objectFit: 'cover'
+                                        }} className='w-100' />
                                         <div className='Event-content upcoming'>
                                             <h4>{event.name}</h4>
                                             <h5>{new Date(event.date).toLocaleDateString('en-US', {
@@ -149,39 +175,29 @@ const EventsPage = () => {
             </div>
 
             {/* Past Events */}
-            <div className='container my-5'>
+            <div className='container mb-5'>
+                {pastEvents.length > 0 ? (
+                    <>
 
-                <>
-                    <div className="row mt-5 align-items-center mb-3">
-                        <div className="col-md-2 mb-1">
-                            <h4>Past Events -</h4>
+                        <div className="row align-items-center">
+                            <div className="col-md-12 mb-3">
+                                <div className="webTittle"><i className="bi bi-chevron-right"></i> Past Events</div>
+                            </div>
                         </div>
-                        <div className="col-md-3 mb-1">
-                            <Form.Select
-                                aria-label="Select Event"
-                                className='webinput'
-                                value={selectedEventType}
-                                onChange={(e) => setSelectedEventType(e.target.value)}
-                            >
-                                <option value="">All Events</option>
-                                {options.map(option => (
-                                    <option key={option._id} value={option.category}>{option.category}</option>
-                                ))}
-                            </Form.Select>
-                        </div>
-                    </div>
 
-                    {pastEvents.length > 0 ? (
                         <div className='row'>
                             {pastEvents.map(event => (
-                                <div className='col-md-3 col-6 mt-3' key={event._id}>
+                                <div className='col-md-3 col-6 mb-3' key={event._id}>
                                     <a
                                         href={event.url}
                                         target="_blank"
                                         rel="noopener noreferrer"
                                         style={{ textDecoration: "none", color: "inherit" }} >
                                         <div className='EventBox'>
-                                            <img src={event.image || eventimg4} alt={event.name} className='w-100' />
+                                            <img src={event.image || eventimg4} style={{
+                                                aspectRatio: 2,
+                                                objectFit: 'cover'
+                                            }} alt={event.name} className='w-100' />
                                             <div className='Event-content'>
                                                 <h4>{event.name}</h4>
                                             </div>
@@ -190,10 +206,11 @@ const EventsPage = () => {
                                 </div>
                             ))}
                         </div>
-                    ) : (
-                        <p>No Event Found</p>
-                    )}
-                </>
+                    </>
+
+                ) : (
+                    <p className='text-center py-5'>No Event Found</p>
+                )}
 
                 {/* View More Button */}
                 {page < totalPages && (

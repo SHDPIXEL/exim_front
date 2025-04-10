@@ -4,6 +4,9 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { Link, useNavigate } from 'react-router-dom';
 import API from '../api';
 
+import { useNotification } from "../context/NotificationContext"
+
+
 const ForgotPass = () => {
     const navigate = useNavigate();
     const [formData, setFormData] = useState({ username: '' });
@@ -14,6 +17,8 @@ const ForgotPass = () => {
         setFormData({ ...formData, [name]: value });
     };
 
+    const { showNotification } = useNotification();
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setButtonLoading(true);
@@ -22,14 +27,14 @@ const ForgotPass = () => {
             const response = await API.post('/services/forgot-password', { email: formData.username });
 
             if (response.data.success) {
-                alert('Password reset instructions sent to your email!');
+                showNotification("Password reset instructions sent to your email!", "info");
                 setFormData({ username: '' });
                 navigate('/login');
             } else {
-                alert(response.data.message || 'Failed to send reset instructions.');
+                showNotification("Failed to send reset instructions.", "error");
             }
         } catch (error) {
-            alert(error?.message);
+            showNotification(error?.message, "error");
             console.error('Forgot password error:', error);
         }
 

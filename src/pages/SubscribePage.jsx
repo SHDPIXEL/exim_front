@@ -7,6 +7,7 @@ import { useNotification } from '../context/NotificationContext';
 import API from '../api';
 import { Modal, Button } from 'react-bootstrap';
 
+
 const SubscribePage = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -85,7 +86,7 @@ const SubscribePage = () => {
   const handlePackageChange = (location, duration, price) => {
     if (user && activeType !== "digital") {
       if (!userData || (!userData.city && !userData.state)) {
-        alert("Your location details are missing. Please update your profile.");
+        showNotification("Your location details are missing. Please update your profile.", "info");
         return;
       }
 
@@ -94,7 +95,7 @@ const SubscribePage = () => {
         userData.state?.toLowerCase() === location.toLowerCase();
 
       if (!userLocationMatches) {
-        alert("You can only subscribe to packages available in your city or state.");
+        showNotification("You can only subscribe to packages available in your city or state.", "info");
         return;
       }
     }
@@ -117,18 +118,18 @@ const SubscribePage = () => {
     });
   };
 
-  const handleRenewClick = (location, duration, price, type) => {
-    navigate('/paymentSummary', {
+  const handleRenewClick = (location, type) => {
+    navigate('/paymentHistory', {
       state: {
         subscriptionType: type,
-        packages: [{ location, duration, price }],
+        packages: [{ location }],
       },
     });
   };
 
   const handleContinue = () => {
     if (selectedPackages.length === 0) {
-      alert('Please select at least one package.');
+      showNotification("Please select at least one package.", "info");
       return;
     }
     navigate('/paymentSummary', {
@@ -150,11 +151,10 @@ const SubscribePage = () => {
   };
 
   // Check if a package is subscribed and active
-  const isPackageSubscribed = (location, duration) => {
+  const isPackageSubscribed = (location) => {
     return subscribedPackages.some(
       (sub) =>
         sub.location === location &&
-        sub.duration === duration &&
         sub.type === activeType &&
         sub.status === "success" &&
         sub.expiryDate > new Date()
@@ -162,9 +162,9 @@ const SubscribePage = () => {
   };
 
   // Check if a package is renewable (expired or within 30 days of expiry)
-  const isPackageRenewable = (location, duration) => {
+  const isPackageRenewable = (location) => {
     const sub = subscribedPackages.find(
-      (s) => s.location === location && s.duration === duration && s.type === activeType
+      (s) => s.location === location && s.type === activeType
     );
     if (!sub || sub.status !== "success") return false;
 
@@ -178,7 +178,7 @@ const SubscribePage = () => {
   return (
     <>
       <Modal show={showModal} onHide={() => setShowModal(false)} centered>
-       
+
         <Modal.Header closeButton>
           <span className='modal-head-text'>📢 All Editions Now Available!</span>
         </Modal.Header>
@@ -269,61 +269,67 @@ const SubscribePage = () => {
                 <div className="row mb-5">
                   <div className="col-md-12 mb-3">
                     <div className="webTittle">
-                      <i className="bi bi-chevron-right"></i>Select a Package
+                      <i className="bi bi-chevron-right"></i>Select a {activeType === "digital" ? "Digital Copy" : ( activeType === "hard" ? "Hard Copy" : "" )} Package
                     </div>
                   </div>
-                  {packagesData.map((pkg) => (
-                    <div key={pkg.location} className="col-md-3 col-6 mt-4">
-                      <div className="packbox">
-                        <div className="toppack">{pkg.location}</div>
-                        <div className="botpack">
-                          {pkg.options.map((option) => {
-                            const isSubscribed = isPackageSubscribed(pkg.location, option.duration);
-                            const isRenewable = isPackageRenewable(pkg.location, option.duration);
-
-                            return (
-                              <div
-                                key={option.duration}
-                                className="form-check packinput p-2 border rounded mb-3"
-                                style={{ backgroundColor: isSubscribed ? '#f0f8ff' : '#fff' }}
-                              >
-                                <div>
-                                  <input
-                                    className="form-check-input me-2"
-                                    type="checkbox"
-                                    id={`${pkg.location}-${option.duration}`}
-                                    checked={selectedPackages.some(
-                                      (selectedPkg) =>
-                                        selectedPkg.location === pkg.location &&
-                                        selectedPkg.duration === option.duration
-                                    )}
-                                    onChange={() => handlePackageChange(pkg.location, option.duration, option.price)}
-                                    disabled={isSubscribed && !isRenewable} // Disable if subscribed and not renewable
-                                  />
-                                  <label className="form-check-label" htmlFor={`${pkg.location}-${option.duration}`}>
-                                    <h3 className="mb-1">{option.duration}</h3>
-                                    <h5>₹ {option.price.toLocaleString()}</h5>
-                                  </label>
-                                </div>
-
-                                {isSubscribed && isRenewable && (
-                                  <div className="mt-2">
-                                    <button
-                                      className="btn btn-sm btn-primary w-100"
-                                      onClick={() => handleRenewClick(pkg.location, option.duration, option.price, activeType)}
-                                    >
-                                      Renew
-                                    </button>
+                  {packagesData.map((pkg) => {
+                    const isSubscribed = isPackageSubscribed(pkg.location);
+                    const isRenewable = true || isPackageRenewable(pkg.location);
+                    return (
+                      <div key={pkg.location} className="col-md-3 col-6 mt-4 position-relative z-1" >
+                        {isSubscribed && isRenewable && (
+                          <button
+                            className="btn btn-primary position-absolute"
+                            style={{
+                              top: '50%',
+                              left: '50%',
+                              transform: 'translate(-50%, -50%)',
+                              zIndex: 10,
+                            }}
+                            onClick={() => handleRenewClick(pkg.location)} // define this function
+                          >
+                            Renew
+                          </button>
+                        )}
+                        <div style={{ filter: isSubscribed ? 'blur(0.5px)' : 'none', opacity: isSubscribed ? '0.5' : '1' }}>
+                          <div className="packbox" style={{ backgroundColor: isSubscribed ? '#f0f8ff' : '#fff' }}>
+                            <div className="toppack">{pkg.location}</div>
+                            <div className="botpack">
+                              {pkg.options.map((option) => {
+                                return (
+                                  <div
+                                    style={{ backgroundColor: isSubscribed ? '#f0f8ff' : '#fff' }}
+                                    key={option.duration}
+                                    className="form-check packinput p-2 border rounded mb-3"
+                                  >
+                                    <div >
+                                      <input
+                                        className="form-check-input me-2"
+                                        type="checkbox"
+                                        id={`${pkg.location}-${option.duration}`}
+                                        checked={selectedPackages.some(
+                                          (selectedPkg) =>
+                                            selectedPkg.location === pkg.location &&
+                                            selectedPkg.duration === option.duration
+                                        )}
+                                        onChange={() => handlePackageChange(pkg.location, option.duration, option.price)}
+                                        disabled={isSubscribed && !isRenewable} // Disable if subscribed and not renewable
+                                      />
+                                      <label className="form-check-label" htmlFor={`${pkg.location}-${option.duration}`}>
+                                        <h3 className="mb-1">{option.duration}</h3>
+                                        <h5>₹ {option.price.toLocaleString()}</h5>
+                                      </label>
+                                    </div>
                                   </div>
-                                )}
-                              </div>
-                            );
-                          })}
+                                );
+                              })}
 
+                            </div>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  ))}
+                    )
+                  })}
                 </div>
 
                 <div className="borderbg"></div>
