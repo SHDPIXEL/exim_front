@@ -92,7 +92,7 @@ const MainHeader = () => {
                 )}
 
                 {(location.pathname === "/dashboard" || location.pathname === "/profile" || location.pathname === "/mydevice" || location.pathname === "/paymentHistory") && (
-                  <Dropdown >
+                  <Dropdown className='d-flex' >
                     <Dropdown.Toggle id="dropdown-button-dark-example1" className='userlogout' drop={"start"} variant='link'>
                       <i className="bi bi-person-circle"></i>
                     </Dropdown.Toggle>
