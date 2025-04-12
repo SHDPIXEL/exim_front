@@ -23,6 +23,16 @@ const PaymentHistory = () => {
           }
         );
 
+        const renewableResponse = await API.post(
+          "/services/get_user_renewal",
+          {},
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+            },
+          }
+        );
+
         // Map payment data
         const mappedPayments = response.data.userSubscription.map((payment) => ({
           id: payment.razorpayPaymentId || "N/A",
@@ -38,19 +48,8 @@ const PaymentHistory = () => {
 
         setPayments(mappedPayments);
 
-        // Filter expired or expiring within a month
-        const today = new Date();
-        const renewable = mappedPayments.filter((payment) => {
-          const expiryDate = new Date(payment.expiryDate);
-          const daysLeft = (expiryDate - today) / (1000 * 60 * 60 * 24);
-
-          return (
-            payment.status === "success" &&
-            (expiryDate < today || daysLeft <= 30)
-          );
-        });
-
-        setRenewableSubscriptions(renewable);
+      
+        setRenewableSubscriptions(renewableResponse.data);
       } catch (error) {
         console.error("Error in fetching payment details:", error);
         setPayments([]);
@@ -159,12 +158,15 @@ const PaymentHistory = () => {
                           <td>{payment.location}</td>
                           <td>{payment.duration}</td>
                           <td>{payment.type}</td>
-                          <td>{payment.date}</td>
-                          <td>{payment.amount}</td>
-                          <td>{payment.expiryDate}</td>
+                          <td>{payment?.date || "N/A"}</td>
+                          <td>{payment?.amount || "N/A"}</td>
+                          <td>{payment.renewalDate}</td>
                           <td>
                             <button
-                              className="btn btn-primary btn-sm"
+                              className={`btn btn-primary btn-sm ${
+                                payment.renewalStatus !== "Active" ? "opacity-50 cursor-not-allowed" : ""
+                              }`}
+                              disabled={payment.renewalStatus === "Active" ? false : true}
                               onClick={() => handleRenewClick(payment)}
                             >
                               Renewal
