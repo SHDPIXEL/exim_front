@@ -17,6 +17,23 @@ const PaymentSummary = () => {
 
   const subscriptionType = state?.subscriptionType || 'digital';
   const packages = state?.packages || [];
+  
+const result = packages.reduce(
+  (acc, pkg) => {
+    if (pkg.type === 'digital') {
+      acc.digital.push(pkg.id);
+    } else if (pkg.type === 'hard') {
+      acc.hard.push(pkg.id);
+    }
+    return acc;
+  },
+  {
+    digital: [],
+    hard: [],
+    type: subscriptionType,
+  }
+);
+
   const total = packages.reduce((sum, pkg) => sum + pkg.price, 0);
 
   useEffect(() => {
@@ -27,14 +44,7 @@ const PaymentSummary = () => {
       return;
     }
 
-    if (
-      subscriptionType !== 'digital' &&
-      userData &&
-      packages.some(pkg => pkg.location !== userData.state && pkg.location !== userData.city)
-    ) {
-      showNotification("Subscription location does not match your state or city. Please choose a valid subscription.", "info")
-      navigate('/subscribePage');
-    }
+    console.log(packages);
   }, [state, user, userData, navigate, subscriptionType, packages]);
 
   const loadScript = (src) => {
@@ -75,37 +85,27 @@ const PaymentSummary = () => {
     setIsLoading(true);
   
     try {
-      const subscriptionData = {
-        type: subscriptionType,
-        subscription_details: packages.map((pkg) => ({
-          location: pkg.location,
-          duration: pkg.duration,
-          price: pkg.price,
-        })),
-        amount: total,
-      };
-  
-      const response = await API.post('/services/order', subscriptionData, {
+      const response = await API.post('/services/order', { "packageData" : result }, {
         headers: {
           Authorization: `Bearer ${authToken}`,
         },
       });
   
-      const { amount, id: order_id, currency } = response.data.razorpayOrder;
+      const { amount, razorpayOrderId, currency, razorpayKey} = response.data;
       const userId = user.id;
   
       const options = {
-        key: 'rzp_test_TmUiraAoARSPLC',
+        key: razorpayKey,
         amount: amount.toString(),
         currency: currency,
         name: 'Exim',
         description: 'News membership',
         image: '',
-        order_id: order_id,
+        order_id: razorpayOrderId,
         handler: async function (response) {
           try {
             const paymentData = {
-              orderCreationId: order_id,
+              orderCreationId: razorpayOrderId,
               razorpayPaymentId: response.razorpay_payment_id,
               razorpayOrderId: response.razorpay_order_id,
               razorpaySignature: response.razorpay_signature,
@@ -122,7 +122,7 @@ const PaymentSummary = () => {
             if (verificationResponse.status === 200) {
               closeRazorpayModal(); // Close modal before success navigation
               navigate('/paymentDone', {
-                state: { order_id: order_id, amount: amount / 100 },
+                state: { order_id: razorpayOrderId, amount: amount / 100 },
               });
             } else {
               showNotification("Payment verification failed. Please contact support.", "danger");

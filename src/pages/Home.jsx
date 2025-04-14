@@ -424,19 +424,18 @@ const Home = () => {
                 <div className="row my-4">
                     <div className="col-md-9">
                         <div className="row">
-                            <div className="col-md-6 mb-4">
+                            <div className="col-md-6 mb-4" style={{ height: '900px', overflow: 'auto' }}>
                                 <div className="webTittle"><i className="bi bi-chevron-right"></i> EXIM India on <i className="bi bi-facebook"></i> </div>
                                 <h5 className="mt-3 mb-3">@Exim_India - a reputed and all-India recognised premier publishing house.</h5>
                                 <div className="w-100">
                                     <FacebookPost />
                                 </div>
                             </div>
-                            <div className="col-md-6 mb-4">
+                            <div className="col-md-6 mb-4" style={{ height: '900px', overflow: 'auto' }}>
                                 <div className="webTittle"><i className="bi bi-chevron-right"></i> EXIM India on <i className="bi bi-twitter-x"></i> </div>
                                 <h5 className="mt-3 mb-3">@Exim_India - a reputed and all-India recognised premier publishing house.</h5>
                                 <div className="w-100 ">
                                     <TwitterPost tweetUrl="https://twitter.com/TwitterDev/status/1524561551162716161" />
-
                                 </div>
                             </div>
                             <div className="col-md-12 mb-3">

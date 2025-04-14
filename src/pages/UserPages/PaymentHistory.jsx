@@ -9,7 +9,8 @@ const PaymentHistory = () => {
   const navigate = useNavigate();
   const [payments, setPayments] = useState([]);
   const [renewableSubscriptions, setRenewableSubscriptions] = useState([]);
-
+  const [subscriptions, setSubscriptions] = useState([]);
+  
   useEffect(() => {
     const fetchDetails = async () => {
       try {
@@ -34,19 +35,29 @@ const PaymentHistory = () => {
         );
 
         // Map payment data
-        const mappedPayments = response.data.userSubscription.map((payment) => ({
-          id: payment.razorpayPaymentId || "N/A",
-          invoiceId: payment.razorpayOrderId || "N/A",
-          location: payment.location || "N/A",
-          duration: payment.duration || "N/A",
-          type: payment.type || "N/A",
-          date: new Date(payment.createdAt).toISOString().split("T")[0],
-          amount: `₹ ${payment.price?.toLocaleString()}`,
-          expiryDate: new Date(payment.expiryDate).toISOString().split("T")[0],
-          status: payment.paymentStatus || "Pending",
+        const mappedSubscriptions = response.data.data.map((item) => ({
+          location: item.location || "N/A",
+          duration: item.duration || "N/A",
+          type: item.type || "N/A",
+          expiryDate: new Date(item.expiryDate).toISOString().split("T")[0],
+          status: item.status || "Pending",
         }));
 
+        const mappedPayments = response.data.data.map((item) => ({
+          location: item.location || "N/A",
+          duration: item.duration || "N/A",
+          invoiceId: item.payment.razorpayOrderId || "N/A",
+          payment_id: item.payment.razorpayPaymentId || "N/A",
+          paid_at : item.payment.paid_at || "N/A",
+          duration: item.duration || "N/A",
+          type: item.type || "N/A",
+          expiryDate: new Date(item.expiryDate).toISOString().split("T")[0],
+          status: item.status || "Pending",
+        }));
+
+        console.log(mappedSubscriptions);
         setPayments(mappedPayments);
+        setSubscriptions(mappedSubscriptions);
 
       
         setRenewableSubscriptions(renewableResponse.data);
@@ -79,7 +90,52 @@ const PaymentHistory = () => {
       </div>
       <div className="row">
         <div className="col-md-12 mb-4">
-          <Tabs defaultActiveKey="PaymentHistory" id="uncontrolled-tab-example" className="mb-3">
+          <Tabs defaultActiveKey="SubcriptionHistory" id="uncontrolled-tab-example" className="mb-3">
+          <Tab eventKey="SubcriptionHistory" title="Subcription History">
+              <div className="table-responsive">
+                <table className="table table-bordered table-hover">
+                  <thead className="table-primary">
+                    <tr>
+                      <th>Edition</th>
+                      <th>Duration</th>
+                      <th>Type</th>
+                      <th>Expiry Date</th>
+                      <th>Status</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {subscriptions.length > 0 ? (
+                      subscriptions.map((payment, index) => (
+                        <tr key={index}>
+                          <td>{payment.location}</td>
+                          <td>{payment.duration}</td>
+                          <td>{payment.type}</td>
+                          <td>{payment.expiryDate}</td>
+                          <td>
+                            <span
+                              className={`badge ${payment.status === "Active"
+                                  ? "bg-success"
+                                  : payment.status === "inactive"
+                                    ? "bg-warning text-dark"
+                                    : "bg-danger"
+                                }`}
+                            >
+                              {payment.status}
+                            </span>
+                          </td>
+                        </tr>
+                      ))
+                    ) : (
+                      <tr>
+                        <td colSpan="9" className="text-center">
+                          No payment records found.
+                        </td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            </Tab>
             <Tab eventKey="PaymentHistory" title="Payment History">
               <div className="table-responsive">
                 <table className="table table-bordered table-hover">
@@ -94,6 +150,7 @@ const PaymentHistory = () => {
                       <th>Amount</th>
                       <th>Expiry Date</th>
                       <th>Status</th>
+                      <th>Action</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -124,6 +181,7 @@ const PaymentHistory = () => {
                               {payment.status}
                             </span>
                           </td>
+                          <td>View Download </td>
                         </tr>
                       ))
                     ) : (
