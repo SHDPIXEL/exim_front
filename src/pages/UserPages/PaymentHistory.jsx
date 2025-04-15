@@ -207,7 +207,6 @@ const PaymentHistory = () => {
                       <th>Edition</th>
                       <th>Duration</th>
                       <th>Type</th>
-                      <th>Paid At</th>
                       <th>Amount</th>
                       <th>Expiry Date</th>
                       <th>Action</th>
@@ -220,7 +219,6 @@ const PaymentHistory = () => {
                           <td>{payment.location}</td>
                           <td>{payment.duration}</td>
                           <td>{payment.type}</td>
-                          <td>{payment?.date || "N/A"}</td>
                           <td>{payment?.amount || "N/A"}</td>
                           <td>{new Date(payment.renewalDate).toISOString().split("T")[0] || "N/A"}</td>
                           <td>
