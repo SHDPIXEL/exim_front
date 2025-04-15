@@ -157,13 +157,15 @@ const Invoice = () => {
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td>1</td>
-                <td>{invoiceData.locations}</td>
-                <td>₹{invoiceData.prices}</td>
-                <td>{invoiceData.durations}</td>
-                <td>₹{invoiceData.prices}</td>
-              </tr>
+              {invoiceData.subscriptions.map((data, index) => (
+                <tr key={index}>
+                  <td>{index + 1}</td>
+                  <td>{data.location}</td>
+                  <td>₹{data.price}</td>
+                  <td>{data.duration}</td>
+                  <td>₹{data.price}</td>
+                </tr>
+              ))}
             </tbody>
           </table>
         </div>

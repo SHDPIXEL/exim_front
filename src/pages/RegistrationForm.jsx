@@ -199,7 +199,7 @@ const RegistrationForm = () => {
             console.error('Registration failed:', error.response?.data || error.message);
 
             if (error?.success === 0) {
-                showNotification(`error.response?.data?.message || "User with the same email or mobile already exists."`, "info");
+                showNotification(`${error.response?.data?.message || "User with the same email or mobile already exists."}`, "info");
             } else {
                 showNotification("Registration failed. Please try again.", "error");
             }
