@@ -35,7 +35,7 @@ const PaymentHistory = () => {
         );
 
         // Map payment data
-        const mappedSubscriptions = response.data.data.map((item) => ({
+        const mappedSubscriptions = response.data.data.subscriptionHistory.map((item) => ({
           location: item.location || "N/A",
           duration: item.duration || "N/A",
           type: item.type || "N/A",
@@ -43,23 +43,18 @@ const PaymentHistory = () => {
           status: item.status || "Pending",
         }));
 
-        const mappedPayments = response.data.data.map((item) => ({
-          location: item.location || "N/A",
-          duration: item.duration || "N/A",
-          invoiceId: item.payment.razorpayOrderId || "N/A",
-          payment_id: item.payment.razorpayPaymentId || "N/A",
-          paid_at : item.payment.paid_at || "N/A",
-          duration: item.duration || "N/A",
+        const mappedPayments = response.data.data.paymentDetails.map((item) => ({
+          invoiceId: item.razorpayOrderId || "N/A",
+          payment_id: item.razorpayPaymentId || "N/A",
+          amount : item.amount || "N/A",
           type: item.type || "N/A",
-          expiryDate: new Date(item.expiryDate).toISOString().split("T")[0],
-          status: item.status || "Pending",
+          paid_at: new Date(item.paidAt).toISOString().split("T")[0],
+          status: item.paymentStatus || "Pending",
         }));
 
-        console.log(mappedSubscriptions);
         setPayments(mappedPayments);
         setSubscriptions(mappedSubscriptions);
 
-      
         setRenewableSubscriptions(renewableResponse.data);
       } catch (error) {
         console.error("Error in fetching payment details:", error);
@@ -76,7 +71,15 @@ const PaymentHistory = () => {
     navigate("/paymentSummary", {
       state: {
         subscriptionType: payment.type,
-        packages: [{ location: payment.location, duration: payment.duration, price: parseInt(payment.amount.replace(/[^0-9]/g, "")) }],
+        packages: [
+          {
+            location: payment.location,
+            duration: payment.duration,
+            price: parseInt(payment.amount),
+            type: payment.type || null,
+            id: payment.id || null, 
+          },
+        ],
       },
     });
   };
@@ -143,12 +146,9 @@ const PaymentHistory = () => {
                     <tr>
                       <th>Payment ID</th>
                       <th>Invoice ID</th>
-                      <th>Edition</th>
-                      <th>Duration</th>
                       <th>Type</th>
                       <th>Paid At</th>
                       <th>Amount</th>
-                      <th>Expiry Date</th>
                       <th>Status</th>
                       <th>Action</th>
                     </tr>
@@ -157,19 +157,17 @@ const PaymentHistory = () => {
                     {payments.length > 0 ? (
                       payments.map((payment, index) => (
                         <tr key={index}>
-                          <td>{payment.id}</td>
-                          <td>
+                          <td className="align-middle">{payment.payment_id}</td>
+                          <td className="align-middle">
                             <Link target="_new" to={`/invoice/${payment.invoiceId}`} className="text-primary">
                               {payment.invoiceId}
                             </Link>
                           </td>
-                          <td>{payment.location}</td>
-                          <td>{payment.duration}</td>
-                          <td>{payment.type}</td>
-                          <td>{payment.date}</td>
-                          <td>{payment.amount}</td>
-                          <td>{payment.expiryDate}</td>
-                          <td>
+                        
+                          <td className="align-middle">{payment.type}</td>
+                          <td className="align-middle">{payment.paid_at}</td>
+                          <td className="align-middle">{payment.amount}</td>
+                          <td className="align-middle">
                             <span
                               className={`badge ${payment.status === "success"
                                   ? "bg-success"
@@ -181,7 +179,13 @@ const PaymentHistory = () => {
                               {payment.status}
                             </span>
                           </td>
-                          <td>View Download </td>
+                          <td> 
+                            <Link target="_new" to={`/invoice/${payment.invoiceId}`} className="btn btn-sm btn-primary mx-2">
+                              View
+                            </Link>
+                            <Link target="_new" to={`/invoice/${payment.invoiceId}?download=true`} className="btn btn-sm btn-success">
+                              Download
+                            </Link> </td>
                         </tr>
                       ))
                     ) : (
@@ -218,7 +222,7 @@ const PaymentHistory = () => {
                           <td>{payment.type}</td>
                           <td>{payment?.date || "N/A"}</td>
                           <td>{payment?.amount || "N/A"}</td>
-                          <td>{payment.renewalDate}</td>
+                          <td>{new Date(payment.renewalDate).toISOString().split("T")[0] || "N/A"}</td>
                           <td>
                             <button
                               className={`btn btn-primary btn-sm ${

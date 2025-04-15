@@ -27,7 +27,7 @@ const EximPolls = (props) => {
     useEffect(() => {
         const fetchPolls = async () => {
             try {
-                const response = await API.post("/polls/get_poll");
+                const response = await API.post("/polls/get_poll_website");
                 setPollsData(response.data.polls);
             } catch (error) {
                 console.error("Error in fetching polls", error)

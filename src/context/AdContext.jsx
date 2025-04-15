@@ -13,11 +13,7 @@ export function AdProvider({ children }) {
   useEffect(() => {
     const fetchAds = async () => {
       try {
-        // Fetch original ads data
-        // const response = await API.post("/adds/get_adds");
-        // console.log("Original Ads Data:", response.data);
-        // setAds(response.data);
-
+ 
         // Fetch new selected ads data
         const selectedResponse = await API.post("/adds/get_selected");
         setSelectedAds(selectedResponse.data.selectedAds);

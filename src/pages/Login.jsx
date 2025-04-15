@@ -50,7 +50,9 @@ const Login = () => {
       const { token } = response.data;
       if (token) {
         login(token);
-        if (location.state?.from === '/subscribePage' && location.state?.subscriptionType && location.state?.packages) {
+        if(location.state?.redirect){
+          navigate(location.state.redirect);
+        } else if (location.state?.from === '/subscribePage' && location.state?.subscriptionType && location.state?.packages) {
           navigate('/paymentSummary', {
             state: {
               subscriptionType: location.state.subscriptionType,

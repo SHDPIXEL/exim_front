@@ -115,6 +115,7 @@ const News = () => {
                                     onChange={(date) => setSelectedDate(date)}
                                     placeholderText="Select a date"
                                     dateFormat="dd/MM/yyyy"
+                                    maxDate={new Date()}
                                     className="form-control webinput"
                                 />
                             </div>

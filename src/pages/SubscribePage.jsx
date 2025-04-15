@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { Link, useNavigate, useLocation, redirect } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import demo from '../assets/images/demo.jpg';
 import { useUser } from '../context/UserContext';
@@ -133,6 +133,7 @@ const SubscribePage = () => {
   const handleLoginRedirect = () => {
     navigate('/login', {
       state: {
+        redirect : "/subscribePage",
         from: location.pathname,
         subscriptionType: activeType,
         packages: selectedPackages,

@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useSearchParams } from "react-router-dom";
 import API from "../api";
 import { Button } from "react-bootstrap";
 import jsPDF from "jspdf";
@@ -8,10 +8,12 @@ import logo from "../logo.png"
 
 const Invoice = () => {
   const { invoiceId } = useParams();
+  const [searchParams] = useSearchParams(); // new
+  const shouldDownload = searchParams.get("download") === "true"; // new
   const [invoiceData, setInvoiceData] = useState(null);
   const [loading, setLoading] = useState(true);
   const invoiceRef = useRef(); // Reference to the invoice div
-
+  const autoDownload = useRef(true);
   console.log(invoiceId);
   useEffect(() => {
     console.log(invoiceId);
@@ -19,7 +21,7 @@ const Invoice = () => {
       try {
         const response = await API.post(
           "/services/get_invoice",
-          { orderId : invoiceId },
+          { orderId: invoiceId },
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("authToken")}`,
@@ -38,20 +40,30 @@ const Invoice = () => {
     fetchInvoice();
   }, [invoiceId]);
 
+  useEffect(() => {
+    if (!loading && invoiceData && shouldDownload && autoDownload.current) {
+      setTimeout(() => {
+        DownloadPDF();
+        autoDownload.current = false;
+      }, 1000);
+    }
+    
+  }, [loading, invoiceData, shouldDownload]);
+
   if (loading) return <p>Loading invoice...</p>;
   if (!invoiceData) return <p>No invoice found.</p>;
 
   // Function to download the invoice as a PDF
   const DownloadPDF = () => {
     const input = invoiceRef.current;
-  
+
     // Wait for all images inside invoiceRef to load
     const images = input.querySelectorAll("img");
     const promises = Array.from(images).map((img) => {
       if (img.complete) return Promise.resolve();
       return new Promise((res) => img.onload = img.onerror = res);
     });
-  
+
     Promise.all(promises).then(() => {
       html2canvas(input, { scale: 2, useCORS: true }).then((canvas) => {
         const imgData = canvas.toDataURL("image/png");
@@ -63,7 +75,7 @@ const Invoice = () => {
       });
     });
   };
-  
+
 
   return (
     <div className="invoice-container-m">

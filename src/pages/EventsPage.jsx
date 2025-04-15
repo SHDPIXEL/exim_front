@@ -121,12 +121,12 @@ const EventsPage = () => {
                                             }} className='w-100' />
                                             <div className='Event-content'>
                                                 <h4>{event.name}</h4>
-                                                <h5>{new Date(event.date).toLocaleDateString('en-US', {
+                                                <h6>{new Date(event.date).toLocaleDateString('en-US', {
                                                     weekday: 'short',
                                                     day: 'numeric',
                                                     month: 'short',
                                                     year: 'numeric'
-                                                })}</h5>
+                                                })}</h6>
                                                 <p>{event.venue}</p>
                                             </div>
                                         </div>
@@ -158,12 +158,12 @@ const EventsPage = () => {
                                         }} className='w-100' />
                                         <div className='Event-content upcoming'>
                                             <h4>{event.name}</h4>
-                                            <h5>{new Date(event.date).toLocaleDateString('en-US', {
+                                            <h6>{new Date(event.date).toLocaleDateString('en-US', {
                                                 weekday: 'short',
                                                 day: 'numeric',
                                                 month: 'short',
                                                 year: 'numeric'
-                                            })}</h5>
+                                            })}</h6>
                                             <p>{event.venue}</p>
                                         </div>
                                     </div>
