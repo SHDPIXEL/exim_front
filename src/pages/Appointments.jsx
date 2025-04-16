@@ -21,6 +21,7 @@ const Appointments = () => {
     const [selectedJob, setSelectedJob] = useState(null);
     const [searchPage, setSearchPage] = useState(1);
     const [searchTotalPages, setSearchTotalPages] = useState(1);
+    const [count, setCount] = useState(0);
     const [selectedCity, setSelectedCity] = useState("Mumbai");
     const [searchedCity, setSearchedCity] = useState("Mumbai");
 
@@ -43,6 +44,7 @@ const Appointments = () => {
             const response = await API.post("/appointments/get_allappointment", {
                 page: pageNumber,
             });
+
             setAppointments((prev) => pageNumber === 1 ? response.data.appointments : [...prev, ...response.data.appointments]);
             setPage(pageNumber);
             setTotalPages(response.data.totalPages);
@@ -54,22 +56,27 @@ const Appointments = () => {
     };
 
     useEffect(() => {
-       handleSearch(searchPage);
-    }, [selectedCity, searchTerm ]);
+        handleSearch(searchPage);
+    }, [searchTerm]);
+
+    useEffect(() => {
+        if (count > 0) {
+            handleSearch(1);
+        }
+        setCount(1);
+    }, [selectedCity]);
 
     const handleViewMore = () => {
-        if (searchTerm) {
-            // Load more search results
-            if (searchPage < searchTotalPages) handleSearch(searchPage + 1);
+        if (searchTerm || selectedCity) {
+            if (searchPage < searchTotalPages) handleSearch(searchPage + 1, true);
         } else {
-            // Load more default appointments
             if (page < totalPages) fetchAppointments(page + 1);
         }
     };
 
-    const handleSearch = async (pageNumber = 1) => {
-        if (pageNumber > searchTotalPages && searchTotalPages !== 0) return;
-
+    const handleSearch = async (pageNumber = 1, view = false) => {
+        if (pageNumber > searchTotalPages && searchTotalPages !== 0)  { console.log(pageNumber, searchTotalPages); return; }
+        console.log(pageNumber);
         setLoading(true);
         try {
             const response = await API.post("/appointments/search_appointments", {
@@ -81,9 +88,13 @@ const Appointments = () => {
             // Access the correct field for appointments
             const results = response.data.appointments || []; // Fallback to an empty array
 
-            setSearchResults((prev) =>
-                pageNumber === 1 ? results : [...prev, ...results]
-            );
+            if(view){
+                setSearchResults((prev) => 
+                    pageNumber === 1 ? results : prev.length > 0 ? [...prev, ...results] : results);
+            } else {
+                setSearchResults((prev) => results);
+            }
+
             setSearchedCity(selectedCity);
             setSearchPage(pageNumber);
             setSearchTotalPages(response.data.totalPages || 1);
@@ -166,12 +177,12 @@ const Appointments = () => {
                                     <p className="text-center mt-3">No appointments found.</p>
                                 )}
                                 <div className="col-12 text-center mt-4 mb-3 d-flex justify-content-center">
-                                    { searchPage < searchTotalPages ?
+                                    {searchPage < searchTotalPages ?
                                         (<button
                                             className="dailySubscribebtn p-2"
                                             style={{ width: "200px" }}  // Fixed width
                                             onClick={handleViewMore}
-                                            disabled={loading || (searchTerm ? searchPage >= searchTotalPages : page >= totalPages)}
+                                            disabled={loading || (searchTerm || (selectedCity || searchedCity) ? searchPage >= searchTotalPages : page >= totalPages)}
                                         >
                                             {loading ? "Loading..." : "View More"}
                                         </button>
@@ -190,8 +201,8 @@ const Appointments = () => {
                         <Swiper modules={[Autoplay]} autoplay={{ delay: 3000 }} loop={true}>
                             {appointmentMedia.map((media, index) => (
                                 <SwiperSlide key={index}>
-                                    <a title='View More' onClick={() => handleAdClick("Appointment " + media.name,media.url)} className='cursor-pointer' target="_blank" rel="noopener noreferrer">
-                  
+                                    <a title='View More' onClick={() => handleAdClick("Appointment " + media.name, media.url)} className='cursor-pointer' target="_blank" rel="noopener noreferrer">
+
                                         {media.type === "image" ? (
                                             <img src={media.src} alt="Advertisement" className="ad-image-between w-100" />
                                         ) : (
