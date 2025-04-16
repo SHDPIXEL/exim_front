@@ -16,7 +16,6 @@ const EventsPage = () => {
 
     const createOption = async () => {
         const optionResponse = await API.post("/event_categories/get_event_categories_website");
-        console.log(optionResponse.data.data);
         setOptions(optionResponse.data.data);
     }
     // Fetch Events Function

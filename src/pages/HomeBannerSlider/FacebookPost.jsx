@@ -15,21 +15,7 @@ const FacebookPost = () => {
         }
     }, []);
 
-
-
-
     return (
-        // <div className="fb-page"
-        //     data-href="https://www.facebook.com/facebookapp"
-        //     data-tabs="timeline"
-        //     data-width="470"
-        //     data-height="700"
-        //     data-small-header="false"
-        //     data-adapt-container-width="true"
-        //     data-hide-cover="false"
-        //     data-show-facepile="true">
-        // </div>
-
         <>
             <iframe src="https://www.facebook.com/plugins/post.php?href=https%3A%2F%2Fwww.facebook.com%2Fpermalink.php%3Fstory_fbid%3Dpfbid0npBrFFWEaigSupTSPqFQwj19j7U1MYpVix57w42PCVNnEeeDApXMUmc1ujvRVS6Ll%26id%3D100064039290498&show_text=true&width=500"
              width="100%" 
@@ -40,8 +26,6 @@ const FacebookPost = () => {
              allowfullscreen="true" 
              allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"></iframe>
         </>
-
-
     );
 };
 

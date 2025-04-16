@@ -6,7 +6,7 @@ const ViewPage = () => {
     const { url, location, date } = state || {};
 
     // Fallback URL if none is provided
-    const defaultUrl = "http://eximin.net/demo/index.html";
+    const defaultUrl = "https://eximin.net/demo/index.html";
 
     return (
         <div className="container border shadow-sm p-md-5 py-md-3">

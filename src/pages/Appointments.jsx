@@ -68,12 +68,6 @@ const Appointments = () => {
     };
 
     const handleSearch = async (pageNumber = 1) => {
-        // if (!searchTerm || !selectedCity) {
-        //     setSearchResults([]);
-        //     return;
-        // }
-
-        console.log(searchPage, searchTotalPages);
         if (pageNumber > searchTotalPages && searchTotalPages !== 0) return;
 
         setLoading(true);

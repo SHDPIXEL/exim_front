@@ -8,13 +8,6 @@ import getActiveMedia from '../helper/GetActiveMedia';
 import ReactGA from "react-ga4";
 
 const handleAdClick = (details, link) => {
-  // ReactGA.event({
-  //   category: "Ads",
-  //   action: "Click",
-  //   label: adName,
-  //   value: 1,
-  // });
-
   window.dataLayer = window.dataLayer || [];
   window.dataLayer.push({
     event: 'ad_click',

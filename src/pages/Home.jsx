@@ -79,7 +79,6 @@ const Home = () => {
             try {
                 const response = await API.post("/news/get_news_recent");
                 const data = response.data.data;
-                console.log("news data", response.data)
                 setTopNews(data.slice(0, 11));
                 SetHeadlines(data.slice(11));
             } catch (error) {
@@ -93,10 +92,9 @@ const Home = () => {
         const fetchAppointments = async () => {
             try {
                 const response = await API.post("/appointments/get_latest_appointments");
-                console.log("response appointments", response.data.appointments)
                 setAppointments(response.data.appointments)
             } catch (error) {
-                console.log("Error in fetching appointments")
+                console.error("Error in fetching appointments")
             }
         };
         fetchAppointments();

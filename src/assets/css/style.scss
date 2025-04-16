@@ -426,10 +426,6 @@ a {
     padding-right: 15px;
 }
 
-// .righttopStory .imgside img {
-//     height: 130px !important;
-// }
-
 .option-container {
     margin-bottom: 10px;
     position: relative;
@@ -774,10 +770,6 @@ input::-webkit-inner-spin-button {
     margin: 0;
 }
 
-/* Firefox */
-// input[type=number] {
-//   -moz-appearance: textfield;
-// }
 .form-control {
     font-size: 1.2rem;
 }
@@ -1347,7 +1339,6 @@ input::-webkit-inner-spin-button {
     align-items: center;
     height: 70px;
     border-radius: 5px;
-    // box-shadow: 0 0px 3px #ccc;
     margin: 10px 0;
     color: #fff;
     cursor: pointer;
@@ -1473,12 +1464,7 @@ input::-webkit-inner-spin-button {
     font-size: 23px;
     font-weight: 700;
     color: #3a3e43;
-    // background: #1d75d9;
-    // margin: 0;
-    // padding: 5px 15px;
     text-align: left;
-    // color: #fff;
-    // border: 2px solid #1d75d9;
 }
 
 .officeCateg span {
@@ -2145,7 +2131,6 @@ strong {
 .exchangetable thead td:first-child {
     width: 220px;
     text-align: left !important;
-    //    border-right:1px solid var(--Primary--Blue);
 }
 
 .overlay {
@@ -2212,13 +2197,6 @@ strong {
 .tab-content {
     padding: 0 !important;
 }
-
-// .nav-pills {
-//     --bs-nav-pills-border-radius: var(--bs-border-radius);
-//     --bs-nav-pills-link-active-color: #fff;
-//     --bs-nav-pills-link-active-bg: #0d6efd;
-// }
-//Responsive
 
 @media (max-width: 1200px) {
     .mainmenu .nav-link {

@@ -23,10 +23,8 @@ export const UserProvider = ({ children }) => {
                     Authorization: `Bearer ${token}`,
                 },
             });
-            // console.log("User data", response.data)
             setUser(response.data.user);
             setUserSubscription(response.data.subscription_locations || []);
-            // console.log("User data:", response.data);
         } catch (error) {
             console.error("Failed to fetch user details:", error);
             setUser(null);

@@ -43,8 +43,6 @@ const result = packages.reduce(
       navigate('/login');
       return;
     }
-
-    console.log(packages);
   }, [state, user, userData, navigate, subscriptionType, packages]);
 
   const loadScript = (src) => {
@@ -150,12 +148,12 @@ const result = packages.reduce(
           color: '#61dafb',
         },
         method: {
-          netbanking: '1', // Enable Net Banking
-          card: '1',       // Enable Credit/Debit Cards
-          upi: '1',        // Enable UPI
-          wallet: '1',     // Disable Wallets
-          emi: '0',        // Disable EMI
-          paylater: '0',   // Disable PayLater options
+          netbanking: '1', 
+          card: '1',       
+          upi: '1',        
+          wallet: '1',     
+          emi: '0',        
+          paylater: '0',   
       },
       };
   

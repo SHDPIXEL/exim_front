@@ -8,11 +8,6 @@ import "swiper/css/free-mode";
 import "swiper/css/navigation";
 import { Autoplay, FreeMode, Navigation } from "swiper/modules";
 
-// Import images dynamically
-import banner1 from "../../assets/images/banner1.png";
-import banner2 from "../../assets/images/banner2.png";
-import banner3 from "../../assets/images/banner3.png";
-import banner4 from "../../assets/images/banner7.png";
 import { Link, useNavigate } from "react-router-dom";
 import TextFormatter from "../../helper/TextFormatter";
 import dataFormatter from "../../helper/DateFormatter";

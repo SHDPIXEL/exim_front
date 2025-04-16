@@ -17,8 +17,7 @@ export function AdProvider({ children }) {
         // Fetch new selected ads data
         const selectedResponse = await API.post("/adds/get_selected");
         setSelectedAds(selectedResponse.data.selectedAds);
-        console.log("add data", selectedResponse.data)
-
+       
       } catch (err) {
         console.error("Error fetching advertisements:", err);
         setError("Failed to load advertisements.");
@@ -31,12 +30,6 @@ export function AdProvider({ children }) {
   }, []);
 
   const handleAdClick = (details, link) => {
-    // ReactGA.event({
-    //   category: "Ads",
-    //   action: "Click",
-    //   label: adName,
-    //   value: 1,
-    // });
 
     window.dataLayer = window.dataLayer || [];
     window.dataLayer.push({

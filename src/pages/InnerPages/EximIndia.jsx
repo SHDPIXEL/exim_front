@@ -43,7 +43,6 @@ const EximIndia = () => {
         const fetchAboutData = async () => {
             try {
                 const response = await API.get("/about/get_about");
-                console.log(response);
                 setAboutDescription(response.data?.description || "No data available.");
             } catch (error) {
                 console.error("Error fetching about data:", error.response?.data || error.message);

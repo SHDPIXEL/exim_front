@@ -19,7 +19,6 @@ const NewsFocus = () => {
             try {
                 const response = await API.post("/news/get_inFocus");
                 setNewsInFocus(response.data.data || []);
-                console.log(response.data.data)
             } catch (error) {
                 console.error("Error fetching news in focus:", error);
             }

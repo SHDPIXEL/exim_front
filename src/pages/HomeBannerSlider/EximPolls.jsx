@@ -134,10 +134,6 @@ const EximPolls = (props) => {
                 <Form>
                     <Swiper
                         freeMode={false}
-                        // autoplay={{
-                        //     delay: 2500,
-                        //     disableOnInteraction: false,
-                        // }}
                         autoplay={false}
                         breakpoints={{
                             1024: { slidesPerView: 1, spaceBetween: 0 },

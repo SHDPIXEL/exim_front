@@ -14,9 +14,7 @@ const Invoice = () => {
   const [loading, setLoading] = useState(true);
   const invoiceRef = useRef(); // Reference to the invoice div
   const autoDownload = useRef(true);
-  console.log(invoiceId);
   useEffect(() => {
-    console.log(invoiceId);
     const fetchInvoice = async () => {
       try {
         const response = await API.post(
