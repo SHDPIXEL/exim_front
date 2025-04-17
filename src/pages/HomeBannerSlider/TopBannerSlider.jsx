@@ -50,18 +50,22 @@ const TopBannerSlider = ({ topNews, headlines }) => {
                                             <div className="d-flex mb-3">
                                                 <div className="categorybtn">{slider.category_name}</div>
                                                 <div className="Slidercountbtn ms-2">
-                                                    {currentSlide + 1} / {topNews.slice(0,7).length}
+                                                    {currentSlide + 1} / {topNews.slice(0, 7).length}
                                                 </div>
                                             </div>
                                             <h3>{slider.headline}</h3>
                                             <p>{htmlToText(slider.description, {
                                                 wordwrap: 130,
                                             })}</p>
-                                            <p><small>{new Date(slider.date).toLocaleDateString("en-US", {
-                                                day: "numeric",
-                                                month: "long",
-                                                year: "numeric",
-                                            })}</small></p>
+                                            <p><small>
+
+                                                {(() => {
+                                                    const date = new Date(slider.date);
+                                                    const day = date.getDate().toString().padStart(2, '0');
+                                                    const month = date.toLocaleString('en-US', { month: 'short' }).toUpperCase();
+                                                    const year = date.getFullYear();
+                                                    return `${day} ${month} ${year}`;
+                                                })()}</small></p>
                                         </div>
                                     </div>
                                     <div className="col-md-6 order-0 order-md-1">
@@ -86,19 +90,22 @@ const TopBannerSlider = ({ topNews, headlines }) => {
                                 <img src={item.image || "https://placehold.co/600x400"} alt="news" />
                             </div>
                             <h4>{item.headline}</h4>
-                            <p>{new Date(item.date).toLocaleDateString("en-US", {
-                                day: "numeric",
-                                month: "long",
-                                year: "numeric",
-                            })}</p>
+                            <p>
+                            {(() => {
+                                const date = new Date(item.date);
+                                const day = date.getDate().toString().padStart(2, '0');
+                                const month = date.toLocaleString('en-US', { month: 'short' }).toUpperCase();
+                                const year = date.getFullYear();
+                                return `${day} ${month} ${year}`;
+                              })()}</p>
                         </div>
 
                     </div>
                 ))}
             </div>
-            <div 
-            onClick={() => navigate("/eximnews", {state: {headlines}})}
-            className="row justify-content-center my-3">
+            <div
+                onClick={() => navigate("/eximnews", { state: { headlines } })}
+                className="row justify-content-center my-3">
                 <div className="col-md-3">
                     <div className="dailySubscribebtn py-2 text-center">View All</div>
                 </div>

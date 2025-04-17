@@ -204,16 +204,7 @@ const Category = () => {
                                                             key={item.id} 
                                                             onClick={() => navigate(`/newsDetails/${item._id}`)}
                                                         >
-                                                            {item.image && (
-                                                                <div className="imgside">
-                                                                    <img 
-                                                                        src={item.image} 
-                                                                        width="" 
-                                                                        height="100%" 
-                                                                        alt={item.headline} 
-                                                                    />
-                                                                </div>
-                                                            )}
+                                                          
                                                             <div className="textside">
                                                                 <h4>{item.headline}</h4>
                                                                 <p>{dataFormatter(item.date)}</p>

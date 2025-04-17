@@ -14,6 +14,12 @@ const Invoice = () => {
   const [loading, setLoading] = useState(true);
   const invoiceRef = useRef(); // Reference to the invoice div
   const autoDownload = useRef(true);
+
+  const headerRef = useRef();
+  const contentRef = useRef();
+  const footerRef = useRef();
+
+
   useEffect(() => {
     const fetchInvoice = async () => {
       try {
@@ -45,7 +51,7 @@ const Invoice = () => {
         autoDownload.current = false;
       }, 1000);
     }
-    
+
   }, [loading, invoiceData, shouldDownload]);
 
   if (loading) return <p>Loading invoice...</p>;
@@ -55,24 +61,70 @@ const Invoice = () => {
   const DownloadPDF = () => {
     const input = invoiceRef.current;
 
-    // Wait for all images inside invoiceRef to load
-    const images = input.querySelectorAll("img");
-    const promises = Array.from(images).map((img) => {
-      if (img.complete) return Promise.resolve();
-      return new Promise((res) => img.onload = img.onerror = res);
-    });
+    // Clone invoice for consistent rendering
+    const cloned = input.cloneNode(true);
+    const hiddenContainer = document.createElement("div");
+    hiddenContainer.style.position = "fixed";
+    hiddenContainer.style.top = "-10000px";
+    hiddenContainer.style.left = "0";
+    hiddenContainer.style.width = "794px"; // A4 width
+    hiddenContainer.style.background = "white";
+    hiddenContainer.style.zIndex = "-1";
+    hiddenContainer.appendChild(cloned);
+    document.body.appendChild(hiddenContainer);
+
+    // Wait for images
+    const images = cloned.querySelectorAll("img");
+    const promises = Array.from(images).map((img) =>
+      img.complete ? Promise.resolve() : new Promise((res) => (img.onload = img.onerror = res))
+    );
 
     Promise.all(promises).then(() => {
-      html2canvas(input, { scale: 2, useCORS: true }).then((canvas) => {
-        const imgData = canvas.toDataURL("image/png");
+      html2canvas(cloned, { scale: 2, useCORS: true }).then((canvas) => {
         const pdf = new jsPDF("p", "mm", "a4");
-        const width = pdf.internal.pageSize.getWidth();
-        const height = (canvas.height * width) / canvas.width;
-        pdf.addImage(imgData, "PNG", 0, 0, width, height);
+        const pageWidth = pdf.internal.pageSize.getWidth();
+        const pageHeight = pdf.internal.pageSize.getHeight();
+
+        const canvasWidth = canvas.width;
+        const canvasHeight = canvas.height;
+
+        const imgHeight = (canvasHeight * pageWidth) / canvasWidth;
+
+        const totalPages = Math.ceil(imgHeight / pageHeight);
+
+        const pageCanvas = document.createElement("canvas");
+        const pageCtx = pageCanvas.getContext("2d");
+
+        // Dimensions for each split
+        pageCanvas.width = canvas.width;
+        pageCanvas.height = (canvas.height * pageHeight) / imgHeight;
+
+        for (let i = 0; i < totalPages; i++) {
+          const srcY = (canvas.height / totalPages) * i;
+          pageCtx.clearRect(0, 0, pageCanvas.width, pageCanvas.height);
+          pageCtx.drawImage(
+            canvas,
+            0,
+            srcY,
+            canvas.width,
+            pageCanvas.height,
+            0,
+            0,
+            canvas.width,
+            pageCanvas.height
+          );
+
+          const imgData = pageCanvas.toDataURL("image/png");
+          if (i > 0) pdf.addPage();
+          pdf.addImage(imgData, "PNG", 0, 0, pageWidth, pageHeight);
+        }
+
         pdf.save(`invoice_${invoiceId}.pdf`);
+        document.body.removeChild(hiddenContainer);
       });
     });
   };
+
 
 
   return (
@@ -80,6 +132,7 @@ const Invoice = () => {
       {/* Invoice Div to Capture */}
       <div className="invoice-container" ref={invoiceRef}>
         {/* Invoice Header */}
+
         <div
           className="header"
           style={{
@@ -143,7 +196,7 @@ const Invoice = () => {
         </div>
 
         {/* Invoice Table */}
-        <div className="table-container">
+        <div className="table-container" style={{ overflow: 'auto' }}>
           <table className="invoice-table">
             <thead>
               <tr>
@@ -164,6 +217,7 @@ const Invoice = () => {
                   <td>₹{data.price}</td>
                 </tr>
               ))}
+             
             </tbody>
           </table>
         </div>

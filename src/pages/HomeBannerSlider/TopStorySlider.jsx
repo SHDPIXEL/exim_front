@@ -64,11 +64,15 @@ const TopStorySlider = () => {
                                         <p>{htmlToText(slider.description, {
                                             wordwrap: 130,
                                         })}</p>
-                                        <p><small>{new Date(slider.date).toLocaleDateString("en-US", {
-                                            day: "numeric",
-                                            month: "long",
-                                            year: "numeric",
-                                        })}</small></p>
+                                        <p> <small>
+                                            {(() => {
+                                                const date = new Date(slider.date);
+                                                const day = date.getDate().toString().padStart(2, '0');
+                                                const month = date.toLocaleString('en-US', { month: 'short' }).toUpperCase();
+                                                const year = date.getFullYear();
+                                                return `${day} ${month} ${year}`;
+                                            })()}
+                                        </small></p>
                                     </div>
                                 </SwiperSlide>
                             ))}

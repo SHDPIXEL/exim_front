@@ -4,6 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Form, InputGroup } from 'react-bootstrap';
 import API from '../api';
 import BottomAds from "../components/BottomAds";
+import dataFormatter from '../helper/DateFormatter';
 
 
 const News = () => {
@@ -96,6 +97,7 @@ const News = () => {
             handleSearch(page + 1);
         }
     };
+    
 
     return (
         <div className="container mt-3">
@@ -157,11 +159,7 @@ const News = () => {
                                     <div className="textside">
                                         <span className='categorybtn_1 mb-1'>{item.category_name}</span>
                                         <h4>{item.headline}</h4>
-                                        <p>{new Date(item.date).toLocaleDateString("en-US", {
-                                            year: "numeric",
-                                            month: "long",
-                                            day: "numeric"
-                                        })}</p>
+                                        <p>{dataFormatter(item.date)}</p>
                                     </div>
                                 </div>
                             ))}

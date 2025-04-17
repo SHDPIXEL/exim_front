@@ -74,18 +74,6 @@ const SubscribePage = () => {
   }
 
   const handlePackageChange = (location, duration, price, type = null, id) => {
-    if (user && (activeType === "hard" || (activeType === "both" && type === "hard")) ) {
-      if (!userData || (!userData.city && !userData.state)) {
-        showNotification("Your location details are missing. Please update your profile.", "info");
-        return;
-      }
-
-      if (!userLocationMatches(location)) {
-        showNotification("You can only subscribe to packages available in your city or state.", "info");
-        return;
-      }
-    }
-
     setSelectedPackages((prev) => {
       const isSelected = prev.some(
         (pkg) => pkg.location === location && pkg.duration === duration && pkg.type === type

@@ -31,7 +31,7 @@ const Home = () => {
 
     const { selectedAds, handleAdClick } = useAds();
     // Get active media for top right and top left ads
-    const topRightAd = selectedAds?.find(ad =>
+    const topRightAd = selectedAds?.find(ad =>  
         ad.selectedMedia.some(media => media.position === "Home_Top_Right")
     );
     const topLeftAd = selectedAds?.find(ad =>

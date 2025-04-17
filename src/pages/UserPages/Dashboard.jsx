@@ -27,35 +27,34 @@ const Dashboard = () => {
 
     const { showNotification } = useNotification();
 
-
-    // Generate last 10 days dynamically
     const generatePastDates = () => {
         const dates = [];
         const today = new Date();
-        let count = 0; // Tracks total working days added
-        let currentDate = new Date(today); // Start from today
-
+        let count = 0;
+        let currentDate = new Date(today);
+      
         while (count < 30) {
-            const dayOfWeek = currentDate.getDay(); // 0 = Sunday, 6 = Saturday
-
-            if (dayOfWeek !== 0 && dayOfWeek !== 6) { // Only add weekdays
-                dates.push({
-                    id: count + 1,
-                    dateU: currentDate.toLocaleDateString("en-US", {
-                        day: "numeric",
-                        month: "short",
-                        year: "numeric"
-                    })
-                });
-                count++; // Increase only if it's a working day
-            }
-
-            // Move to the previous day
-            currentDate.setDate(currentDate.getDate() - 1);
+          const dayOfWeek = currentDate.getDay();
+      
+          if (dayOfWeek !== 0 && dayOfWeek !== 6) {
+            const day = currentDate.getDate().toString().padStart(2, '0');
+            const month = currentDate.toLocaleString('en-US', { month: 'short' }).toUpperCase();
+            const year = currentDate.getFullYear();
+      
+            dates.push({
+              id: count + 1,
+              dateU: `${day} ${month} ${year}`,
+            });
+      
+            count++;
+          }
+      
+          currentDate.setDate(currentDate.getDate() - 1);
         }
-
+      
         return dates;
-    };
+      };
+      
 
 
     // Format date to YYYY-MM-DD in local timezone
@@ -200,7 +199,16 @@ const Dashboard = () => {
                 <div className="col-md-4 mb-3 offset-md-4 text-center">
                     <h5 className="fw-bold">
                         {selectedEdition ? `${selectedEdition.location} Editions` : "Select an Edition"}
-                        {selectedDate ? ` - ${selectedDate.toLocaleDateString("en-US", { day: "numeric", month: "long", year: "numeric" })}` : ""}
+                        {selectedDate
+                            ? ` - ${(() => {
+                                const date = new Date(selectedDate);
+                                const day = date.getDate().toString().padStart(2, '0');
+                                const month = date.toLocaleString('en-US', { month: 'short' }).toUpperCase();
+                                const year = date.getFullYear();
+                                return `${day} ${month} ${year}`;
+                            })()}`
+                            : ""}
+
                     </h5>
                     <div className="newspaper-container mt-3">
                         {isFetching ? (

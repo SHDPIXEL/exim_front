@@ -11,6 +11,7 @@ import { useNavigate } from 'react-router-dom';
 import API, { BASE_URL } from '../api';
 import { useAds } from "../context/AdContext";
 import getActiveMedia from "../helper/GetActiveMedia";
+import dataFormatter from '../helper/DateFormatter';
 
 // Utility function to extract YouTube video ID from URL
 const getYouTubeVideoId = (url) => {
@@ -123,11 +124,7 @@ const VideoGalleryNews = () => {
                                                             </div>
                                                             <h3>{slider.headline}</h3>
                                                             <p>{slider.description.replace(/<[^>]+>/g, '')}</p>
-                                                            <p><small>{new Date(slider.date).toLocaleDateString("en-US", {
-                                                                year: "numeric",
-                                                                month: "long",
-                                                                day: "numeric"
-                                                            })}</small></p>
+                                                            <p><small>{dataFormatter(slider.date)}</small></p>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -166,11 +163,7 @@ const VideoGalleryNews = () => {
                                                     </div>
                                                 </div>
                                                 <h4>{item.headline}</h4>
-                                                <p>{new Date(item.date).toLocaleDateString("en-US", {
-                                                    year: "numeric",
-                                                    month: "long",
-                                                    day: "numeric"
-                                                })}</p>
+                                                <p>{dataFormatter(item.date)}</p>
                                             </div>
                                         </div>
                                     );

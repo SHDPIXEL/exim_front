@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import eventimg4 from "../assets/images/eventnew.jpg";
 import { Form } from 'react-bootstrap';
 import API from '../api';
+import dataFormatter from '../helper/DateFormatter';
 
 const EventsPage = () => {
     const [currentEvents, setCurrentEvents] = useState([]);
@@ -120,12 +121,7 @@ const EventsPage = () => {
                                             }} className='w-100' />
                                             <div className='Event-content'>
                                                 <h4>{event.name}</h4>
-                                                <h6>{new Date(event.date).toLocaleDateString('en-US', {
-                                                    weekday: 'short',
-                                                    day: 'numeric',
-                                                    month: 'short',
-                                                    year: 'numeric'
-                                                })}</h6>
+                                                <h6>{dataFormatter(event.date)}</h6>
                                                 <p>{event.venue}</p>
                                             </div>
                                         </div>
@@ -157,12 +153,7 @@ const EventsPage = () => {
                                         }} className='w-100' />
                                         <div className='Event-content upcoming'>
                                             <h4>{event.name}</h4>
-                                            <h6>{new Date(event.date).toLocaleDateString('en-US', {
-                                                weekday: 'short',
-                                                day: 'numeric',
-                                                month: 'short',
-                                                year: 'numeric'
-                                            })}</h6>
+                                            <h6>{dataFormatter(event.date)}</h6>
                                             <p>{event.venue}</p>
                                         </div>
                                     </div>

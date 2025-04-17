@@ -36,12 +36,12 @@ export function AuthProvider({ children }) {
 
   const logout = async () => {
     try {
-      const response = await API.post("/services/logout", {},{
+      const response = await API.post("/services/logout", {}, {
         headers: {
-            Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+          Authorization: `Bearer ${localStorage.getItem("authToken")}`,
         },
-    });
-      
+      });
+
       if (response.status === 200) {  // Ensure the API call was successful
         localStorage.clear();
         setUser(null);
@@ -53,27 +53,35 @@ export function AuthProvider({ children }) {
     }
   };
 
-  // Auto logout on expiration (even after refresh)
   useEffect(() => {
-    if (user) {
-      const checkExpiration = () => {
-        const loginTime = localStorage.getItem('loginTime');
-        if (loginTime) {
-          const timeElapsed = Date.now() - parseInt(loginTime, 10);
-          if (timeElapsed > EXPIRATION_TIME) {
+    async function init() {
+      if (user) {
+        try {
+          const response = await API.post("/services/isLogin", {}, {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+            },
+          });
+
+          if (response.status === 200) {
+            if(!response.data?.isLogin){
+              logout();
+            }
+           
+          } else {
             logout();
           }
+        } catch (e) {
+          console.log("Logging out from catch");
+          logout()
         }
-      };
-
-      // Check immediately on mount
-      checkExpiration();
-
-      // Set interval to check every minute
-      const interval = setInterval(checkExpiration, 60 * 1000);
-
-      return () => clearInterval(interval);
+      }
     }
+
+    if (user) {
+      init();
+    }
+
   }, [user]);
 
   return (

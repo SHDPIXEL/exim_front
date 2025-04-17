@@ -168,6 +168,10 @@ const RegistrationForm = () => {
         try {
             // Remove confirmPassword from the data as it's not needed in backend
             const { ...submitData } = data;
+            // Fetch the user's IP address
+            const ipResponse = await fetch('https://api64.ipify.org?format=json');
+            const ipData = await ipResponse.json();
+            const userIp = ipData.ip;
 
             // API endpoint - replace with your actual backend endpoint
             const response = await API.post('/services/register', {
@@ -185,6 +189,7 @@ const RegistrationForm = () => {
                 state: data.state,
                 country: data.country,
                 subscribe_newsletter: true,
+                ip: userIp, 
             });
 
             const { token } = response.data;

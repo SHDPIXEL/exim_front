@@ -7,6 +7,7 @@ import 'swiper/css/free-mode';
 import 'swiper/css/navigation';
 import { Autoplay, FreeMode, Navigation } from 'swiper/modules';
 import { useNavigate } from "react-router-dom";
+import dataFormatter from "../../helper/DateFormatter";
 
 const EximEventsSlider = (props) => {
     const navigate = useNavigate();
@@ -71,13 +72,8 @@ const EximEventsSlider = (props) => {
                                 </div>
                                 <div className='Event-content upcoming'>
                                     <h4>{event.name}</h4>
-                                    <h5>{new Date(event.date).toLocaleDateString("en-US", {
-                                        year: "numeric",
-                                        month: "long",
-                                        day: "numeric"
-                                    })}</h5>
+                                    <h6>{dataFormatter(event.date)}</h6>
                                     <p>{event.venue}</p>
-
                                 </div>
                             </div>
                         </SwiperSlide>

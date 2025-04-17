@@ -49,7 +49,7 @@ const ProfilePage = () => {
         const response = await API.post("/services/get_device_name", {}, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("authToken")}`,
-        },
+          },
         });
 
         if (response.data?.success) {
@@ -106,12 +106,17 @@ const ProfilePage = () => {
               <li className="list-group-item d-flex">
                 <div className="w-50 fw-bold">Member since:</div>
                 <div>
-                  {new Date(user?.createdAt).toLocaleDateString("en-US", {
-                    year: "numeric",
-                    month: "long",
-                    day: "numeric",
-                  })}
+                  {user?.createdAt
+                    ? (() => {
+                      const date = new Date(user.createdAt);
+                      const day = date.getDate().toString().padStart(2, '0');
+                      const month = date.toLocaleString('en-US', { month: 'short' }).toUpperCase();
+                      const year = date.getFullYear();
+                      return `${day} ${month} ${year}`;
+                    })()
+                    : "N/A"}
                 </div>
+
               </li>
             </ul>
           </div>
@@ -138,34 +143,22 @@ const ProfilePage = () => {
                 <table className="table table-bordered table-hover ">
                   <thead className="table-primary">
                     <tr>
-                      <th scope="col">Current login</th>
-                      {/* <th scope="col">Device</th> */}
                       <th scope="col">Location</th>
-                      <th scope="col">First login</th>
-                      {/* <th scope="col">login type</th> */}
-
+                      <th scope="col">Login Time</th>
+                      <th scope="col">Device</th>
                     </tr>
                   </thead>
                   <tbody>
                     {user?.login_history?.map((log, index) => (
                       <tr key={index}>
-                        {log?.timestamp ? <td>{log.timestamp}</td> : <td></td>}
-
                         <td>
-                          {log.country || log.ip
+                          {log.country || "N/A"}
+                          {/* {log.country || log.ip
                             ? `${log.country || ""}${log.country && log.ip ? " (" : ""}${log.ip || ""}${log.country && log.ip ? ")" : ""}`
-                            : "N/A"}
+                            : "N/A"} */}
                         </td>
-
-                        <td>
-                          {user?.createdAt
-                            ? new Date(user.createdAt).toLocaleDateString("en-US", {
-                              year: "numeric",
-                              month: "long",
-                              day: "numeric",
-                            })
-                            : "N/A"}
-                        </td>
+                        {log?.timestamp ? <td>{log.timestamp}</td> : <td></td>}
+                        {log?.device_name ? <td>{log.device_name}</td> : <td>-</td>}
                       </tr>
                     ))}
 

@@ -10,7 +10,7 @@ const PaymentHistory = () => {
   const [payments, setPayments] = useState([]);
   const [renewableSubscriptions, setRenewableSubscriptions] = useState([]);
   const [subscriptions, setSubscriptions] = useState([]);
-  
+
   useEffect(() => {
     const fetchDetails = async () => {
       try {
@@ -39,16 +39,32 @@ const PaymentHistory = () => {
           location: item.location || "N/A",
           duration: item.duration || "N/A",
           type: item.type || "N/A",
-          expiryDate: new Date(item.expiryDate).toISOString().split("T")[0],
+          expiryDate: item.expiryDate
+            ? (() => {
+              const date = new Date(item.expiryDate);
+              const day = date.getDate().toString().padStart(2, '0');
+              const month = date.toLocaleString('en-US', { month: 'short' }).toUpperCase();
+              const year = date.getFullYear();
+              return `${day} ${month} ${year}`;
+            })()
+            : "N/A",
           status: item.status || "Pending",
         }));
 
         const mappedPayments = response.data.data.paymentDetails.map((item) => ({
           invoiceId: item.razorpayOrderId || "N/A",
           payment_id: item.razorpayPaymentId || "N/A",
-          amount : item.amount || "N/A",
+          amount: item.amount || "N/A",
           type: item.type || "N/A",
-          paid_at: new Date(item.paidAt).toISOString().split("T")[0],
+          paid_at: item.paidAt
+            ? (() => {
+              const date = new Date(item.paidAt);
+              const day = date.getDate().toString().padStart(2, '0');
+              const month = date.toLocaleString('en-US', { month: 'short' }).toUpperCase();
+              const year = date.getFullYear();
+              return `${day} ${month} ${year}`;
+            })()
+            : "N/A",
           status: item.paymentStatus || "Pending",
         }));
 
@@ -77,7 +93,7 @@ const PaymentHistory = () => {
             duration: payment.duration,
             price: parseInt(payment.amount),
             type: payment.type || null,
-            id: payment.id || null, 
+            id: payment.id || null,
           },
         ],
       },
@@ -94,7 +110,7 @@ const PaymentHistory = () => {
       <div className="row">
         <div className="col-md-12 mb-4">
           <Tabs defaultActiveKey="SubcriptionHistory" id="uncontrolled-tab-example" className="mb-3">
-          <Tab eventKey="SubcriptionHistory" title="Subcription History">
+            <Tab eventKey="SubcriptionHistory" title="Subcription History">
               <div className="table-responsive">
                 <table className="table table-bordered table-hover">
                   <thead className="table-primary">
@@ -117,10 +133,10 @@ const PaymentHistory = () => {
                           <td>
                             <span
                               className={`badge ${payment.status === "Active"
-                                  ? "bg-success"
-                                  : payment.status === "inactive"
-                                    ? "bg-warning text-dark"
-                                    : "bg-danger"
+                                ? "bg-success"
+                                : payment.status === "inactive"
+                                  ? "bg-warning text-dark"
+                                  : "bg-danger"
                                 }`}
                             >
                               {payment.status}
@@ -163,23 +179,23 @@ const PaymentHistory = () => {
                               {payment.invoiceId}
                             </Link>
                           </td>
-                        
+
                           <td className="align-middle">{payment.type}</td>
                           <td className="align-middle">{payment.paid_at}</td>
                           <td className="align-middle">{payment.amount}</td>
                           <td className="align-middle">
                             <span
                               className={`badge ${payment.status === "success"
-                                  ? "bg-success"
-                                  : payment.status === "pending"
-                                    ? "bg-warning text-dark"
-                                    : "bg-danger"
+                                ? "bg-success"
+                                : payment.status === "pending"
+                                  ? "bg-warning text-dark"
+                                  : "bg-danger"
                                 }`}
                             >
                               {payment.status}
                             </span>
                           </td>
-                          <td> 
+                          <td>
                             <Link target="_new" to={`/invoice/${payment.invoiceId}`} className="btn btn-sm btn-primary mx-2">
                               View
                             </Link>
@@ -220,12 +236,22 @@ const PaymentHistory = () => {
                           <td>{payment.duration}</td>
                           <td>{payment.type}</td>
                           <td>{payment?.amount || "N/A"}</td>
-                          <td>{new Date(payment.renewalDate).toISOString().split("T")[0] || "N/A"}</td>
+                          <td>
+                            {payment.renewalDate
+                              ? (() => {
+                                const date = new Date(payment.renewalDate);
+                                const day = date.getDate().toString().padStart(2, '0');
+                                const month = date.toLocaleString('en-US', { month: 'short' }).toUpperCase();
+                                const year = date.getFullYear();
+                                return `${day} ${month} ${year}`;
+                              })()
+                              : "N/A"}
+                          </td>
+
                           <td>
                             <button
-                              className={`btn btn-primary btn-sm ${
-                                payment.renewalStatus !== "Active" ? "opacity-50 cursor-not-allowed" : ""
-                              }`}
+                              className={`btn btn-primary btn-sm ${payment.renewalStatus !== "Active" ? "opacity-50 cursor-not-allowed" : ""
+                                }`}
                               disabled={payment.renewalStatus === "Active" ? false : true}
                               onClick={() => handleRenewClick(payment)}
                             >

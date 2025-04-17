@@ -8,6 +8,7 @@ import { htmlToText } from "html-to-text";
 import { useNavigate } from "react-router-dom";
 import API from "../../api";
 import banner1 from "../../assets/images/banner1.png";
+import dataFormatter from "../../helper/DateFormatter";
 
 
 const NewsFocus = () => {
@@ -61,7 +62,7 @@ const NewsFocus = () => {
                                     </div>
                                     <h3>{news.headline}</h3>
                                     <p>{htmlToText(news.description, { wordwrap: 130 })}</p>
-                                    <p><small>{new Date(news.date).toLocaleDateString("en-US", { day: "numeric", month: "long", year: "numeric" })}</small></p>
+                                    <p><small>{dataFormatter(news.date)}</small></p>
                                 </div>
                             </div>
                         </div>

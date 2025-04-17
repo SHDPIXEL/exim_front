@@ -19,7 +19,7 @@ const MainHeader = () => {
   }
 
   const { lastUpdatedTime } = useAppContext();
-  const {logout, user} = useAuth();
+  const { logout, user } = useAuth();
 
   return (
     <>
@@ -28,10 +28,19 @@ const MainHeader = () => {
           <div className='row'>
             <div className='col-md-8 text-center text-md-start'>
               <div> <ul>
-              <li>{new Date().toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' })}</li>
-                
-                 <li>|</li>
-                 <li>Updated {lastUpdatedTime} IST</li>
+                <li>
+                  {(() => {
+                    const date = new Date();
+                    const weekday = date.toLocaleDateString('en-US', { weekday: 'short' });
+                    const day = date.getDate().toString().padStart(2, '0');
+                    const month = date.toLocaleDateString('en-US', { month: 'short' }).toUpperCase();
+                    const year = date.getFullYear();
+                    return `${weekday}, ${day} ${month} ${year}`;
+                  })()}
+                </li>
+
+                <li>|</li>
+                <li>Updated {lastUpdatedTime} IST</li>
                 {/* <li>|</li>
                 <li><Link><img src={Darkmode} alt='' className='p-0' /></Link></li> */}
               </ul></div>
@@ -39,8 +48,8 @@ const MainHeader = () => {
             <div className='col-md-4'>
               <div className='d-flex justify-content-end rightlist'>
                 <div className='mx-2 my-2'>App In :</div>
-                <Link to="https://play.google.com/store/apps/details?id=com.hv.eximindia&pli=1" target='_blank' className='mx-2 my-1' ><img src={playStore} width={80} className='rounded-1'/></Link>
-                <Link to="https://apps.apple.com/in/app/exim-india/id1225479989" target='_blank'  className='mx-2 my-1' ><img src={AppStore} width={80} className='rounded-1' /></Link>
+                <Link to="https://play.google.com/store/apps/details?id=com.hv.eximindia&pli=1" target='_blank' className='mx-2 my-1' ><img src={playStore} width={80} className='rounded-1' /></Link>
+                <Link to="https://apps.apple.com/in/app/exim-india/id1225479989" target='_blank' className='mx-2 my-1' ><img src={AppStore} width={80} className='rounded-1' /></Link>
                 {/* <div className='searchtop'><i className="bi bi-search"></i> Search</div> */}
                 {
                   user ? (
