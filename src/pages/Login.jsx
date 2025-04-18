@@ -67,7 +67,7 @@ const Login = () => {
       }
     } catch (error) {
       console.error('Error logging in:', error.response?.data || error.message);
-      showNotification('Login failed. ' + error.response?.data, "danger");
+      showNotification('Login failed. ' + error?.message, "danger");
     }
   };
   
