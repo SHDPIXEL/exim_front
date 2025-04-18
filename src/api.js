@@ -5,6 +5,7 @@ export const BASE_URL = "https://eximback.demo.shdpixel.com";
 
 const API = axios.create({
     baseURL: BASE_URL,
+    withCredentials: true, 
     headers: {
         "Content-Type": "application/json", // Default content type
     },

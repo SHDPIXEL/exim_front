@@ -166,8 +166,6 @@ const RegistrationForm = () => {
 
     const onSubmit = async (data) => {
         try {
-            // Remove confirmPassword from the data as it's not needed in backend
-            const { ...submitData } = data;
             // Fetch the user's IP address
             const ipResponse = await fetch('https://api64.ipify.org?format=json');
             const ipData = await ipResponse.json();
@@ -193,13 +191,13 @@ const RegistrationForm = () => {
             });
 
             const { token } = response.data;
-
             if (token) {
                 login(token);
+                navigate('/subscribePage');
             } else {
-                console.warn('No token received from backend');
+                showNotification("Registration failed. Please try again.", "error");
+                console.warn('No token or deviceID received');
             }
-            navigate('/subscribePage');
         } catch (error) {
             console.error('Registration failed:', error.response?.data || error.message);
 

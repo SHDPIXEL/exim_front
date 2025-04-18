@@ -25,6 +25,23 @@ const Dashboard = () => {
     const [isFetching, setIsFetching] = useState(false); // Track fetch status
 
 
+
+    useEffect(() => {
+
+
+
+        async function init() {
+            try {
+                const r = await API.get("/services/test");
+                console.log(r.status);
+            } catch (e) {
+                console.log(e.message);
+            }
+        }
+
+        init();
+    }, []);
+
     const { showNotification } = useNotification();
 
     const generatePastDates = () => {
@@ -32,29 +49,29 @@ const Dashboard = () => {
         const today = new Date();
         let count = 0;
         let currentDate = new Date(today);
-      
+
         while (count < 30) {
-          const dayOfWeek = currentDate.getDay();
-      
-          if (dayOfWeek !== 0 && dayOfWeek !== 6) {
-            const day = currentDate.getDate().toString().padStart(2, '0');
-            const month = currentDate.toLocaleString('en-US', { month: 'short' }).toUpperCase();
-            const year = currentDate.getFullYear();
-      
-            dates.push({
-              id: count + 1,
-              dateU: `${day} ${month} ${year}`,
-            });
-      
-            count++;
-          }
-      
-          currentDate.setDate(currentDate.getDate() - 1);
+            const dayOfWeek = currentDate.getDay();
+
+            if (dayOfWeek !== 0 && dayOfWeek !== 6) {
+                const day = currentDate.getDate().toString().padStart(2, '0');
+                const month = currentDate.toLocaleString('en-US', { month: 'short' }).toUpperCase();
+                const year = currentDate.getFullYear();
+
+                dates.push({
+                    id: count + 1,
+                    dateU: `${day} ${month} ${year}`,
+                });
+
+                count++;
+            }
+
+            currentDate.setDate(currentDate.getDate() - 1);
         }
-      
+
         return dates;
-      };
-      
+    };
+
 
 
     // Format date to YYYY-MM-DD in local timezone

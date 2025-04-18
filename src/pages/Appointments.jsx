@@ -75,8 +75,7 @@ const Appointments = () => {
     };
 
     const handleSearch = async (pageNumber = 1, view = false) => {
-        if (pageNumber > searchTotalPages && searchTotalPages !== 0)  { console.log(pageNumber, searchTotalPages); return; }
-        console.log(pageNumber);
+        if (pageNumber > searchTotalPages && searchTotalPages !== 0) return;
         setLoading(true);
         try {
             const response = await API.post("/appointments/search_appointments", {

@@ -28,7 +28,6 @@ export function AuthProvider({ children }) {
     localStorage.setItem('authToken', token);
     localStorage.setItem('loginTime', Date.now().toString());
     setUser({ token });
-
     // Optional: Trigger a manual storage event to sync across tabs
     window.dispatchEvent(new Event("storage"));
     navigate('/dashboard');
@@ -36,43 +35,44 @@ export function AuthProvider({ children }) {
 
   const logout = async () => {
     try {
-      const response = await API.post("/services/logout", {}, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("authToken")}`,
-        },
-      });
+      const response = await API.post("/services/logout-token");
 
+      console.log("Status : " + response.status)
       if (response.status === 200) {  // Ensure the API call was successful
+        localStorage.clear();
+        setUser(null);
+        navigate('/login');
+      } else if (response.status === 401) {
+        localStorage.clear();
+        setUser(null);
+        navigate('/login');
+      } else {
         localStorage.clear();
         setUser(null);
         navigate('/login');
       }
     } catch (error) {
       console.error("Logout failed:", error);
-      // Optionally, show an error message to the user if logout fails
     }
   };
 
   useEffect(() => {
+
+
+
     async function init() {
+      
       if (user) {
         try {
-          const response = await API.post("/services/isLogin", {}, {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("authToken")}`,
-            },
-          });
-
+          const response = await API.post("/services/isLogin");
           if (response.status === 200) {
-            if(!response.data?.isLogin){
+            if (!response.data?.isLogin) {
               logout();
             }
-           
-          } else {
+          } else if (response.status === 401) {
             logout();
           }
         } catch (e) {
-          console.log("Logging out from catch");
           logout()
         }
       }
