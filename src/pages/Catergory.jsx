@@ -34,7 +34,25 @@ const Category = () => {
     const [loading, setLoading] = useState(false);
     const [page, setPage] = useState(1);
     const [totalPages, setTotalPages] = useState(0);
-
+    const handleDateChange = (date) => {
+        if (!date) return;
+      
+        // Adjust for timezone offset to avoid -1 day issues
+        const adjustedDate = new Date(date.getTime() + date.getTimezoneOffset() * 60000);
+      
+        // Format to "YYYY-MM-DD"
+        const yyyy = adjustedDate.getFullYear();
+        const mm = String(adjustedDate.getMonth() + 1).padStart(2, '0');
+        const dd = String(adjustedDate.getDate()).padStart(2, '0');
+      
+        const formattedDate = `${yyyy}-${mm}-${dd}`;
+      
+        console.log("Formatted Date:", formattedDate); // 👉 "2024-12-22"
+        setSelectedDate(formattedDate); // store string or adjust as needed
+      };
+      
+      
+      
     useEffect(() => {
         window.scrollTo(0, 0);
     }, [pathname]);
@@ -73,7 +91,7 @@ const Category = () => {
         try {
             const response = await API.post("/news/get_search_news_categoryId", {
                 categoryId: categoryId,
-                date: selectedDate ? selectedDate.toISOString().split("T")[0] : null,
+                date: selectedDate || null,
                 query: searchTerm,
                 page: pageNumber,
             });
@@ -160,7 +178,7 @@ const Category = () => {
                                             <div className="col-md-4 mb-3">
                                                 <DatePicker
                                                     selected={selectedDate}
-                                                    onChange={(date) => setSelectedDate(date)}
+                                                    onChange={(date) => handleDateChange(date)}
                                                     placeholderText="Select a date"
                                                     dateFormat="dd/MM/yyyy"
                                                     className="form-control webinput w-100 dateiconimg"

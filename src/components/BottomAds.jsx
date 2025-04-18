@@ -11,10 +11,12 @@ const handleAdClick = (details, link) => {
   window.dataLayer = window.dataLayer || [];
   window.dataLayer.push({
     event: 'ad_click',
-    company_name: details.company,
-    ad_id: details.id,
+    company_name: details.company || "untitled",
+    ad_id: details.id|| "untitled",
+    ad_position : details.position || "untitled",
     debug_mode : true,
   });
+
 
   // Redirect or perform any other action after click
   window.open(link, "_blank");
@@ -42,7 +44,7 @@ const BottomAds = ({ leftPosition, rightPosition }) => {
             <Swiper modules={[Autoplay]} autoplay={{ delay: 3000 }} loop={true} >
               {leftMedia.map((media, index) => (
                 <SwiperSlide key={index}>
-                 <a title='View More' onClick={() => handleAdClick({company : media.company_name, id : media.name + media.sequenceNumber},media.url)} className='cursor-pointer' target="_blank" rel="noopener noreferrer">
+                 <a title='View More' onClick={() => handleAdClick({company : media.company_name, id : media.name},media.url)} className='cursor-pointer' target="_blank" rel="noopener noreferrer">
                  {media.type === 'image' ? (
                       <img src={media.src} alt="Advertisement" className="w-100 ad-image-top" />
                     ) : (
@@ -64,7 +66,7 @@ const BottomAds = ({ leftPosition, rightPosition }) => {
             <Swiper modules={[Pagination, Autoplay]} autoplay={{ delay: 3000 }} loop={true}>
               {rightMedia.map((media, index) => (
                 <SwiperSlide key={index}>
-                <a title='View More' onClick={() => handleAdClick({company : media.company_name, id : media.name + media.sequenceNumber},media.url)} className='cursor-pointer' target="_blank" rel="noopener noreferrer">
+                <a title='View More' onClick={() => handleAdClick({company : media.company_name, id : media.name },media.url)} className='cursor-pointer' target="_blank" rel="noopener noreferrer">
                   
                     {media.type === 'image' ? (
                       <img src={media.src} alt="Advertisement" className="w-100 ad-image-top" />

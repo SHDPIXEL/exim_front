@@ -34,8 +34,9 @@ export function AdProvider({ children }) {
     window.dataLayer = window.dataLayer || [];
     window.dataLayer.push({
       event: 'ad_click',
-      company_name: details.company,
-      ad_id: details.id,
+      company_name: details.company || "untitled",
+      ad_id: details.id|| "untitled",
+      ad_position : details.position || "untitled",
       debug_mode : true,
     });
 

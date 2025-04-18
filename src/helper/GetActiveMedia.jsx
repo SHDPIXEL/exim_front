@@ -1,3 +1,4 @@
+
 const getActiveMedia = (ad) => {
     if (ad?.selectedMedia?.length) {
         const activeMedia = ad.selectedMedia[0].media?.filter(media => media.status === "Active") || [];
@@ -12,6 +13,7 @@ const getActiveMedia = (ad) => {
                 name: item.name,
                 url: item.url,
                 sequenceNumber: item.sequenceNumber,
+                position: ad.selectedMedia[0].position
             }));
     }
     return [];

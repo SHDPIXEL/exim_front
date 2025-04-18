@@ -116,7 +116,7 @@ const Home = () => {
                                 >
                                     {topLeftMedia.map((media, index) => (
                                         <SwiperSlide key={index}>
-                                           <a title='View More'  onClick={() => handleAdClick({company : media.company_name, id : media.name + media.sequenceNumber},media.url)} className='cursor-pointer' target="_blank" rel="noopener noreferrer">
+                                           <a title='View More'  onClick={() => handleAdClick({company : media.company_name, id : media.name, position: media.position},media.url)} className='cursor-pointer' target="_blank" rel="noopener noreferrer">
                                              {media.type === "image" ? (
                                                     <img src={media.src} alt="Advertisement" className="w-100 ad-image-top" />
                                                 ) : (
@@ -141,7 +141,7 @@ const Home = () => {
                                 >
                                     {topRightMedia.map((media, index) => (
                                         <SwiperSlide key={index}>
-                                           <a title='View More' onClick={() => handleAdClick({company : media.company_name, id : media.name + media.sequenceNumber},media.url)}  className='cursor-pointer' target="_blank" rel="noopener noreferrer">
+                                           <a title='View More' onClick={() => handleAdClick({company : media.company_name, id : media.name, position:  media.position},media.url)}  className='cursor-pointer' target="_blank" rel="noopener noreferrer">
                                                  {media.type === "image" ? (
                                                     <img src={media.src} alt="Advertisement" className="w-100 ad-image-top" />
                                                 ) : (
@@ -215,7 +215,7 @@ const Home = () => {
                                 >
                                     {aboveEventsLeftMedia.map((media, index) => (
                                         <SwiperSlide key={index}>
-                                            <a title='View More' onClick={() => handleAdClick({company : media.company_name, id : media.name + media.sequenceNumber},media.url)} className='cursor-pointer' target="_blank" rel="noopener noreferrer">
+                                            <a title='View More' onClick={() => handleAdClick({company : media.company_name, id : media.name , position:  media.position},media.url)} className='cursor-pointer' target="_blank" rel="noopener noreferrer">
                                               {media.type === "image" ? (
                                                     <img src={media.src} alt="Advertisement" className="w-100 ad-image-top" />
                                                 ) : (
@@ -240,7 +240,7 @@ const Home = () => {
                                 >
                                     {aboveEventsRightMedia.map((media, index) => (
                                         <SwiperSlide key={index}>
-                                            <a title='View More' onClick={() => handleAdClick({company : media.company_name, id : media.name + media.sequenceNumber},media.url)} className='cursor-pointer' target="_blank" rel="noopener noreferrer">
+                                            <a title='View More' onClick={() => handleAdClick({company : media.company_name, id : media.name , position:  media.position},media.url)} className='cursor-pointer' target="_blank" rel="noopener noreferrer">
                                                   {media.type === "image" ? (
                                                     <img src={media.src} alt="Advertisement" className="w-100 ad-image-top" />
                                                 ) : (
@@ -300,7 +300,7 @@ const Home = () => {
                                 >
                                     {SubscribeMedia.map((media, index) => (
                                         <SwiperSlide key={index}>
-                                            <a title='View More' onClick={() => handleAdClick({company : media.company_name, id : media.name + media.sequenceNumber},media.url)} className='cursor-pointer' target="_blank" rel="noopener noreferrer">
+                                            <a title='View More' onClick={() => handleAdClick({company : media.company_name, id : media.name, position:  media.position},media.url)} className='cursor-pointer' target="_blank" rel="noopener noreferrer">
                                                   {media.type === "image" ? (
                                                     <img src={media.src} alt="Advertisement" className="ad-image-between w-100" />
                                                 ) : (
@@ -395,7 +395,7 @@ const Home = () => {
                                 >
                                     {videoHomeMedia.map((media, index) => (
                                         <SwiperSlide key={index}>
-                                            <a title='View More' onClick={() => handleAdClick({company : media.company_name, id : media.name + media.sequenceNumber},media.url)} className='cursor-pointer' target="_blank" rel="noopener noreferrer">
+                                            <a title='View More' onClick={() => handleAdClick({company : media.company_name, id : media.name , position:  media.position},media.url)} className='cursor-pointer' target="_blank" rel="noopener noreferrer">
                                                   {media.type === "image" ? (
                                                     <img src={media.src} alt="Advertisement" className="ad-image-between w-100" />
                                                 ) : (
@@ -472,7 +472,7 @@ const Home = () => {
                                 >
                                     {bottomLeftMedia.map((media, index) => (
                                         <SwiperSlide key={index}>
-                                            <a title='View More' onClick={() => handleAdClick({company : media.company_name, id : media.name + media.sequenceNumber},media.url)} className='cursor-pointer' target="_blank" rel="noopener noreferrer">
+                                            <a title='View More' onClick={() => handleAdClick({company : media.company_name, id : media.name , position:  media.position},media.url)} className='cursor-pointer' target="_blank" rel="noopener noreferrer">
                                                   {media.type === "image" ? (
                                                     <img src={media.src} alt="Advertisement" className="w-100 ad-image-top" />
                                                 ) : (
@@ -497,7 +497,7 @@ const Home = () => {
                                 >
                                     {bottomRightMedia.map((media, index) => (
                                         <SwiperSlide key={index}>
-                                            <a title='View More'  onClick={() => handleAdClick({company : media['company_name'], id : media['name'] + media['sequenceNumber']},media.url)} className='cursor-pointer' target="_blank" rel="noopener noreferrer">
+                                            <a title='View More'  onClick={() => handleAdClick({company : media['company_name'], id : media['name'] , position:  media.position},media.url)} className='cursor-pointer' target="_blank" rel="noopener noreferrer">
                                                 {media.type === "image" ? (
                                                     <img src={media.src} alt="Advertisement" className="w-100 ad-image-top" />
                                                 ) : (

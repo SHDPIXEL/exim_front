@@ -37,7 +37,6 @@ export function AuthProvider({ children }) {
     try {
       const response = await API.post("/services/logout-token");
 
-      console.log("Status : " + response.status)
       if (response.status === 200) {  // Ensure the API call was successful
         localStorage.clear();
         setUser(null);
