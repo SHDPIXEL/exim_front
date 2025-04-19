@@ -1,5 +1,5 @@
-import React, {useEffect} from 'react';
-import { Form, Row, Col, Button } from 'react-bootstrap';
+import React, { useEffect, useState } from 'react';
+import { Form, Row, Col, Button, Spinner } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import gicon from '../assets/images/gicon.png';
@@ -12,6 +12,7 @@ const Login = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { showNotification } = useNotification();
+  const [loading, setLoading] = useState(false);
   const { login, user } = useAuth();
 
   useEffect(() => {
@@ -35,22 +36,23 @@ const Login = () => {
 
   const onSubmit = async (data) => {
     try {
+      setLoading(true);
       // Fetch the user's IP address
       const ipResponse = await fetch('https://api64.ipify.org?format=json');
       const ipData = await ipResponse.json();
       const userIp = ipData.ip;
-  
+
       // Send login request with IP
       const response = await API.post('/services/login', {
         email: data.username,
         password: data.password,
-        ip: userIp, 
+        ip: userIp,
       });
-  
+
       const { token } = response.data;
       if (token) {
         login(token);
-        if(location.state?.redirect){
+        if (location.state?.redirect) {
           navigate(location.state.redirect);
         } else if (location.state?.from === '/subscribePage' && location.state?.subscriptionType && location.state?.packages) {
           navigate('/paymentSummary', {
@@ -67,10 +69,12 @@ const Login = () => {
       }
     } catch (error) {
       console.error('Error logging in:', error.response?.data || error.message);
-      showNotification('Login failed. ' + error?.message, "danger");
+      showNotification('Login failed. ' + error?.message, "error");
+    } finally {
+      setLoading(false);
     }
   };
-  
+
 
   return (
     <>
@@ -143,9 +147,10 @@ const Login = () => {
                           <div className="col-md-6">
                             <Button
                               type="submit"
-                              className="mt-5 mb-3 dailySubscribebtn p-2"
+                              className="mt-5 mb-3 dailySubscribebtn p-2 d-flex justify-content-center align-items-center gap-2"
                               style={{ height: '50px' }}
                             >
+                              {loading && <Spinner animation="border" size="sm" />}
                               LOGIN
                             </Button>
                           </div>

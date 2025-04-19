@@ -2,19 +2,20 @@ import React, { useState, useEffect } from 'react';
 import ads4 from "../assets/images/ads4.png";
 import ads5 from "../assets/images/ads5.png";
 import DatePicker from 'react-datepicker';
-import { useNavigate } from 'react-router-dom';
 import { Form, InputGroup } from 'react-bootstrap';
 import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
 import API from '../api';
 import banner4 from "../assets/images/banner4.png";
 import dataFormatter from '../helper/DateFormatter';
-import { useLocation } from "react-router-dom";
 import BottomAds from "../components/BottomAds";
+import { useLocation, useNavigate } from "react-router-dom";
+
 
 const Category = () => {
     const navigate = useNavigate();
-    const { pathname } = useLocation();
+    const location = useLocation();
+    const { pathname, search } = useLocation();
 
     const categories = [
         { id: 1, name: "ShippingNews", title: "Shipping News" },
@@ -34,25 +35,33 @@ const Category = () => {
     const [loading, setLoading] = useState(false);
     const [page, setPage] = useState(1);
     const [totalPages, setTotalPages] = useState(0);
+    const [selectedCategory, setSelectedCategory] = useState(null);
+
+    const getQueryParam = (param) => {
+        const searchParams = new URLSearchParams(location.search);
+        return searchParams.get(param);
+    };
+
+
     const handleDateChange = (date) => {
         if (!date) return;
-      
+
         // Adjust for timezone offset to avoid -1 day issues
         const adjustedDate = new Date(date.getTime() + date.getTimezoneOffset() * 60000);
-      
+
         // Format to "YYYY-MM-DD"
         const yyyy = adjustedDate.getFullYear();
         const mm = String(adjustedDate.getMonth() + 1).padStart(2, '0');
         const dd = String(adjustedDate.getDate()).padStart(2, '0');
-      
+
         const formattedDate = `${yyyy}-${mm}-${dd}`;
-      
+
         console.log("Formatted Date:", formattedDate); // 👉 "2024-12-22"
         setSelectedDate(formattedDate); // store string or adjust as needed
-      };
-      
-      
-      
+    };
+
+
+
     useEffect(() => {
         window.scrollTo(0, 0);
     }, [pathname]);
@@ -110,22 +119,31 @@ const Category = () => {
         }
     };
 
-    // Initial fetch for the first category
     useEffect(() => {
-        const firstCategoryId = categories[0].id;
-        fetchNews(firstCategoryId, 1);
-    }, []);
+        const categoryFromQuery = getQueryParam("category"); // e.g., PortNews
+        if (!categoryFromQuery) {
+            const defaultCategory = categories[0];
+            setSelectedCategory(defaultCategory);
+            setActiveCategory(defaultCategory.name);
+            fetchNews(defaultCategory.id, 1);
+        } else if (categoryFromQuery !== selectedCategory) {
+            setNewsData([]);
+            setPage(1);
+            setTotalPages(0);
+            setSearchTerm(""); // Reset search term
+            setSelectedDate(null); // Reset date
+            const matchedCategory = categories.find(cat => cat.name === categoryFromQuery);
+            const defaultCategory = matchedCategory || categories[0];
+            setSelectedCategory(defaultCategory);
+            setActiveCategory(defaultCategory.name);
+            fetchNews(defaultCategory.id, 1);
+        }
+    }, [search]);
+
 
     // Handle category tab change
     const handleCategoryChange = (categoryName) => {
-        setActiveCategory(categoryName);
-        const selectedCategory = categories.find(cat => cat.name === categoryName);
-        setNewsData([]);
-        setPage(1);
-        setTotalPages(0);
-        setSearchTerm(""); // Reset search term
-        setSelectedDate(null); // Reset date
-        fetchNews(selectedCategory.id, 1);
+        navigate(`?category=${categoryName}`);
     };
 
     // Handle "View More" for both fetchNews and handleSearch
@@ -165,9 +183,9 @@ const Category = () => {
                             variant="pills"
                         >
                             {categories.map(category => (
-                                <Tab 
+                                <Tab
                                     key={category.id}
-                                    eventKey={category.name} 
+                                    eventKey={category.name}
                                     title={category.title}
                                 >
                                     <div className="shadow-sm p-4 pb-2 border rounded-3 bg-white">
@@ -199,7 +217,7 @@ const Category = () => {
                                                 </InputGroup>
                                             </div>
                                             <div className="col-md-2 mb-3 col-4">
-                                                <button 
+                                                <button
                                                     className='dailySubscribebtn mx-auto p-2'
                                                     onClick={handleSearchClick}
                                                     disabled={loading}
@@ -217,12 +235,12 @@ const Category = () => {
                                                     <div className="text-center">No news found</div>
                                                 ) : (
                                                     newsData.map((item) => (
-                                                        <div 
-                                                            className="righttopStory topleftimgcard newsArchive" 
-                                                            key={item.id} 
+                                                        <div
+                                                            className="righttopStory topleftimgcard newsArchive"
+                                                            key={item.id}
                                                             onClick={() => navigate(`/newsDetails/${item._id}`)}
                                                         >
-                                                          
+
                                                             <div className="textside">
                                                                 <h4>{item.headline}</h4>
                                                                 <p>{dataFormatter(item.date)}</p>
@@ -233,9 +251,9 @@ const Category = () => {
 
                                                 {page < totalPages && (
                                                     <div className="col-12 text-center mt-4 mb-3">
-                                                        <button 
-                                                            className='dailySubscribebtn mx-auto p-2' 
-                                                            style={{ width: "200px" }} 
+                                                        <button
+                                                            className='dailySubscribebtn mx-auto p-2'
+                                                            style={{ width: "200px" }}
                                                             onClick={handleViewMore}
                                                             disabled={loading}
                                                         >

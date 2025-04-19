@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
-import { Form, Row, Col, Modal, Button } from 'react-bootstrap';
+import { Form, Row, Col, Modal, Button, Spinner } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Link, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import API from '../api';
 import { useAuth } from '../context/AuthContext';
-
 import { useNotification } from "../context/NotificationContext";
 
 
@@ -13,6 +12,8 @@ const RegistrationForm = () => {
     const navigate = useNavigate();
     const [modalShow, setModalShow] = React.useState(false);
     const { login } = useAuth();
+
+    const [loading, setLoading] = useState(false);
 
     const [selectedState, setSelectedState] = React.useState('');
     const [cityOptions, setCityOptions] = React.useState([]);
@@ -165,6 +166,7 @@ const RegistrationForm = () => {
     const password = watch('password');
 
     const onSubmit = async (data) => {
+        setLoading(true);
         try {
             // Fetch the user's IP address
             const ipResponse = await fetch('https://api64.ipify.org?format=json');
@@ -187,7 +189,7 @@ const RegistrationForm = () => {
                 state: data.state,
                 country: data.country,
                 subscribe_newsletter: true,
-                ip: userIp, 
+                ip: userIp,
             });
 
             const { token } = response.data;
@@ -206,6 +208,8 @@ const RegistrationForm = () => {
             } else {
                 showNotification("Registration failed. Please try again.", "error");
             }
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -563,7 +567,8 @@ const RegistrationForm = () => {
                                             <Col md={12}>
                                                 <div className='text-center row justify-content-center'>
                                                     <div className='col-md-6'>
-                                                        <button type="submit" className="mt-4 mb-3 dailySubscribebtn p-2" style={{ height: "50px" }}>
+                                                        <button type="submit" className="mt-4 mb-3 dailySubscribebtn p-2 d-flex justify-content-center align-items-center gap-2" style={{ height: "50px" }}>
+                                                            {loading && <Spinner animation="border" size="sm" />}
                                                             REGISTER NOW
                                                         </button>
                                                     </div>

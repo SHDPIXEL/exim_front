@@ -17,6 +17,9 @@ export const NotificationProvider = ({ children }) => {
             case "error":
                 toast.error(message);
                 break;
+            case "danger":
+                toast.error(message);
+                break;
             case "warning":
                 toast.warn(message);
                 break;

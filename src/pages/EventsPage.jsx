@@ -32,9 +32,7 @@ const EventsPage = () => {
             });
 
             const eventsData = response.data.data || [];
-            const now = new Date();
-            now.setHours(0, 0, 0, 0);
-
+           
             const current = eventsData.current;
 
             const upcoming = eventsData.upcoming;
@@ -50,7 +48,6 @@ const EventsPage = () => {
                 setUpcomingEvents(prev => [...prev, ...upcoming]);
                 setPastEvents(prev => [...prev, ...past]);
             }
-
             setPage(pageNumber);
             setTotalPages(response.data.totalPages || 1);
         } catch (error) {

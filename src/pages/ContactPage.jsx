@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 
 import Form from 'react-bootstrap/Form';
-import { Button, Col, FormControl, Row } from 'react-bootstrap';
+import { Button, Col, FormControl, Row, Spinner } from 'react-bootstrap';
 import { Link } from "react-router-dom";
 import contact_1 from "../assets/images/contact_1_1.svg";
 import contact_2 from "../assets/images/contact_1_2.svg";
@@ -13,43 +13,46 @@ const ContactPage = () => {
 
     const { showNotification } = useNotification();
     const [btnText, setBtnText] = useState('Submit Now');
+    const [loading, setLoading] = useState(false);
     const [formData, setFormData] = useState({
         name: '',
         email: '',
         contactNumber: '',
         message: ''
-      });
-      
+    });
 
 
-      const submitForm = async () => {
+
+    const submitForm = async () => {
         setBtnText('Submitting');
+        setLoading(true);
         try {
-          const response = await API.post('/services/send-contact-message', formData);
-          showNotification('Form submitted successfully', 'success');
+            const response = await API.post('/services/send-contact-message', formData);
+            showNotification('Form submitted successfully', 'success');
         } catch (error) {
-          console.error("Error submitting form:", error);
-          showNotification('Failed To Submit', 'danger');
-          showNotification(error, 'danger');
+            console.error("Error submitting form:", error);
+            showNotification('Failed To Submit', 'danger');
+            showNotification(error, 'danger');
         } finally {
             setBtnText('Submit Now');
+            setLoading(false);
         }
-      };
-      
+    };
+
 
 
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData((prevData) => ({
-          ...prevData,
-          [name]: value
+            ...prevData,
+            [name]: value
         }));
-      };
+    };
 
-      const handleSubmit = (e) => {
+    const handleSubmit = (e) => {
         e.preventDefault(); // prevent default form submission
         submitForm();       // call the API
-      };
+    };
 
     return (
         <>
@@ -132,8 +135,9 @@ const ContactPage = () => {
 
                                                     <Col md={12}>
                                                         <Form.Group controlId="name" className="mt-3">
-                                                            <Form.Label>Your Name *</Form.Label>
+                                                            <Form.Label>Your Name<span className="text-danger">*</span></Form.Label>
                                                             <Form.Control
+                                                                required
                                                                 type="name"
                                                                 placeholder="Enter Your Name"
                                                                 name="name"
@@ -145,22 +149,23 @@ const ContactPage = () => {
                                                     </Col>
                                                     <Col md={6}>
                                                         <Form.Group controlId="email" className="mt-3">
-                                                            <Form.Label>Email *</Form.Label>
+                                                            <Form.Label>Email<span className="text-danger">*</span></Form.Label>
                                                             <Form.Control
+                                                                required
                                                                 type="email"
                                                                 placeholder="Enter Your email"
                                                                 name="email"
                                                                 value={formData.email}
                                                                 onChange={handleChange}
-
                                                                 className='webinput'
                                                             />
                                                         </Form.Group>
                                                     </Col>
                                                     <Col md={6}>
                                                         <Form.Group controlId="contactNumber" className="mt-3">
-                                                            <Form.Label>Conatct No *</Form.Label>
+                                                            <Form.Label>Conatct No<span className="text-danger">*</span></Form.Label>
                                                             <Form.Control
+                                                                required
                                                                 type="number"
                                                                 placeholder="Enter your Conatct No"
                                                                 name="contactNumber"
@@ -173,8 +178,9 @@ const ContactPage = () => {
                                                     </Col>
                                                     <Col md={12}>
                                                         <Form.Group controlId="formPassword" className="mt-3">
-                                                            <Form.Label>Message / Queries *</Form.Label>
+                                                            <Form.Label>Message / Queries<span className="text-danger">*</span></Form.Label>
                                                             <Form.Control
+                                                                required
                                                                 as={"textarea"}
                                                                 row={12}
                                                                 placeholder="Enter your Message / Queries"
@@ -192,7 +198,8 @@ const ContactPage = () => {
                                                     <Col md={12} >
                                                         <div className='text-start row justify-content-start'>
                                                             <div className='col-md-4'>
-                                                                <button type="submit" className="mt-4 mb-3 dailySubscribebtn p-2 " style={{ height: "50px" }}>
+                                                                <button type="submit" className="mt-4 mb-3 dailySubscribebtn p-2 d-flex justify-content-center align-items-center gap-2 " style={{ height: "50px" }}>
+                                                                {loading && <Spinner animation="border" size="sm" />}
                                                                     {btnText}
                                                                 </button>
                                                             </div>
@@ -357,7 +364,7 @@ const ContactPage = () => {
                             <div className="officeBox">
                                 <p> 247-A / 1&2, North Car Street, Tuticorin - 628 002.</p>
                                 <p><i className="bi bi-telephone-fill"></i> <Link to="tel:04612336346">(0461) 2336346 / 4550346.</Link></p>
-                               
+
                                 <p><i className="bi bi-envelope-fill"></i>  <Link to="mailto:tuticorin@exim-india.com" >tuticorin@exim-india.com</Link></p>
                             </div>
                         </div>

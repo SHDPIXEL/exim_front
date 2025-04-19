@@ -21,7 +21,7 @@ const MainFooter = () => {
                                     <Link target='_blank' to="https://www.facebook.com/people/Exim-India/100064039290498/"><i className="bi bi-facebook"></i></Link>
                                     <Link target='_blank' to=" https://www.linkedin.com/company/eximindia/" ><i className='bi bi-linkedin'></i></Link>
                                     <Link to="https://x.com/Exim_India" target='_blank'><i className="bi bi-twitter-x"></i></Link>
-                                    <Link target='_blank'  to="https://www.youtube.com/@eximindia9046"><i className="bi bi-youtube"></i></Link>
+                                    <Link target='_blank' to="https://www.youtube.com/@eximindia9046"><i className="bi bi-youtube"></i></Link>
 
                                 </div>
 
@@ -47,12 +47,12 @@ const MainFooter = () => {
                             <div className='footernav'>
                                 <h5>News Categories</h5>
                                 <div className='botnav'>
-                                    <Link to="/Category">Trade</Link>
-                                    <Link to="/Category" >Market</Link>
-                                    <Link to="/Category" >Indian Economy</Link>
-                                    <Link to="/Category">Ports</Link>
-                                    <Link to="/Category">Special Reports</Link>
-                                    <Link to="/Category">Shipping</Link>
+                                    <Link to="/Category?category=TradeNews">Trade News</Link>
+                                    <Link to="/Category?category=International" >International</Link>
+                                    <Link to="/Category?category=IndianEconomy" >Indian Economy</Link>
+                                    <Link to="/Category?category=PortNews">Ports News</Link>
+                                    <Link to="/Category?category=SpecialReport">Special Reports</Link>
+                                    <Link to="/Category?category=ShippingNews">Shipping News</Link>
                                     <Link to="/Category"><b>View All Categories</b></Link>
 
 
@@ -80,7 +80,7 @@ const MainFooter = () => {
                                 <h5>Useful Links</h5>
                                 <div className='botnav'>
                                     <Link to="/">Home</Link>
-                                    <Link to="/#">About Us</Link>
+                                    <Link to="/EximIndia">About Us</Link>
                                     <Link to="/rates">FER/ CER</Link>
                                     <Link to="/events">Events</Link>
                                     <Link to="/appointments">Appointments</Link>
@@ -129,7 +129,6 @@ const MainFooter = () => {
                                     <Link to="/termsandconditions" >Terms and Conditions</Link>
                                     <Link to="/shippingAndDeliveryPolicy" >Shipping and Delivery Policy</Link>
                                     <Link to="/cancellationAndRefundPolicy" >Cancellation and Refund Policy</Link>
-
                                 </div>
                                 <h5 className='my-3'>Exim Mobile App Available on</h5>
 
@@ -140,17 +139,16 @@ const MainFooter = () => {
                         <div className='col-md-2 col-12 '>
                             <div className='footernav'>
                                 <h5>Contact Us</h5>
-                                <div className='botnav footcontact'>
+                                <div className='botnav '>
                                     <Link to="tel:02267571400"><span>Call Us: </span><br />(022) 67571400</Link>
-                                    <Link to="mailto:fairplay@exim-india.com"><span>Write Us: Events</span> <br />
-                                        fairplay@exim-india.com</Link>
-                                    <Link to="mailto:mktg@exim-india.com" ><span>Write Us: EXIM NewsLetters </span><br />
-                                        mktg@exim-india.com <br />
-                                        infomumbai@exim-india.com <br />
-                                        newsmumbai@exim-india.com</Link>
-                                    <Link to="/#"><span>Head Office:</span> Mumbai-400053</Link>
+                                    <span className='text-white'>Write Us: </span> <span className='text-white-50'> Events</span> <br />
+                                    <Link to="mailto:fairplay@exim-india.com">  fairplay@exim-india.com</Link>
+                                    <span className='text-white'>Write Us: </span> <span className='text-white-50'> EXIM NewsLetters </span>
+                                    <a href="mailto:mktg@exim-india.com" >mktg@exim-india.com</a> 
+                                    <a href="mailto:infomumbai@exim-india.com" >infomumbai@exim-india.com</a> 
+                                    <a href="mailto:newsmumbai@exim-india.com" >newsmumbai@exim-india.com</a>
+                                    <span className='text-white'>Head Office:</span> <span className='text-white-50'>Mumbai-400053</span>
                                     <Link to="/contact" ><b>View All Branch Offices</b></Link>
-
                                 </div>
                             </div>
                         </div>
