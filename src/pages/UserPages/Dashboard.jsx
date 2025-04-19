@@ -24,24 +24,6 @@ const Dashboard = () => {
     const [editionImage, setEditionImage] = useState(null); // Renamed for consistency
     const [isFetching, setIsFetching] = useState(false); // Track fetch status
 
-
-
-    useEffect(() => {
-
-
-
-        async function init() {
-            try {
-                const r = await API.get("/services/test");
-                console.log(r.status);
-            } catch (e) {
-                console.log(e.message);
-            }
-        }
-
-        init();
-    }, []);
-
     const { showNotification } = useNotification();
 
     const generatePastDates = () => {

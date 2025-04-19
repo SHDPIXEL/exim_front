@@ -35,7 +35,11 @@ export function AuthProvider({ children }) {
 
   const logout = async () => {
     try {
-      const response = await API.post("/services/logout-token");
+      const response = await API.post("/services/logout-token", {}, {
+        "headers" : {
+          "Authorization" : "Bearer " +  localStorage.getItem('authToken')
+        }
+      });
 
       if (response.status === 200) {  // Ensure the API call was successful
         localStorage.clear();

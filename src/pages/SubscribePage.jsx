@@ -75,20 +75,15 @@ const SubscribePage = () => {
 
   const handlePackageChange = (location, duration, price, type = null, id) => {
     setSelectedPackages((prev) => {
-      const isSelected = prev.some(
-        (pkg) => pkg.location === location && pkg.duration === duration && pkg.type === type
+      const filtered = prev.filter(
+        (pkg) => !(pkg.location === location && pkg.type === type)
       );
-
-      if (isSelected) {
-        return prev.filter(
-          (pkg) => !(pkg.location === location && pkg.duration === duration && pkg.type === type)
-        );
-      } else {
-        return [
-          ...prev,
-          { location, duration, price, type, id}
-        ];
-      }
+  
+      // Add the new one
+      return [
+        ...filtered,
+        { location, duration, price, type, id }
+      ];
     });
   };
 
@@ -266,7 +261,8 @@ const SubscribePage = () => {
                                       <div >
                                         <input
                                           className="form-check-input me-2"
-                                          type="checkbox"
+                                          type="radio"
+                                          name={`${pkg.location}-${activeType}`}
                                           id={`${pkg.locationId}-${option.id}-${activeType}`}
                                           checked={selectedPackages.some(
                                             (selectedPkg) =>
@@ -277,7 +273,7 @@ const SubscribePage = () => {
                                           onChange={() => handlePackageChange(pkg.location, option.duration, option.price, activeType, `${pkg.locationId}:${option.id}`)}
                                           disabled={!canSubscribe} // Disable if subscribed and not renewable
                                         />
-                                        <label className="form-check-label" htmlFor={`${pkg.location}-${option.duration}`}>
+                                        <label className="form-check-label" htmlFor={`${pkg.locationId}-${option.id}-${activeType}`}>
                                           <h3 className="mb-1">{option.duration}</h3>
                                           <h5>₹ {option.price.toLocaleString()}</h5>
                                         </label>
@@ -336,7 +332,8 @@ const SubscribePage = () => {
                                         <div >
                                           <input
                                             className="form-check-input me-2"
-                                            type="checkbox"
+                                            type="radio"
+                                            name={`${pkg.location}-both-digital`}
                                             id={`${pkg.locationId}-${option.id}-digital`}
                                             checked={selectedPackages.some(
                                               (selectedPkg) =>
@@ -347,7 +344,7 @@ const SubscribePage = () => {
                                             onChange={() => handlePackageChange(pkg.location, option.duration, option.price, "digital", `${pkg.locationId}:${option.id}`)}
                                             disabled={!canSubscribeDigital} // Disable if subscribed and not renewable
                                           />
-                                          <label className="form-check-label" htmlFor={`${pkg.location}-${option.duration}`}>
+                                          <label className="form-check-label" htmlFor={`${pkg.location}-${option.id}-digital`}>
                                             <h3 className="mb-1">{option.duration}</h3>
                                             <h5>₹ {option.price.toLocaleString()}</h5>
                                           </label>
@@ -404,7 +401,8 @@ const SubscribePage = () => {
                                         <div >
                                           <input
                                             className="form-check-input me-2"
-                                            type="checkbox"
+                                            type="radio"
+                                            name={`${pkg.location}-both-hard`}
                                             id={`${pkg.locationId}-${option.id}-hard`}
                                             checked={selectedPackages.some(
                                               (selectedPkg) =>
@@ -415,7 +413,7 @@ const SubscribePage = () => {
                                             onChange={() => handlePackageChange(pkg.location, option.duration, option.price, "hard", `${pkg.locationId}:${option.id}` )}
                                             disabled={!canSubscribeHard} // Disable if subscribed and not renewable
                                           />
-                                          <label className="form-check-label" htmlFor={`${pkg.location}-${option.duration}`}>
+                                          <label className="form-check-label" htmlFor={`${pkg.location}-${option.id}-both-hard`}>
                                             <h3 className="mb-1">{option.duration}</h3>
                                             <h5>₹ {option.price.toLocaleString()}</h5>
                                           </label>
