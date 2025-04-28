@@ -32,7 +32,7 @@ const ResetPasswordPage = () => {
         confirmNewPassword: confirmPassword
       });
 
-      if (response.data.success) {
+      if (response.status === 200) {
         alert("Password reset successful! Please log in with your new password.");
         navigate("/login"); // Redirect to login page
       } else {

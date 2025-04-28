@@ -32,10 +32,10 @@ const ProfilePage = () => {
     try {
       const response = await API.post("/services/forgot-password", { email });
 
-      if (response.data.success) {
+      if (response.status === 200) {
         showNotification("Password reset instructions sent to your email!", "info");
-        handleClose();  // Close the modal
-        setEmail("");    // Clear the email field
+        handleClose();
+        setEmail("");
       } else {
         showNotification("Failed to send reset instructions.", "error");
       }

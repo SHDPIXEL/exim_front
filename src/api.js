@@ -1,7 +1,8 @@
 import axios from "axios";
 
 export const BASE_URL = "https://eximback.demo.shdpixel.com";
-//export const BASE_URL = "http://192.168.1.9:4010";
+// export const BASE_URL = "http://192.168.1.9:4010";
+// export const BASE_URL = "http://192.168.164.244:4010";
 
 const API = axios.create({
     baseURL: BASE_URL,
