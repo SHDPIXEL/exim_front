@@ -1,204 +1,224 @@
-import React, { useEffect, useState } from 'react';
-import DatePicker from 'react-datepicker';
-import { Link, useNavigate } from 'react-router-dom';
-import { Form, InputGroup } from 'react-bootstrap';
-import API from '../api';
+import React, { useEffect, useState } from "react";
+import DatePicker from "react-datepicker";
+import { Link, useNavigate } from "react-router-dom";
+import { Form, InputGroup } from "react-bootstrap";
+import API from "../api";
 import BottomAds from "../components/BottomAds";
-import dataFormatter from '../helper/DateFormatter';
-
+import dataFormatter from "../helper/DateFormatter";
 
 const News = () => {
-    const navigate = useNavigate();
-    const [selectedDate, setSelectedDate] = useState(null);
-    const [searchTerm, setSearchTerm] = useState("");
-    const [repeatedNews, setRepeatedNews] = useState([]);
-    const [page, setPage] = useState(1);
-    const [totalPages, setTotalPages] = useState(1);
-    const [loading, setLoading] = useState(false);
-    const [headlines, SetHeadlines] = useState([]);
-    
+  const navigate = useNavigate();
+  const [selectedDate, setSelectedDate] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [repeatedNews, setRepeatedNews] = useState([]);
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [loading, setLoading] = useState(false);
+  const [headlines, SetHeadlines] = useState([]);
 
-    // Fetch Top Headlines
-    useEffect(() => {
-        const fetchHeadlines = async () => {
-            try {
-                const response = await API.post("/news/get_news_recent");
-                const data = response.data.data;
-                SetHeadlines(data.slice(0, 10));
-            } catch (error) {
-                console.error("Error in fetching Headlines", error);
-            }
-        };
-        fetchHeadlines();
-    }, []);
-
-    // Fetch Paginated News
-    const fetchNews = async (pageNumber = 1) => {
-        if (pageNumber > totalPages && totalPages !== 0) return;
-
-        setLoading(true);
-        try {
-            const response = await API.post(`/news/get_news_pagination`, {
-                page: pageNumber,
-            });
-
-            setRepeatedNews((prev) => (pageNumber === 1 ? response.data.data : [...prev, ...response.data.data]));
-            setPage(pageNumber);
-            setTotalPages(response.data.totalPages);
-        } catch (error) {
-            console.error("Error fetching news:", error);
-        } finally {
-            setLoading(false);
-        }
+  // Fetch Top Headlines
+  useEffect(() => {
+    const fetchHeadlines = async () => {
+      try {
+        const response = await API.post("/news/get_news_recent");
+        const data = response.data.data;
+        SetHeadlines(data.slice(0, 10));
+      } catch (error) {
+        console.error("Error in fetching Headlines", error);
+      }
     };
+    fetchHeadlines();
+  }, []);
 
-    useEffect(() => {
-        fetchNews(1);
-    }, []);
+  // Fetch Paginated News
+  const fetchNews = async (pageNumber = 1) => {
+    if (pageNumber > totalPages && totalPages !== 0) return;
 
-    const handleViewMore = () => {
-        if (page < totalPages) {
-            fetchNews(page + 1);
-        }
-    };
+    setLoading(true);
+    try {
+      const response = await API.post(`/news/get_news_pagination`, {
+        page: pageNumber,
+      });
 
-    // Search Function with Pagination
-    const handleSearch = async (pageNumber = 1) => {
-        if (!searchTerm && !selectedDate) {
-            return;
-        }
+      setRepeatedNews((prev) =>
+        pageNumber === 1 ? response.data.data : [...prev, ...response.data.data]
+      );
+      setPage(pageNumber);
+      setTotalPages(response.data.totalPages);
+    } catch (error) {
+      console.error("Error fetching news:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-        setLoading(true);
-        try {
-            const adjustedDate = selectedDate ? new Date(selectedDate.getTime() - selectedDate.getTimezoneOffset() * 60000) : null;
-            const response = await API.post("/news/search", {
-                date: adjustedDate ? adjustedDate.toISOString().split("T")[0] : null,
-                query: searchTerm,
-                page: pageNumber,
-            });
+  useEffect(() => {
+    fetchNews(1);
+  }, []);
 
-            if (pageNumber === 1) {
-                setRepeatedNews(response.data.data);
-            } else {
-                setRepeatedNews((prev) => [...prev, ...response.data.data]);
-            }
+  const handleViewMore = () => {
+    if (page < totalPages) {
+      fetchNews(page + 1);
+    }
+  };
 
-            setPage(pageNumber);
-            setTotalPages(response.data.totalPages || 1);
-        } catch (error) {
-            console.error("Error in finding your search:", error);
-        } finally {
-            setLoading(false);
-        }
-    };
+  // Search Function with Pagination
+  const handleSearch = async (pageNumber = 1) => {
+    if (!searchTerm && !selectedDate) {
+      return;
+    }
 
-    const handleViewMoreSearch = () => {
-        if (page < totalPages) {
-            handleSearch(page + 1);
-        }
-    };
-    
+    setLoading(true);
+    try {
+      const adjustedDate = selectedDate
+        ? new Date(
+            selectedDate.getTime() - selectedDate.getTimezoneOffset() * 60000
+          )
+        : null;
+      const response = await API.post("/news/search", {
+        date: adjustedDate ? adjustedDate.toISOString().split("T")[0] : null,
+        query: searchTerm,
+        page: pageNumber,
+      });
 
-    return (
-        <div className="container mt-3">
-            <div className="row mb-4">
-                <div className="col-md-9">
-                    <h2 className="text-center mb-3 fw-bold">News</h2>
+      if (pageNumber === 1) {
+        setRepeatedNews(response.data.data);
+      } else {
+        setRepeatedNews((prev) => [...prev, ...response.data.data]);
+      }
 
-                    <div className="shadow-sm p-4 pb-2 border rounded-3 bg-white mb-4">
-                        <div className="row align-items-center">
-                            <div className="col-md-2 mb-1">
-                                <h5 className="fw-bold">Pick a Date -</h5>
-                            </div>
+      setPage(pageNumber);
+      setTotalPages(response.data.totalPages || 1);
+    } catch (error) {
+      console.error("Error in finding your search:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-                            <div className="col-md-4 mb-3">
-                                <DatePicker
-                                    selected={selectedDate}
-                                    onChange={(date) => setSelectedDate(date)}
-                                    placeholderText="Select a date"
-                                    dateFormat="dd/MM/yyyy"
-                                    maxDate={new Date()}
-                                    className="form-control webinput"
-                                />
-                            </div>
+  const handleViewMoreSearch = () => {
+    if (page < totalPages) {
+      handleSearch(page + 1);
+    }
+  };
 
-                            <div className="col-md-4 mb-3">
-                                <InputGroup>
-                                    <Form.Control
-                                        type="text"
-                                        placeholder="Search..."
-                                        value={searchTerm}
-                                        onChange={(e) => setSearchTerm(e.target.value)}
-                                        className="webinput"
-                                    />
-                                    <InputGroup.Text className="bg-transparent border-dark">
-                                        <i className="bi bi-search"></i>
-                                    </InputGroup.Text>
-                                </InputGroup>
-                            </div>
+  return (
+    <div className="container mt-3">
+      <div className="row mb-4">
+        <div className="col-md-9">
+          <h2 className="text-center mb-3 fw-bold">News</h2>
 
-                            <div className="col-md-2 mb-3">
-                                <button onClick={() => handleSearch(1)} className="dailySubscribebtn p-2">
-                                    Search
-                                </button>
-                            </div>
-                        </div>
+          <div className="shadow-sm p-4 pb-2 border rounded-3 bg-white mb-4">
+            <div className="row align-items-center">
+              <div className="col-md-2 mb-1">
+                <h5 className="fw-bold">Pick a Date -</h5>
+              </div>
 
-                        <div className="mt-4">
-                            {repeatedNews.map((item) => (
-                                <div
-                                    key={item._id}
-                                    className="righttopStory topleftimgcard newsArchive"
-                                    onClick={() => navigate(`/newsDetails/${item._id}`)}
-                                >
-                                    {item.image && (
+              <div className="col-md-4 mb-3">
+                <DatePicker
+                  selected={selectedDate}
+                  onChange={(date) => setSelectedDate(date)}
+                  placeholderText="Select a date"
+                  dateFormat="dd/MM/yyyy"
+                  maxDate={new Date()}
+                  className="form-control webinput"
+                />
+              </div>
+
+              <div className="col-md-4 mb-3">
+                <InputGroup>
+                  <Form.Control
+                    type="text"
+                    placeholder="Search..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="webinput"
+                  />
+                  <InputGroup.Text className="bg-transparent border-dark">
+                    <i className="bi bi-search"></i>
+                  </InputGroup.Text>
+                </InputGroup>
+              </div>
+
+              <div className="col-md-2 mb-3">
+                <button
+                  onClick={() => handleSearch(1)}
+                  className="dailySubscribebtn p-2"
+                >
+                  Search
+                </button>
+              </div>
+            </div>
+
+            <div className="mt-4">
+              {repeatedNews.map((item) => (
+                <div
+                  key={item._id}
+                  className="righttopStory topleftimgcard newsArchive"
+                  onClick={() => navigate(`/newsDetails/${item._id}`)}
+                >
+                  {/* {item.image && (
                                         <div className="imgside">
                                             <img src={item.image} alt={item.headline} />
                                         </div>
-                                    )}
-                                    <div className="textside">
-                                        <span className='categorybtn_1 mb-1'>{item.category_name}</span>
-                                        <h4>{item.headline}</h4>
-                                        <p>{dataFormatter(item.date)}</p>
-                                    </div>
-                                </div>
-                            ))}
+                                    )} */}
+                  <div className="textside">
+                    <span className="categorybtn_1 mb-1">
+                      {item.category_name}
+                    </span>
+                    <h4>{item.headline}</h4>
+                    <p>{dataFormatter(item.date)}</p>
+                  </div>
+                </div>
+              ))}
 
-                            {loading && <p>Loading...</p>}
-                            {page < totalPages && (
-                                <button
-                                    className="dailySubscribebtn mx-auto p-2"
-                                    style={{ width: "200px" }}
-                                    onClick={searchTerm || selectedDate ? handleViewMoreSearch : handleViewMore}
-                                    disabled={loading}
-                                >
-                                    View More
-                                </button>
-                            )}
-                        </div>
-                    </div>
-                </div>
-                
-                <div className="col-md-3">
-                    <div className="mt-5 p-3 pt-5 pb-1 HeadlineList">
-                        {/* <h4>Top Headlines</h4> */}
-                        <div className="categorybtn d-inline-block p-2 px-3 mx-auto w-auto mb-4"><i className="bi bi-fire me-2"></i> Top Headlines</div>
-                        <ul>
-                            {headlines.map((headlineItem, index) => (
-                                  <li key={index}>
-                                  <div className="Headlinesingle" onClick={() => navigate(`/newsDetails/${headlineItem._id}`)}>
-                                      <h3>{index + 1}</h3>
-                                      <h5>{headlineItem.headline}</h5>
-                                  </div>
-                              </li>
-                            ))}
-                        </ul>
-                    </div>
-                </div>
+              {loading && <p>Loading...</p>}
+              {page < totalPages && (
+                <button
+                  className="dailySubscribebtn mx-auto p-2"
+                  style={{ width: "200px" }}
+                  onClick={
+                    searchTerm || selectedDate
+                      ? handleViewMoreSearch
+                      : handleViewMore
+                  }
+                  disabled={loading}
+                >
+                  View More
+                </button>
+              )}
             </div>
-            <BottomAds leftPosition="News_Bottom_Left" rightPosition="News_Bottom_Right" />
+          </div>
         </div>
-    );
+
+        <div className="col-md-3">
+          <div className="mt-5 p-3 pt-5 pb-1 HeadlineList">
+            {/* <h4>Top Headlines</h4> */}
+            <div className="categorybtn d-inline-block p-2 px-3 mx-auto w-auto mb-4">
+              <i className="bi bi-fire me-2"></i> Top Headlines
+            </div>
+            <ul>
+              {headlines.map((headlineItem, index) => (
+                <li key={index}>
+                  <div
+                    className="Headlinesingle"
+                    onClick={() => navigate(`/newsDetails/${headlineItem._id}`)}
+                  >
+                    <h3>{index + 1}</h3>
+                    <h5>{headlineItem.headline}</h5>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </div>
+      <BottomAds
+        leftPosition="News_Bottom_Left"
+        rightPosition="News_Bottom_Right"
+      />
+    </div>
+  );
 };
 
 export default News;
