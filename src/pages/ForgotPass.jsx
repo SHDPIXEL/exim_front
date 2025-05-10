@@ -26,7 +26,7 @@ const ForgotPass = () => {
         try {
             const response = await API.post('/services/forgot-password', { email: formData.username });
 
-            if (response.data.success) {
+            if (response.status === 200) {
                 showNotification("Password reset instructions sent to your email!", "info");
                 setFormData({ username: '' });
                 navigate('/login');

@@ -27,9 +27,10 @@ const ResetPasswordPage = () => {
     }
 
     try {
-      const response = await API.post(`/services/reset-password/${token}?expires=${expires}`, {
+      const response = await API.post(`/services/reset-password/${token}`, {
         newPassword,
-        confirmNewPassword: confirmPassword
+        confirmNewPassword: confirmPassword,
+        expires
       });
 
       if (response.status === 200) {
