@@ -222,7 +222,7 @@ const ContactPage = () => {
                                 type="name"
                                 placeholder="Enter Your Name"
                                 name="name"
-                                value={formData.Name}
+                                value={formData.name}
                                 onChange={handleChange}
                                 className="webinput"
                               />
@@ -334,13 +334,23 @@ const ContactPage = () => {
                       </Link>
                     </p>
                   )}
-                  {contact.emails.length > 0 && (
+                  {contact.fax && (
                     <p>
-                      <i className="bi bi-envelope-fill"></i>{" "}
-                      <Link to={`mailto:${contact.emails[0].email}`}>
-                        {contact.emails[0].email}
-                      </Link>
+                      <i className="bi bi-printer-fill"></i>{" "}
+                      <Link to={`fax:${contact.fax}`}>{contact.fax}</Link>
                     </p>
+                  )}
+                  {contact.emails.length > 0 && (
+                    <div>
+                      <i className="bi bi-envelope-fill"></i>{" "}
+                      {contact.emails.map((emailObj, idx) => (
+                        <p key={idx}>
+                          <Link to={`mailto:${emailObj.email}`}>
+                            {emailObj.email}
+                          </Link>
+                        </p>
+                      ))}
+                    </div>
                   )}
                 </div>
               </div>
