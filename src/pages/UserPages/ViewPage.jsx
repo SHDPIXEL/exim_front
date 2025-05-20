@@ -4,6 +4,7 @@ import { useLocation } from "react-router-dom";
 const ViewPage = () => {
     const { state } = useLocation();
     const { url, location, date } = state || {};
+    // console.log("details:",url,"loc:",location,"date:",date);
 
     // Fallback URL if none is provided
     const defaultUrl = "https://eximin.net/demo/index.html";
@@ -21,7 +22,7 @@ const ViewPage = () => {
                 <iframe
                     width="100%"
                     height="100%"
-                    src={defaultUrl}
+                    src={url || defaultUrl}
                     title={`${location} Edition - ${date}`}
                     frameBorder="0"
                     allowFullScreen
