@@ -52,6 +52,28 @@ const NewsDetails = () => {
     fetchNewsDetails();
   }, [id]);
 
+  const defaultImageUrls = [
+    "http://eximindiaonline.in:4000/assets/default_category/shipping.jpg",
+    "http://eximindiaonline.in:4000/assets/default_category/Trade.jpg",
+    "http://eximindiaonline.in:4000/assets/default_category/Port.jpg",
+    "http://eximindiaonline.in:4000/assets/default_category/Transport%20&%20logistics.jpg",
+    "http://eximindiaonline.in:4000/assets/default_category/indian%20economy.jpg",
+    "http://eximindiaonline.in:4000/assets/default_category/Special%20Report.jpg",
+    "http://eximindiaonline.in:4000/assets/default_category/Logistics.jpg",
+    "http://eximindiaonline.in:4000/assets/default_category/Others.jpg",
+    "http://eximindiaonline.in:4000/assets/default_images/shipping.jpg",
+    "http://eximindiaonline.in:4000/assets/default_images/Trade.jpg",
+    "http://eximindiaonline.in:4000/assets/default_images/Port.jpg",
+    "http://eximindiaonline.in:4000/assets/default_images/Transport%20&%20logistics.jpg",
+    "http://eximindiaonline.in:4000/assets/default_images/indian%20economy.jpg",
+    "http://eximindiaonline.in:4000/assets/default_images/Special%20Report.jpg",
+    "http://eximindiaonline.in:4000/assets/default_images/Logistics.jpg",
+    "http://eximindiaonline.in:4000/assets/default_images/Others.jpg",
+  ];
+
+  const shouldShowImage =
+    newsDetails.image && !defaultImageUrls.includes(newsDetails.image);
+
   if (loading) return <p>Loading...</p>;
 
   return (
@@ -63,22 +85,23 @@ const NewsDetails = () => {
               {newsDetails.category_name}
             </Link>
             {/* <h2 className="blog-title">{newsDetails.headline}</h2> */}
-            <div className="blog-meta" style={{marginTop:"10px"}}>
+            <div className="blog-meta" style={{ marginTop: "10px" }}>
               <Link to="/#">
                 <i className="far fa-calendar-days"></i>
                 {dataFormatter(newsDetails.date)}
               </Link>
             </div>
-            {newsDetails.image && (
+            {shouldShowImage && (
               <div className="blog-img">
                 <img
-                  src={newsDetails.image || "https://placehold.co/600x400"}
+                  src={newsDetails.image}
                   style={{ aspectRatio: "3 / 2", objectFit: "cover" }}
                   alt="Blog"
                   width={"100%"}
                 />
               </div>
             )}
+
             <div className="blog-content-wrap">
               <div className="blog-content">
                 <div className="content">
