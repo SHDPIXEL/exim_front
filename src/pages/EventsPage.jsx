@@ -84,7 +84,10 @@ const EventsPage = () => {
 
         {/* Current Events */}
 
-        <div className="row my-5 align-items-center">
+        <div className="row events-heading align-items-center">
+          <div className="col-md-12 mb-2">
+            <h2 className="text-center fw-bold">Exim Events</h2>
+          </div>
           <div className="col-md-12 mb-5 w-100">
             <Form.Select
               aria-label="Select Event"

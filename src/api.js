@@ -1,7 +1,7 @@
 import axios from "axios";
 
 export const BASE_URL = "http://eximindiaonline.in:4000";
-//export const BASE_URL = "http://192.168.1.16:4040";
+//export const BASE_URL = "http://192.168.1.12:4040";
 // export const BASE_URL = "http://192.168.164.244:4010";
 
 const API = axios.create({
