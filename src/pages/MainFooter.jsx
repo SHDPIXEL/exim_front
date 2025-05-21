@@ -19,7 +19,7 @@ const MainFooter = () => {
                                 <div className='footsociallink'>
                                     <Link target='_blank' to="https://www.instagram.com/eximindia_"><i className="bi bi-instagram"></i></Link>
                                     <Link target='_blank' to="https://www.facebook.com/people/Exim-India/100064039290498/"><i className="bi bi-facebook"></i></Link>
-                                    <Link target='_blank' to=" https://www.linkedin.com/company/eximindia/" ><i className='bi bi-linkedin'></i></Link>
+                                    <Link target='_blank' to=" https://www.linkedin.com/company/89659864/admin" ><i className='bi bi-linkedin'></i></Link>
                                     <Link to="https://x.com/Exim_India" target='_blank'><i className="bi bi-twitter-x"></i></Link>
                                     <Link target='_blank' to="https://www.youtube.com/@eximindia9046"><i className="bi bi-youtube"></i></Link>
 

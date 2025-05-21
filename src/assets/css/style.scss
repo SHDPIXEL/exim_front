@@ -450,7 +450,7 @@ a {
   width: 33.75rem;
   height: 6.25rem;
   /* Matches bottom media */
-  object-fit: cover;
+  object-fit: contain; /* default for mobile */
   /* Ensures consistent rectangle shape */
 }
 
@@ -1982,6 +1982,13 @@ a.hover-line:hover {
     font-size: 16px;
   }
 }
+
+@media screen and (min-width: 1100px) {
+    .ad-image-top {
+      object-fit: cover;
+      height: 6.25rem; /* Optional: increase height for larger screens */
+    }
+  }
 
 /* Small devices */
 @media (max-width: 767px) {
