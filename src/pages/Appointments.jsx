@@ -13,6 +13,7 @@ const Appointments = () => {
     const [searchTerm, setSearchTerm] = useState("");
     const { selectedAds, handleAdClick } = useAds();
     const [appointments, setAppointments] = useState([]);
+    const [editions, setEditions] = useState([]);
     const [searchResults, setSearchResults] = useState([]);
     const [page, setPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
@@ -131,6 +132,8 @@ const Appointments = () => {
                                     <option value="Chennai">Chennai</option>
                                     <option value="Delhi">Delhi</option>
                                     <option value="Gujarat">Gujarat</option>
+                                    <option value="Tuticorin">Tuticorin</option>
+                                    <option value="Cochin">Cochin</option>
                                 </Form.Select>
 
                             </div>
