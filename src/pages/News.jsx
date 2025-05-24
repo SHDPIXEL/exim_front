@@ -5,6 +5,7 @@ import { Form, InputGroup } from "react-bootstrap";
 import API from "../api";
 import BottomAds from "../components/BottomAds";
 import dataFormatter from "../helper/DateFormatter";
+import { FaInfoCircle } from "react-icons/fa"; // If you want to use react-icons
 
 const News = () => {
   const navigate = useNavigate();
@@ -114,7 +115,7 @@ const News = () => {
                 <h5 className="fw-bold">Pick a Date -</h5>
               </div>
 
-              <div className="col-md-4 mb-3">
+              <div className="col-md-3 mb-3">
                 <DatePicker
                   selected={selectedDate}
                   onChange={(date) => setSelectedDate(date)}
@@ -125,19 +126,45 @@ const News = () => {
                 />
               </div>
 
-              <div className="col-md-4 mb-3">
-                <InputGroup>
-                  <Form.Control
-                    type="text"
-                    placeholder="Search..."
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    className="webinput"
-                  />
-                  <InputGroup.Text className="bg-transparent border-dark">
-                    <i className="bi bi-search"></i>
-                  </InputGroup.Text>
-                </InputGroup>
+              <div className="col-auto mb-3 text-center">
+                <span
+                  className="fw-bold"
+                  style={{ textDecoration: "underline", fontSize: "12px" }}
+                >
+                  OR
+                </span>
+              </div>
+
+              <div className="col-md-3 mb-3">
+                <div style={{ position: "relative", minHeight: "40px" }}>
+                  <InputGroup>
+                    <Form.Control
+                      type="text"
+                      placeholder="Search..."
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                      className="webinput"
+                    />
+                    <InputGroup.Text className="bg-transparent border-dark">
+                      <i className="bi bi-search"></i>
+                    </InputGroup.Text>
+                  </InputGroup>
+                  <div
+                    style={{
+                      position: "absolute",
+                      bottom: "-35px",
+                      left: "0",
+                      display: "flex",
+                      alignItems: "center",
+                      fontSize: "10px",
+                      color: "#6c757d", // Bootstrap's muted color
+                    }}
+                  >
+                    <i className="bi bi-info-circle me-1"></i>{" "}
+                    {/* Bootstrap info icon */}
+                    To get proper search results, please enter at least 2 words.
+                  </div>
+                </div>
               </div>
 
               <div className="col-md-2 mb-3">
