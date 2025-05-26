@@ -9,12 +9,21 @@ const ViewPage = () => {
     // Fallback URL if none is provided
     const defaultUrl = "https://eximin.net/demo/index.html";
 
+    // Format the date to 'DD-MMM-YYYY'
+    const formatDate = (dateString) => {
+        const dateObj = new Date(dateString);
+        const options = { day: '2-digit', month: 'short', year: 'numeric' };
+        return new Intl.DateTimeFormat('en-GB', options).format(dateObj).toUpperCase();
+    };
+
+    const formattedDate = date ? formatDate(date) : '';
+
     return (
         <div className="container border shadow-sm p-md-5 py-md-3">
             <div className="row mb-4">
                 {location && date && 
                 <div className="col-12 text-center">
-                    <h3>{location} Edition - {date}</h3>
+                    <h3>{location} Edition - {formattedDate}</h3>
                 </div>
                 }
             </div>
@@ -23,7 +32,7 @@ const ViewPage = () => {
                     width="100%"
                     height="100%"
                     src={url || defaultUrl}
-                    title={`${location} Edition - ${date}`}
+                    title={`${location} Edition - ${formattedDate}`}
                     frameBorder="0"
                     allowFullScreen
                 ></iframe>
