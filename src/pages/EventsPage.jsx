@@ -160,43 +160,47 @@ const EventsPage = () => {
         </div>
 
         {/* Upcoming Events */}
-        {upcomingEvents.length > 0 && (
-          <div className="row my-5 align-items-center">
-            <div className="col-md-12 mb-3">
-              <div className="webTittle">
-                <i className="bi bi-chevron-right"></i> Upcoming Events
-              </div>
-            </div>
-            {upcomingEvents.map((event) => (
-              <div className="col-md-3 col-1 mb-3" key={event._id}>
-                <a
-                  href={event.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  style={{ textDecoration: "none", color: "inherit" }}
-                >
-                  <div className="EventBox">
-                    <img
-                      src={event.image || eventimg4}
-                      alt={event.name}
-                      style={{
-                        aspectRatio: 2,
-                        objectFit: "cover",
-                      }}
-                      className="w-100"
-                    />
-                    <div className="Event-content upcoming">
-                      <h4>{event.name}</h4>
-                      <h6>{dataFormatter(event.date)}</h6>
-                      <p>{event.venue}</p>
-                    </div>
-                  </div>
-                </a>
-              </div>
-            ))}
-          </div>
-        )}
+       {/* Upcoming Events */}
+{upcomingEvents.length > 0 && (
+  <div className="row my-5 align-items-center">
+    <div className="col-12 mb-3">
+      <div className="webTittle">
+        <i className="bi bi-chevron-right"></i> Upcoming Events
       </div>
+    </div>
+
+    {upcomingEvents.map((event) => (
+      <div className="col-12 col-sm-6 col-md-4 col-lg-3 mb-3" key={event._id}>
+        <a
+          href={event.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{ textDecoration: "none", color: "inherit" }}
+        >
+          <div className="EventBox">
+            <img
+              src={event.image || eventimg4}
+              alt={event.name}
+              style={{
+                aspectRatio: 2,
+                objectFit: "cover",
+                width: "100%",
+                height: "auto",
+              }}
+              className="w-100"
+            />
+            <div className="Event-content upcoming">
+              <h4>{event.name}</h4>
+              <h6>{dataFormatter(event.date)}</h6>
+              <p>{event.venue}</p>
+            </div>
+          </div>
+        </a>
+      </div>
+    ))}
+  </div>
+)}
+
 
       {/* Past Events */}
       <div className="container mb-5">
