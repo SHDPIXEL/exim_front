@@ -248,27 +248,29 @@ const EventsPage = () => {
                   <h5>No events available for the selected category.</h5>
                 </div>
               )}
+           
           </>
         ) : (
           <p className="text-center py-5">No Event Found</p>
         )}
+        </div>
 
         {/* View More Button */}
-        {page < totalPages && (
-          <div className="row mt-4">
-            <div className="col-12 text-center">
-              <button
-                className="dailySubscribebtn mx-auto p-2"
-                style={{ width: "200px" }}
-                onClick={handleViewMore}
-                disabled={loading}
-              >
-                {loading ? "Loading..." : "View More"}
-              </button>
-            </div>
+      {page < totalPages && (
+        <div className="row mt-4">
+          <div className="col-12 text-center">
+            <button
+              className="dailySubscribebtn mx-auto p-2"
+              style={{ width: "200px" }}
+              onClick={handleViewMore}
+              disabled={loading}
+            >
+              {loading ? "Loading..." : "View More"}
+            </button>
           </div>
-        )}
-      </div>
+        </div>
+      )}
+      
     </>
   );
 };
