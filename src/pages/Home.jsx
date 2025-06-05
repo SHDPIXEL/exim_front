@@ -125,6 +125,28 @@ const Home = () => {
     }
   }, [tweets]);
 
+  useEffect(() => {
+    const script1 = document.createElement("script");
+    script1.src = "https://www.googletagmanager.com/gtag/js?id=G-Y1L0N0LFM2";
+    script1.async = true;
+    document.head.appendChild(script1);
+  
+    const script2 = document.createElement("script");
+    script2.innerHTML = `
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-Y1L0N0LFM2');
+    `;
+    document.head.appendChild(script2);
+  
+    return () => {
+      document.head.removeChild(script1);
+      document.head.removeChild(script2);
+    };
+  }, []);
+  
+
   return (
     <>
       <div className="container mt-3">
