@@ -135,35 +135,33 @@ const News = () => {
                 </span>
               </div>
 
-              <div className="col-md-3 mb-3">
-                <div style={{ position: "relative", minHeight: "40px" }}>
-                  <InputGroup>
-                    <Form.Control
-                      type="text"
-                      placeholder="Search..."
-                      value={searchTerm}
-                      onChange={(e) => setSearchTerm(e.target.value)}
-                      className="webinput"
-                    />
-                    <InputGroup.Text className="bg-transparent border-dark">
-                      <i className="bi bi-search"></i>
-                    </InputGroup.Text>
-                  </InputGroup>
-                  <div
-                    style={{
-                      position: "absolute",
-                      bottom: "-35px",
-                      left: "0",
-                      display: "flex",
-                      alignItems: "center",
-                      fontSize: "10px",
-                      color: "#6c757d", // Bootstrap's muted color
-                    }}
-                  >
-                    <i className="bi bi-info-circle me-1"></i>{" "}
-                    {/* Bootstrap info icon */}
-                    To get proper search results, please enter at least 2 words.
-                  </div>
+              <div className="col-md-3 mb-3 position-relative">
+                <InputGroup>
+                  <Form.Control
+                    type="text"
+                    placeholder="Search..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="webinput"
+                  />
+                  <InputGroup.Text className="bg-transparent border-dark">
+                    <i className="bi bi-search"></i>
+                  </InputGroup.Text>
+                </InputGroup>
+
+                {/* Responsive info text */}
+                <div
+                  className="d-none d-md-flex position-absolute start-0 small text-muted mt-1"
+                  style={{}}
+                >
+                  <i className="bi bi-info-circle me-1"></i>
+                  To get proper search results, please enter at least 2 words.
+                </div>
+
+                {/* Mobile version (stacked naturally below input) */}
+                <div className="d-flex d-md-none mt-1 small text-muted">
+                  <i className="bi bi-info-circle me-1"></i>
+                  To get proper search results, please enter at least 2 words.
                 </div>
               </div>
 

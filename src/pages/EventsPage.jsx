@@ -110,7 +110,7 @@ const EventsPage = () => {
                 </div>
               </div>
               {currentEvents.map((event) => (
-                <div className="col-md-3 col-6 mb-3" key={event._id}>
+                <div className="col-md-3 col-12 mb-3" key={event._id}>
                   <a
                     href={event.url}
                     target="_blank"
@@ -128,8 +128,10 @@ const EventsPage = () => {
                         <h4>{event.name}</h4>
                         <h6>
                           {dataFormatter(event.date)}
-                          {event.date_two && `, ${dataFormatter(event.date_two)}`}
-                          {event.date_three && `, ${dataFormatter(event.date_three)}`}
+                          {event.date_two &&
+                            `, ${dataFormatter(event.date_two)}`}
+                          {event.date_three &&
+                            `, ${dataFormatter(event.date_three)}`}
                         </h6>
                         <p>{event.venue}</p>
                       </div>
@@ -178,7 +180,12 @@ const EventsPage = () => {
                     />
                     <div className="Event-content upcoming">
                       <h4>{event.name}</h4>
-                      <h6>{dataFormatter(event.date)}</h6>
+                      <h6>
+                        {dataFormatter(event.date)}
+                        {event.date_two && `, ${dataFormatter(event.date_two)}`}
+                        {event.date_three &&
+                          `, ${dataFormatter(event.date_three)}`}
+                      </h6>
                       <p>{event.venue}</p>
                     </div>
                   </div>
@@ -201,7 +208,7 @@ const EventsPage = () => {
               </div>
               <div className="row">
                 {pastEvents.map((event) => (
-                  <div className="col-md-3 col-6 mb-3" key={event._id}>
+                  <div className="col-md-3 col-12 mb-3" key={event._id}>
                     <a
                       href={event.url}
                       target="_blank"
