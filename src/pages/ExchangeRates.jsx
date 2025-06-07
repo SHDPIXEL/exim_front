@@ -137,7 +137,17 @@ const ExchangeRates = () => {
                 />
               </div>
             </div>
-            {/*download button*/}
+            {exchangeData.length > 0 && (
+              <div className="col-md-7  mt-2 justify-content-md-end d-flex  justify-content-center">
+                <button
+                  onClick={downloadExcel}
+                  className="btnlink border-0 bg-transparent"
+                >
+                  <img src={excelicon} width={"50px"} alt="" />
+                </button>
+                {/* <button className="ViewallBtn mx-auto p-2"> Download</button> */}
+              </div>
+            )}
           </div>
 
           {/* Dynamic Table */}

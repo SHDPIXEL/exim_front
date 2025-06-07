@@ -142,33 +142,13 @@ const ContactPage = () => {
                       </div>
                     </div>
 
-                    {/* Email: Exim Newsletters Section */}
-                    <div className="contact-feature">
-                      <div className="box-icon">
-                        <img src={contact_2} alt="icon" />
-                      </div>
-                      <div className="box-content">
-                        <h3 className="box-title-22">
-                          Email : Exim NewsLetters
-                        </h3>
-                        <p className="box-text">
-                          {getintouch[0]?.emails &&
-                            getintouch[0]?.emails.map((email, index) => (
-                              <Link key={index} to={`mailto:${email}`}>
-                                {email}
-                              </Link>
-                            ))}
-                        </p>
-                      </div>
-                    </div>
-
                     {/* Email: Events Section */}
                     <div className="contact-feature">
                       <div className="box-icon">
                         <img src={contact_2} alt="icon" />
                       </div>
                       <div className="box-content">
-                        <h3 className="box-title-22">Email : Events</h3>
+                        <h3 className="box-title-22">Write Us : Events</h3>
                         <p className="box-text">
                           {getintouch[0]?.eventsEmails &&
                             getintouch[0]?.eventsEmails.map(
@@ -178,6 +158,26 @@ const ContactPage = () => {
                                 </Link>
                               )
                             )}
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* Email: Exim Newsletters Section */}
+                    <div className="contact-feature">
+                      <div className="box-icon">
+                        <img src={contact_2} alt="icon" />
+                      </div>
+                      <div className="box-content">
+                        <h3 className="box-title-22">
+                          Write Us : Exim NewsLetters
+                        </h3>
+                        <p className="box-text">
+                          {getintouch[0]?.emails &&
+                            getintouch[0]?.emails.map((email, index) => (
+                              <Link key={index} to={`mailto:${email}`}>
+                                {email}
+                              </Link>
+                            ))}
                         </p>
                       </div>
                     </div>
