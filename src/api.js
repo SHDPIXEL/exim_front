@@ -1,6 +1,6 @@
 import axios from "axios";
 
-export const BASE_URL = "http://eximindiaonline.in:4000";   
+export const BASE_URL = "https://eximindiaonline.in:4000";   
 // export const BASE_URL = "http://192.168.1.14:4040";
 // export const BASE_URL = "http://192.168.164.244:4010";
 
