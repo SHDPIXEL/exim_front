@@ -129,6 +129,7 @@ const Appointments = () => {
                                 >
                                     <option value="">Select City</option>
                                     <option selected value="Mumbai">Mumbai</option>
+                                    <option selected value="Kolkata">Kolkata</option>
                                     <option value="Chennai">Chennai</option>
                                     <option value="Delhi">Delhi</option>
                                     <option value="Gujarat">Gujarat</option>
