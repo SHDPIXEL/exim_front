@@ -7,7 +7,7 @@ const ViewPage = () => {
     // console.log("details:",url,"loc:",location,"date:",date);
 
     // Fallback URL if none is provided
-    const defaultUrl = "https://eximin.net/demo/index.html";
+    const defaultUrl = "https://exim-india.com/Exim-Dcopy-Demo/index.html";
 
     // Format the date to 'DD-MMM-YYYY'
     const formatDate = (dateString) => {

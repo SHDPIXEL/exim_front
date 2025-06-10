@@ -101,51 +101,43 @@ const EventsPage = () => {
         </div>
 
         {/* Current Events */}
-        <div className="row align-items-center">
-          {Array.isArray(currentEvents) && currentEvents.length > 0 ? (
-            <>
-              <div className="col-md-12 mb-3">
-                <div className="webTittle">
-                  <i className="bi bi-chevron-right"></i> Current Events
-                </div>
+        {currentEvents.length > 0 && (
+          <div className="row align-items-center">
+            <div className="col-md-12 mb-3">
+              <div className="webTittle">
+                <i className="bi bi-chevron-right"></i> Current Events
               </div>
-              {currentEvents.map((event) => (
-                <div className="col-md-3 col-12 mb-3" key={event._id}>
-                  <a
-                    href={event.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    style={{ textDecoration: "none", color: "inherit" }}
-                  >
-                    <div className="EventBox">
-                      <img
-                        src={event.image || eventimg4}
-                        alt={event.name}
-                        style={{ aspectRatio: 2, objectFit: "cover" }}
-                        className="w-100"
-                      />
-                      <div className="Event-content">
-                        <h4>{event.name}</h4>
-                        <h6>
-                          {dataFormatter(event.date)}
-                          {event.date_two &&
-                            `, ${dataFormatter(event.date_two)}`}
-                          {event.date_three &&
-                            `, ${dataFormatter(event.date_three)}`}
-                        </h6>
-                        <p>{event.venue}</p>
-                      </div>
-                    </div>
-                  </a>
-                </div>
-              ))}
-            </>
-          ) : (
-            <div className="col-md-12 mb-3 text-center">
-              <h5>No events found in this category.</h5>
             </div>
-          )}
-        </div>
+            {currentEvents.map((event) => (
+              <div className="col-md-3 col-12 mb-3" key={event._id}>
+                <a
+                  href={event.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{ textDecoration: "none", color: "inherit" }}
+                >
+                  <div className="EventBox">
+                    <img
+                      src={event.image || eventimg4}
+                      alt={event.name}
+                      style={{ aspectRatio: 2, objectFit: "cover" }}
+                      className="w-100"
+                    />
+                    <div className="Event-content">
+                      <h4>{event.name}</h4>
+                      <h6>
+                        {dataFormatter(event.date)}
+                        {event.date_two && `, ${dataFormatter(event.date_two)}`}
+                        {event.date_three && `, ${dataFormatter(event.date_three)}`}
+                      </h6>
+                      <p>{event.venue}</p>
+                    </div>
+                  </div>
+                </a>
+              </div>
+            ))}
+          </div>
+        )}
 
         {/* Upcoming Events */}
         {upcomingEvents.length > 0 && (
@@ -183,8 +175,7 @@ const EventsPage = () => {
                       <h6>
                         {dataFormatter(event.date)}
                         {event.date_two && `, ${dataFormatter(event.date_two)}`}
-                        {event.date_three &&
-                          `, ${dataFormatter(event.date_three)}`}
+                        {event.date_three && `, ${dataFormatter(event.date_three)}`}
                       </h6>
                       <p>{event.venue}</p>
                     </div>
@@ -196,45 +187,52 @@ const EventsPage = () => {
         )}
 
         {/* Past Events */}
-        <div className="mb-5">
-          {pastEvents && pastEvents.length > 0 ? (
-            <>
-              <div className="row align-items-center">
-                <div className="col-md-12 mb-3">
-                  <div className="webTittle">
-                    <i className="bi bi-chevron-right"></i> Past Events
-                  </div>
+        {pastEvents.length > 0 && (
+          <div className="mb-5">
+            <div className="row align-items-center">
+              <div className="col-md-12 mb-3">
+                <div className="webTittle">
+                  <i className="bi bi-chevron-right"></i> Past Events
                 </div>
               </div>
-              <div className="row">
-                {pastEvents.map((event) => (
-                  <div className="col-md-3 col-12 mb-3" key={event._id}>
-                    <a
-                      href={event.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      style={{ textDecoration: "none", color: "inherit" }}
-                    >
-                      <div className="EventBox">
-                        <img
-                          src={event.image || eventimg4}
-                          alt={event.name}
-                          style={{ aspectRatio: 2, objectFit: "cover" }}
-                          className="w-100"
-                        />
-                        <div className="Event-content">
-                          <h4>{event.name}</h4>
-                        </div>
+            </div>
+            <div className="row">
+              {pastEvents.map((event) => (
+                <div className="col-md-3 col-12 mb-3" key={event._id}>
+                  <a
+                    href={event.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{ textDecoration: "none", color: "inherit" }}
+                  >
+                    <div className="EventBox">
+                      <img
+                        src={event.image || eventimg4}
+                        alt={event.name}
+                        style={{ aspectRatio: 2, objectFit: "cover" }}
+                        className="w-100"
+                      />
+                      <div className="Event-content">
+                        <h4>{event.name}</h4>
                       </div>
-                    </a>
-                  </div>
-                ))}
+                    </div>
+                  </a>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* No Events Message */}
+        {currentEvents.length === 0 &&
+          upcomingEvents.length === 0 &&
+          pastEvents.length === 0 && (
+            <div className="row">
+              <div className="col-md-12 mb-5 text-center">
+                <h5>No events found in this category.</h5>
               </div>
-            </>
-          ) : (
-            <p className="text-center py-5">No Event Found</p>
+            </div>
           )}
-        </div>
 
         {/* View More Button */}
         {page < totalPages && (
