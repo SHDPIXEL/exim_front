@@ -342,13 +342,13 @@ const ContactPage = () => {
                   )}
                   {contact.emails.length > 0 && (
                     <div>
-                      <i className="bi bi-envelope-fill"></i>{" "}
+                      <i className="bi bi-envelope-fill me-2"></i>
                       {contact.emails.map((emailObj, idx) => (
-                        <p key={idx}>
+                        <span key={idx} className="me-2">
                           <Link to={`mailto:${emailObj.email}`}>
                             {emailObj.email}
                           </Link>
-                        </p>
+                        </span>
                       ))}
                     </div>
                   )}

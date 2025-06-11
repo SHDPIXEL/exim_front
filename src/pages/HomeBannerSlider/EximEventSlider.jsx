@@ -79,7 +79,11 @@ const EximEventsSlider = (props) => {
                 </a>
                 <div className="Event-content upcoming">
                   <h4>{event.name}</h4>
-                  <h6>{dataFormatter(event.date)}</h6>
+                  <h6>
+                        {dataFormatter(event.date)}
+                        {event.date_two && `, ${dataFormatter(event.date_two)}`}
+                        {event.date_three && `, ${dataFormatter(event.date_three)}`}
+                      </h6>
                   <p>{event.venue}</p>
                 </div>
               </div>
