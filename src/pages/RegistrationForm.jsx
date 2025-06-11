@@ -173,8 +173,8 @@ const RegistrationForm = () => {
             const ipData = await ipResponse.json();
             const userIp = ipData.ip;
 
-            // API endpoint - replace with your actual backend endpoint
-            const response = await API.post('/services/register', {
+            // API endpoint - replace with your actual backend endpoint ---- '/services/register'
+            const response = await API.post('/../', {
                 name: data.fullName,
                 email: data.email,
                 mobile: data.mobile,
