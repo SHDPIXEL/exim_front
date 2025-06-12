@@ -175,7 +175,8 @@ const PaymentHistory = () => {
                         <tr key={index}>
                           <td className="align-middle">{payment.payment_id}</td>
                           <td className="align-middle">
-                            <Link target="_new" to={`/invoice/${payment.invoiceId}`} className="text-primary">
+{/*                             to={`/invoice/${payment.invoiceId}`} */}
+                            <Link target="_new" to="#" className="text-primary">
                               {payment.invoiceId}
                             </Link>
                           </td>
