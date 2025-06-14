@@ -197,12 +197,13 @@ const PaymentHistory = () => {
                             </span>
                           </td>
                           <td>
-                            <Link target="_new" to={`/invoice/${payment.invoiceId}`} className="btn btn-sm btn-primary mx-2">
+{/*                             <Link target="_new" to={`/invoice/${payment.invoiceId}`} className="btn btn-sm btn-primary mx-2">
                               View
                             </Link>
                             <Link target="_new" to={`/invoice/${payment.invoiceId}?download=true`} className="btn btn-sm btn-success">
                               Download
-                            </Link> </td>
+                            </Link>  */}
+                            </td>
                         </tr>
                       ))
                     ) : (
