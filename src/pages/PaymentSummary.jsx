@@ -66,7 +66,7 @@ const result = packages.reduce(
   };
 //https://checkout.razorpay.com/v1/checkout.js
   const displayRazorpay = async () => {
-    const res = await loadScript('');
+    const res = await loadScript('https://checkout.razorpay.com/v1/checkout.js');
   
     if (!res) {
       showNotification("Razorpay SDK failed to load. Please check your internet connection.", "danger");
