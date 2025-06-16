@@ -43,7 +43,7 @@ const Login = () => {
       const userIp = ipData.ip;
 
       // Send login request with IP /services/login
-      const response = await API.post('/../', {
+      const response = await API.post('/services/login', {
         email: data.username,
         password: data.password,
         ip: userIp,
