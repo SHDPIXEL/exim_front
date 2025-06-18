@@ -53,22 +53,22 @@ const NewsDetails = () => {
   }, [id]);
 
   const defaultImageUrls = [
-    "http://eximindiaonline.in:4000/assets/default_category/shipping.jpg",
-    "http://eximindiaonline.in:4000/assets/default_category/Trade.jpg",
-    "http://eximindiaonline.in:4000/assets/default_category/Port.jpg",
-    "http://eximindiaonline.in:4000/assets/default_category/Transport%20&%20logistics.jpg",
-    "http://eximindiaonline.in:4000/assets/default_category/indian%20economy.jpg",
-    "http://eximindiaonline.in:4000/assets/default_category/Special%20Report.jpg",
-    "http://eximindiaonline.in:4000/assets/default_category/Logistics.jpg",
-    "http://eximindiaonline.in:4000/assets/default_category/Others.jpg",
-    "http://eximindiaonline.in:4000/assets/default_images/shipping.jpg",
-    "http://eximindiaonline.in:4000/assets/default_images/Trade.jpg",
-    "http://eximindiaonline.in:4000/assets/default_images/Port.jpg",
-    "http://eximindiaonline.in:4000/assets/default_images/Transport%20&%20logistics.jpg",
-    "http://eximindiaonline.in:4000/assets/default_images/indian%20economy.jpg",
-    "http://eximindiaonline.in:4000/assets/default_images/Special%20Report.jpg",
-    "http://eximindiaonline.in:4000/assets/default_images/Logistics.jpg",
-    "http://eximindiaonline.in:4000/assets/default_images/Others.jpg",
+    "https://eximindiaonline.in:4000/assets/default_category/shipping.jpg",
+    "https://eximindiaonline.in:4000/assets/default_category/Trade.jpg",
+    "https://eximindiaonline.in:4000/assets/default_category/Port.jpg",
+    "https://eximindiaonline.in:4000/assets/default_category/Transport%20&%20logistics.jpg",
+    "https://eximindiaonline.in:4000/assets/default_category/indian%20economy.jpg",
+    "https://eximindiaonline.in:4000/assets/default_category/Special%20Report.jpg",
+    "https://eximindiaonline.in:4000/assets/default_category/Logistics.jpg",
+    "https://eximindiaonline.in:4000/assets/default_category/Others.jpg",
+    "https://eximindiaonline.in:4000/assets/default_images/shipping.jpg",
+    "https://eximindiaonline.in:4000/assets/default_images/Trade.jpg",
+    "https://eximindiaonline.in:4000/assets/default_images/Port.jpg",
+    "https://eximindiaonline.in:4000/assets/default_images/Transport%20&%20logistics.jpg",
+    "https://eximindiaonline.in:4000/assets/default_images/indian%20economy.jpg",
+    "https://eximindiaonline.in:4000/assets/default_images/Special%20Report.jpg",
+    "https://eximindiaonline.in:4000/assets/default_images/Logistics.jpg",
+    "https://eximindiaonline.in:4000/assets/default_images/Others.jpg",
   ];
 
   const shouldShowImage =
