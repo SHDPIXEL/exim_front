@@ -85,9 +85,19 @@ const ExchangeRates = () => {
       alert("No data available to download!");
       return;
     }
-
+  
+    const filteredData = exchangeData.filter(
+      ({ currency }) =>
+        !["Chinese Yuan", "Norwegian Kroner", "Qatari Riyal"].includes(currency)
+    );
+  
+    if (filteredData.length === 0) {
+      alert("No downloadable data after excluding specified currencies!");
+      return;
+    }
+  
     const ws = XLSX.utils.json_to_sheet(
-      exchangeData.map(
+      filteredData.map(
         ({
           currency,
           tt_selling_rates_clean_remittance_outwards,
@@ -103,16 +113,17 @@ const ExchangeRates = () => {
         })
       )
     );
-
+  
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, "Exchange Rates");
-
+  
     const excelBuffer = XLSX.write(wb, { bookType: "xlsx", type: "array" });
     const blob = new Blob([excelBuffer], {
       type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
     });
     saveAs(blob, `exchange_rates_${selectedDate || "latest"}.xlsx`);
   };
+  
 
   return (
     <div className="container mt-3">

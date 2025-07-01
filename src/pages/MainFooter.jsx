@@ -69,7 +69,7 @@ const MainFooter = () => {
                                     <Link to="/subscribePage">Kolkata Edition</Link>
                                     <Link to="/subscribePage" >Gujarat Edition</Link>
                                     <Link to="/subscribePage">Kochi Edition</Link>
-                                    <Link to="/subscribePage"  >Tutikorin Edition</Link>
+                                    <Link to="/subscribePage"  >Tuticorin Edition</Link>
 
 
                                 </div>
