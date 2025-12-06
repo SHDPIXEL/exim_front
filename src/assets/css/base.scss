@@ -1,0 +1,58 @@
+:root{
+    --font-size: 16px; 
+    --Primary--Navy-Blue :#102694;
+    --Primary--Blue:#1D75D9;
+    --primary-color: #1D75D9;
+    --Secondary--Sky-Blue: #43BAFE;
+    --text-color:#fff;
+    --primary-text-color:#000;
+    --bg-color: #282c34;
+    --Primary-Black:#1A1A1A;
+    --white-color:#fff;
+}
+
+
+@font-face {
+    font-family: 'Helvetica Neue';
+    src: url('../fonts/font.woff2') format('woff2'),
+         url('../fonts/font.woff2') format('woff');
+    font-weight: 300;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Helvetica Neue';
+    src: url('../fonts/font-400.woff2') format('woff2'),
+         url('../fonts/font-400.woff2') format('woff');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Helvetica Neue';
+    src: url('../fonts/font-400.woff2') format('woff2'),
+         url('../fonts/font-400.woff2') format('woff');
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Helvetica Neue';
+    src: url('../fonts/font-400.woff2') format('woff2'),
+    url('../fonts/font-400.woff2') format('woff');
+    font-weight: 600;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Helvetica Neue';
+    src: url('../fonts/font-bold.woff2') format('woff2'),
+         url('../fonts/font-bold.woff2') format('woff');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
