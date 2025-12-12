@@ -4,7 +4,7 @@ import API from "../api";
 import { Button } from "react-bootstrap";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
-import logo from "../logo.png"
+import logo from "../logo.png";
 
 const Invoice = () => {
   const { invoiceId } = useParams();
@@ -12,14 +12,13 @@ const Invoice = () => {
   const shouldDownload = searchParams.get("download") === "true"; // new
   const [invoiceData, setInvoiceData] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [gstOption, setGstOption] = useState('without'); // 'with' or 'without'
+  const [gstOption, setGstOption] = useState("without"); // 'with' or 'without'
   const invoiceRef = useRef(); // Reference to the invoice div
   const autoDownload = useRef(true);
 
   const headerRef = useRef();
   const contentRef = useRef();
   const footerRef = useRef();
-
 
   useEffect(() => {
     const fetchInvoice = async () => {
@@ -52,11 +51,37 @@ const Invoice = () => {
         autoDownload.current = false;
       }, 1000);
     }
-
   }, [loading, invoiceData, shouldDownload]);
+
+  // Pre-compute totals
+  const { totalBasePrice, totalPrice } = React.useMemo(() => {
+    if (!invoiceData?.subscriptions)
+      return { totalBasePrice: 0, totalPrice: 0 };
+    const totals = invoiceData.subscriptions.reduce(
+      (acc, data) => {
+        const price = parseFloat(data.price);
+        const base = data.basePrice ? parseFloat(data.basePrice) : price / 1.18;
+        acc.totalBasePrice += base;
+        acc.totalPrice += price;
+        return acc;
+      },
+      { totalBasePrice: 0, totalPrice: 0 }
+    );
+    return totals;
+  }, [invoiceData]);
 
   if (loading) return <p>Loading invoice...</p>;
   if (!invoiceData) return <p>No invoice found.</p>;
+
+  // Discount and GST calculations (for with-GST view)
+  const discountPercent = invoiceData.discountInfo?.discountPercentage || 0;
+  const baseDiscount =
+    invoiceData.discountInfo?.baseDiscountAmount ??
+    invoiceData.discountInfo?.discountAmount ??
+    0;
+  const baseSubtotal = totalBasePrice - baseDiscount;
+  const gstOnSubtotal = baseSubtotal * 0.18;
+  const totalPayableWithGst = baseSubtotal + gstOnSubtotal;
 
   // Function to download the invoice as a PDF
   const DownloadPDF = () => {
@@ -79,28 +104,30 @@ const Invoice = () => {
     // Wait for images
     const images = cloned.querySelectorAll("img");
     const promises = Array.from(images).map((img) =>
-      img.complete ? Promise.resolve() : new Promise((res) => (img.onload = img.onerror = res))
+      img.complete
+        ? Promise.resolve()
+        : new Promise((res) => (img.onload = img.onerror = res))
     );
 
     Promise.all(promises).then(() => {
       // Add a small delay to ensure rendering is complete
       setTimeout(() => {
-        html2canvas(cloned, { 
-          scale: 2, 
+        html2canvas(cloned, {
+          scale: 2,
           useCORS: true,
           logging: false,
-          backgroundColor: '#ffffff',
+          backgroundColor: "#ffffff",
           windowWidth: 794,
-          windowHeight: cloned.scrollHeight
+          windowHeight: cloned.scrollHeight,
         }).then((canvas) => {
           const pdf = new jsPDF("p", "mm", "a4");
           const pageWidth = pdf.internal.pageSize.getWidth(); // 210mm
           const pageHeight = pdf.internal.pageSize.getHeight(); // 297mm
-          
+
           // Add margins (10mm on each side)
           const margin = 10;
-          const contentWidth = pageWidth - (2 * margin);
-          const contentHeight = pageHeight - (2 * margin);
+          const contentWidth = pageWidth - 2 * margin;
+          const contentHeight = pageHeight - 2 * margin;
 
           const canvasWidth = canvas.width;
           const canvasHeight = canvas.height;
@@ -145,7 +172,14 @@ const Invoice = () => {
 
               const imgData = pageCanvas.toDataURL("image/png", 1.0);
               if (i > 0) pdf.addPage();
-              pdf.addImage(imgData, "PNG", margin, margin, contentWidth, contentHeight);
+              pdf.addImage(
+                imgData,
+                "PNG",
+                margin,
+                margin,
+                contentWidth,
+                contentHeight
+              );
             }
           }
 
@@ -156,13 +190,11 @@ const Invoice = () => {
     });
   };
 
-
-
   return (
     <div className="invoice-container-m">
       {/* Invoice Div to Capture */}
-      <div 
-        className="invoice-container" 
+      <div
+        className="invoice-container"
         ref={invoiceRef}
         style={{
           padding: "5mm",
@@ -181,7 +213,10 @@ const Invoice = () => {
             borderRadius: "12px 12px 0 0",
           }}
         >
-          <div className="logo-section" style={{ textAlign: "left", width: "100%" }}>
+          <div
+            className="logo-section"
+            style={{ textAlign: "left", width: "100%" }}
+          >
             <img
               crossOrigin="anonymous"
               src={logo}
@@ -209,41 +244,69 @@ const Invoice = () => {
         {/* Supplier & Customer Info */}
         <div
           className="info-container"
-          style={{ display: "flex", justifyContent: "space-between", gap: "2rem" }}
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            gap: "2rem",
+          }}
         >
           <div className="supplier-info" style={{ flex: 1, textAlign: "left" }}>
-            <p><strong>Supplier Name:</strong> Exim India</p>
-            <p><strong>Supplier Address:</strong> 123 Street, City, State, 456789</p>
-            <p><strong>GSTIN:</strong> 29AABCT3518Q1ZV</p>
+            <p>
+              <strong>Supplier Name:</strong> Exim India
+            </p>
+            <p>
+              <strong>Supplier Address:</strong> 123 Street, City, State, 456789
+            </p>
+            <p>
+              <strong>GSTIN:</strong> 29AABCT3518Q1ZV
+            </p>
           </div>
-          <div className="customer-info" style={{ flex: 1, textAlign: "right" }}>
-            <p><strong>Name:</strong> {invoiceData.name}</p>
-            <p><strong>Phone:</strong> {invoiceData.phoneNumber}</p>
-            <p><strong>Address:</strong> {invoiceData.customerAddress}</p>
+          <div
+            className="customer-info"
+            style={{ flex: 1, textAlign: "right" }}
+          >
+            <p>
+              <strong>Name:</strong> {invoiceData.name}
+            </p>
+            <p>
+              <strong>Phone:</strong> {invoiceData.phoneNumber}
+            </p>
+            <p>
+              <strong>Address:</strong> {invoiceData.customerAddress}
+            </p>
           </div>
         </div>
 
         {/* Invoice Details */}
         <div className="invoice-details-container">
           <div className="left-details">
-            <p><strong>Invoice Date:</strong> {invoiceData.invoiceDate} {invoiceData.invoiceTime}</p>
-            <p><strong>Transaction ID:</strong> {invoiceData.transactionId}</p>
+            <p>
+              <strong>Invoice Date:</strong> {invoiceData.invoiceDate}{" "}
+              {invoiceData.invoiceTime}
+            </p>
+            <p>
+              <strong>Transaction ID:</strong> {invoiceData.transactionId}
+            </p>
           </div>
           <div className="right-details" style={{ textAlign: "right" }}>
-            <p><strong>Order ID:</strong> {invoiceData.orderId}</p>
-            <p><strong>Payment Method:</strong> UPI/DIGITAL </p>
+            <p>
+              <strong>Order ID:</strong> {invoiceData.orderId}
+            </p>
+            <p>
+              <strong>Payment Method:</strong> UPI/DIGITAL{" "}
+            </p>
           </div>
         </div>
 
         {/* Invoice Table */}
-        <div className="table-container" style={{ overflow: 'auto' }}>
+        <div className="table-container" style={{ overflow: "auto" }}>
           <table className="invoice-table">
             <thead>
               <tr>
                 <th>#</th>
                 <th>Edition</th>
                 <th>Price</th>
-                {gstOption === 'with' && <th>Tax</th>}
+                {gstOption === "with" && <th>Tax</th>}
                 <th>Duration</th>
                 <th>Total</th>
               </tr>
@@ -251,30 +314,46 @@ const Invoice = () => {
             <tbody>
               {invoiceData.subscriptions.map((data, index) => {
                 const price = parseFloat(data.price);
-                const basePrice = data.basePrice ? parseFloat(data.basePrice) : price / 1.18;
+                const basePrice = data.basePrice
+                  ? parseFloat(data.basePrice)
+                  : price / 1.18;
                 const tax = price - basePrice;
-                
+
                 return (
                   <tr key={index}>
                     <td>{index + 1}</td>
                     <td>{data.location}</td>
-                    <td>₹{gstOption === 'with' ? basePrice.toFixed(2) : price.toFixed(2)}</td>
-                    {gstOption === 'with' && <td>₹{tax.toFixed(2)}</td>}
+                    <td>₹{basePrice.toFixed(2)}</td>
+                    {gstOption === "with" && <td>₹{tax.toFixed(2)}</td>}
                     <td>{data.duration}</td>
-                    <td>₹{price.toFixed(2)}</td>
+                    <td>
+                      ₹
+                      {gstOption === "with"
+                        ? price.toFixed(2)
+                        : basePrice.toFixed(2)}
+                    </td>
                   </tr>
                 );
               })}
-             
             </tbody>
           </table>
         </div>
 
         {/* Applied Offers Section */}
         {invoiceData.offers && invoiceData.offers.length > 0 && (
-          <div style={{ marginTop: "1rem", marginBottom: "1rem", textAlign: "right" }}>
+          <div
+            style={{
+              marginTop: "1rem",
+              marginBottom: "1rem",
+              textAlign: "right",
+            }}
+          >
             <p style={{ margin: 0, fontSize: "0.9rem" }}>
-              <strong>Applied Offer Codes:</strong> {invoiceData.offers.map((offer) => offer.code).filter(Boolean).join(", ")}
+              <strong>Applied Offer Codes:</strong>{" "}
+              {invoiceData.offers
+                .map((offer) => offer.code)
+                .filter(Boolean)
+                .join(", ")}
             </p>
           </div>
         )}
@@ -287,87 +366,93 @@ const Invoice = () => {
             paddingBottom: "1rem",
           }}
         >
-          {gstOption === 'with' && (
-            <>
-              {(() => {
-                const totalBasePrice = invoiceData.subscriptions.reduce((sum, data) => {
-                  const price = parseFloat(data.price);
-                  const basePrice = data.basePrice ? parseFloat(data.basePrice) : price / 1.18;
-                  return sum + basePrice;
-                }, 0);
-                
-                const totalTax = invoiceData.subscriptions.reduce((sum, data) => {
-                  const price = parseFloat(data.price);
-                  const basePrice = data.basePrice ? parseFloat(data.basePrice) : price / 1.18;
-                  const tax = price - basePrice;
-                  return sum + tax;
-                }, 0);
-                
-                return (
-                  <>
-                    <div
-                      className="total-row final"
-                      style={{ fontSize: "1.1rem", marginBottom: "0.5rem" }}
-                    >
-                      <span style={{ fontWeight: 500, color: "#000" }}>
-                        Total Base Price: ₹{totalBasePrice.toFixed(2)}
-                      </span>
-                    </div>
-                    <div
-                      className="total-row final"
-                      style={{ fontSize: "1.1rem", marginBottom: "0.5rem" }}
-                    >
-                      <span style={{ fontWeight: 500, color: "#000" }}>
-                        Total Tax (GST): ₹{totalTax.toFixed(2)}
-                      </span>
-                    </div>
-                  </>
-                );
-              })()}
-            </>
-          )}
-          
-          {/* Discount Information */}
-          {invoiceData.discountInfo && (
+          {gstOption === "with" && (
             <>
               <div
                 className="total-row final"
-                style={{
-                  fontSize: "1.1rem",
-                  marginBottom: "0.5rem",
-                }}
+                style={{ fontSize: "1.1rem", marginBottom: "0.5rem" }}
               >
                 <span style={{ fontWeight: 500, color: "#000" }}>
-                  Subtotal: ₹{parseFloat(invoiceData.discountInfo.originalAmount).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                  Total Base Price: ₹{totalBasePrice.toFixed(2)}
                 </span>
               </div>
+
+              {invoiceData.discountInfo && (
+                <div
+                  className="total-row final"
+                  style={{ fontSize: "1.1rem", marginBottom: "0.5rem" }}
+                >
+                  <span style={{ fontWeight: 500, color: "#000" }}>
+                    Discount ({discountPercent}%): - ₹{baseDiscount.toFixed(2)}
+                  </span>
+                </div>
+              )}
+
               <div
                 className="total-row final"
-                style={{
-                  fontSize: "1.1rem",
-                  marginBottom: "0.5rem",
-                }}
+                style={{ fontSize: "1.1rem", marginBottom: "0.5rem" }}
               >
                 <span style={{ fontWeight: 500, color: "#000" }}>
-                  Discount ({invoiceData.discountInfo.discountPercentage}%): - ₹{parseFloat(invoiceData.discountInfo.discountAmount).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                  Subtotal (after discount): ₹{baseSubtotal.toFixed(2)}
+                </span>
+              </div>
+
+              <div
+                className="total-row final"
+                style={{ fontSize: "1.1rem", marginBottom: "0.5rem" }}
+              >
+                <span style={{ fontWeight: 500, color: "#000" }}>
+                  GST (18% on subtotal): ₹{gstOnSubtotal.toFixed(2)}
+                </span>
+              </div>
+
+              <div
+                className="total-row final"
+                style={{ fontSize: "1.1rem", marginTop: "0.5rem" }}
+              >
+                <span style={{ fontWeight: "bold", color: "#1d75d9" }}>
+                  Total Paid Amount: ₹{totalPayableWithGst.toFixed(2)}
                 </span>
               </div>
             </>
           )}
-          
-          <div
-            className="total-row final"
-            style={{
-              fontSize: "1.1rem",
-              marginTop: invoiceData.discountInfo ? "0.5rem" : gstOption === 'with' ? "0.5rem" : "0",
-            }}
-          >
-            <span style={{ fontWeight: "bold", color: "#1d75d9" }}>
-              Total Paid Amount: ₹{invoiceData.discountInfo 
-                ? parseFloat(invoiceData.discountInfo.finalAmount).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
-                : invoiceData.amount}
-            </span>
-          </div>
+
+          {gstOption !== "with" && (
+            <>
+              {/* Total Base Price (Original) */}
+              <div
+                className="total-row final"
+                style={{ fontSize: "1.1rem", marginBottom: "0.5rem" }}
+              >
+                <span style={{ fontWeight: 500, color: "#000" }}>
+                  Total Base Price: ₹{invoiceData.totalWithoutGSTOriginal}
+                </span>
+              </div>
+
+              {/* Discount Amount (if exists) */}
+              {invoiceData?.discountInfo?.baseDiscountAmount > 0 && (
+                <div
+                  className="total-row final"
+                  style={{ fontSize: "1.1rem", marginBottom: "0.5rem", color: "red" }}
+                >
+                  <span style={{ fontWeight: 500, color: "#000" }}>
+                    Discount ({discountPercent}%): - ₹{invoiceData.discountInfo.baseDiscountAmount}
+                  </span>
+                </div>
+              )}
+
+              {/* Final Total Paid */}
+              <div
+                className="total-row final"
+                style={{ fontSize: "1.1rem", marginTop: "0.5rem" }}
+              >
+                <span style={{ fontWeight: "bold", color: "#1d75d9" }}>
+                  Total Paid Amount: ₹{invoiceData.totalWithoutGST}
+                </span>
+              </div>
+            </>
+          )}
+
           <div
             className="total-row"
             style={{
@@ -376,7 +461,13 @@ const Invoice = () => {
               fontWeight: "500",
             }}
           >
-            <span>Total Amount in Words: {invoiceData.amountInWords}</span>
+            <span>
+              {" "}
+              Total Amount in Words:{" "}
+              {gstOption === "with"
+                ? invoiceData.amountInWords
+                : invoiceData.amountInWordsWithoutGST}
+            </span>
           </div>
         </div>
 
@@ -424,34 +515,60 @@ const Invoice = () => {
       </div>
 
       {/* GST Option Toggle - Above Download Button */}
-      <div style={{ marginBottom: '1rem', display: 'flex', gap: '1rem', alignItems: 'center', justifyContent: 'center' }}>
-        <label style={{ fontWeight: 'bold', marginRight: '1rem' }}>Invoice Type:</label>
-        <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer' }}>
+      <div
+        style={{
+          marginBottom: "1rem",
+          display: "flex",
+          gap: "1rem",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <label style={{ fontWeight: "bold", marginRight: "1rem" }}>
+          Invoice Type:
+        </label>
+        <label
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "0.5rem",
+            cursor: "pointer",
+          }}
+        >
           <input
             type="radio"
             name="gstOption"
             value="without"
-            checked={gstOption === 'without'}
+            checked={gstOption === "without"}
             onChange={(e) => setGstOption(e.target.value)}
-            style={{ cursor: 'pointer' }}
+            style={{ cursor: "pointer" }}
           />
           Without GST
         </label>
-        <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer' }}>
+        <label
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "0.5rem",
+            cursor: "pointer",
+          }}
+        >
           <input
             type="radio"
             name="gstOption"
             value="with"
-            checked={gstOption === 'with'}
+            checked={gstOption === "with"}
             onChange={(e) => setGstOption(e.target.value)}
-            style={{ cursor: 'pointer' }}
+            style={{ cursor: "pointer" }}
           />
           With GST
         </label>
       </div>
 
       {/* Download Button */}
-      <button onClick={DownloadPDF} className="btn btn-primary mb-3">Download Invoice</button>
+      <button onClick={DownloadPDF} className="btn btn-primary mb-3">
+        Download Invoice
+      </button>
     </div>
   );
 };

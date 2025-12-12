@@ -20,6 +20,11 @@ const PaymentSummary = () => {
 
   const subscriptionType = state?.subscriptionType || 'digital';
   const packages = state?.packages || [];
+  const formatAmount = (value) =>
+    Number(value || 0).toLocaleString('en-IN', {
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 2,
+    });
   
 const result = packages.reduce(
   (acc, pkg) => {
@@ -37,7 +42,12 @@ const result = packages.reduce(
   }
 );
 
-  const total = packages.reduce((sum, pkg) => sum + pkg.price, 0);
+  // Use withoutgst when available for display calculations
+  const exGstTotal = packages.reduce((sum, pkg) => {
+    const price = Number(pkg.price ?? 0);
+    const withoutGst = pkg.withoutgst != null ? Number(pkg.withoutgst) : price ? price / 1.18 : 0;
+    return sum + withoutGst;
+  }, 0);
 
   // Calculate discount from selected offers
   const calculateDiscount = () => {
@@ -46,14 +56,14 @@ const result = packages.reduce(
       const offer = offers.find((o) => o._id === offerId);
       if (offer) {
         // Assuming discount is a percentage
-        discountAmount += (total * offer.discount) / 100;
+        discountAmount += (exGstTotal * offer.discount) / 100;
       }
     });
     return discountAmount;
   };
 
   const discountAmount = calculateDiscount();
-  const finalTotal = total - discountAmount;
+  const finalTotal = exGstTotal - discountAmount;
 
   // Fetch offers for the user
   useEffect(() => {
@@ -277,7 +287,22 @@ const result = packages.reduce(
                 <div className="SummarryBoxList">
                   <div className="leftSummBox">Subscription Details - </div>
                   <div className="rightSummBox">
-                    {packages.map((pkg) => `${pkg.duration} ${pkg.location}`).join(', ') || 'N/A'}
+                    {packages.length
+                      ? packages
+                          .map((pkg) => {
+                            const price = Number(pkg.price ?? 0);
+                            const withoutGst =
+                              pkg.withoutgst != null
+                                ? Number(pkg.withoutgst)
+                                : price
+                                  ? price / 1.18
+                                  : 0;
+                            return `${pkg.duration} ${pkg.location} - ₹ ${formatAmount(
+                              withoutGst
+                            )} (excl. GST)`;
+                          })
+                          .join(', ')
+                      : 'N/A'}
                   </div>
                 </div>
                 <div className="SummarryBoxList">
@@ -295,8 +320,8 @@ const result = packages.reduce(
                 {discountAmount > 0 && (
                   <>
                     <div className="SummarryBoxList">
-                      <div className="leftSummBox">Subtotal</div>
-                      <div className="rightSummBox">₹ {total.toLocaleString()}</div>
+                      <div className="leftSummBox">Subtotal (excl. GST)</div>
+                      <div className="rightSummBox">₹ {formatAmount(exGstTotal)}</div>
                     </div>
                     <div className="SummarryBoxList" style={{ color: '#28a745' }}>
                       <div className="leftSummBox">Discount</div>
@@ -305,16 +330,25 @@ const result = packages.reduce(
                   </>
                 )}
                 <div className="SummarryBoxList bg-light">
-                  <div className="leftSummBox fs-4 m-0">Total</div>
+                  <div className="leftSummBox fs-4 m-0">Total (excl. GST)</div>
                   <div className="rightSummBox fw-bold fs-3 m-0 text-webColor">
-                    ₹ {finalTotal.toLocaleString()}
+                    ₹ {formatAmount(finalTotal)}
                   </div>
                 </div>
                 <div className="SummarryBoxList">
-                  <div className="rightSummBox text-muted small text-end" style={{ fontSize: '0.85rem', fontStyle: 'italic' }}>
-                    *Price includes GST
-                  </div>
+                  <div className="leftSummBox">GST (18%)</div>
+                  <div className="rightSummBox">₹ {formatAmount(finalTotal * 0.18)}</div>
                 </div>
+                <div className="SummarryBoxList bg-light">
+                  <div className="leftSummBox fw-bold">Total Payable (incl. GST)</div>
+                  <div className="rightSummBox fw-bold">₹ {formatAmount(finalTotal * 1.18)}</div>
+                </div>
+                {/* {discountAmount === 0 && (
+                  <div className="SummarryBoxList">
+                    <div className="leftSummBox">Subtotal (excl. GST)</div>
+                    <div className="rightSummBox">₹ {formatAmount(exGstTotal)}</div>
+                  </div>
+                )} */}
               </div>
             </div>
           </div>
@@ -328,7 +362,15 @@ const result = packages.reduce(
                   {loadingOffers ? (
                     <p className="text-center py-3">Loading offers...</p>
                   ) : (
-                    <div>
+                    <div
+                      style={{
+                        maxHeight: offers.length > 3 ? '450px' : 'none',
+                        overflowY: offers.length > 3 ? 'auto' : 'visible',
+                        overflowX: 'hidden',
+                        paddingRight: offers.length > 3 ? '8px' : '0',
+                      }}
+                      className={offers.length > 3 ? 'custom-scrollbar' : ''}
+                    >
                       {offers.map((offer) => (
                         <div
                           key={offer._id}

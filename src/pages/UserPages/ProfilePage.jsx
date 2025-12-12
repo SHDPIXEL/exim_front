@@ -12,6 +12,9 @@ const ProfilePage = () => {
   const [buttonLoading, setButtonLoading] = useState(false);
   const [confirmVisible, setConfirmVisible] = useState(false);
   const [selectedDeviceId, setSelectedDeviceId] = useState(null);
+  const [showGstInput, setShowGstInput] = useState(false);
+  const [gstNumber, setGstNumber] = useState("");
+  const [gstLoading, setGstLoading] = useState(false);
 
   const [devices, setDevices] = useState([]);
 
@@ -51,6 +54,53 @@ const ProfilePage = () => {
     console.log("clicked : " + id);
     setSelectedDeviceId(id);
     setConfirmVisible(true);
+  };
+
+  const handleGstinSubmit = async () => {
+    if (!gstNumber.trim()) {
+      showNotification("Please enter GST Number", "error");
+      return;
+    }
+
+    setGstLoading(true);
+
+    try {
+      const response = await API.post(
+        "/app_users/update_gstin",
+        { gstin: gstNumber.trim() },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+          },
+        }
+      );
+
+      if (response.data?.success) {
+        showNotification("GST Number updated successfully!", "success");
+
+        // Re-fetch ONLY gstin
+        const details = await API.get("/app_users/getUserDetails", {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+          },
+        });
+
+        if (details.data?.success) {
+          // Update only GSTIN in context
+          user.gstin = details.data.user.gstin;
+        }
+
+        setShowGstInput(false); // hide input
+        setGstNumber(""); // reset input
+      } else {
+        showNotification("Failed to update GST", "error");
+      }
+    } catch (error) {
+      console.error(error);
+      showNotification("Error updating GST", "error");
+    }
+
+    setGstLoading(false);
   };
 
   const logoutDevice = async () => {
@@ -188,6 +238,58 @@ const ProfilePage = () => {
                 <li className="list-group-item d-flex">
                   <div className="w-50 fw-bold">Company Address :</div>
                   <div>{user?.company_address}</div>{" "}
+                </li>
+                <li className="list-group-item d-flex">
+                  <div className="w-50 fw-bold">GSTIN :</div>
+
+                  {/* If GSTIN exists → show it */}
+                  {user?.gstin ? (
+                    <div>{user.gstin}</div>
+                  ) : (
+                    <>
+                      {/* If GST input is hidden → show Add button */}
+                      {!showGstInput && (
+                        <Button size="sm" onClick={() => setShowGstInput(true)}>
+                          Add GST Number
+                        </Button>
+                      )}
+
+                      {/* Show Input + Submit */}
+                      {showGstInput && (
+                        <div
+                          className="d-flex mt-2 align-items-center gap-2"
+                          style={{ transition: "0.3s" }}
+                        >
+                          <input
+                            type="text"
+                            className="form-control"
+                            placeholder="Enter GST Number"
+                            value={gstNumber}
+                            onChange={(e) => setGstNumber(e.target.value)}
+                            style={{ maxWidth: "250px" }}
+                          />
+
+                          <Button
+                            size="sm"
+                            variant="success"
+                            onClick={handleGstinSubmit}
+                            disabled={gstLoading}
+                          >
+                            {gstLoading ? "Saving..." : "Submit"}
+                          </Button>
+
+                          <Button
+                            size="sm"
+                            variant="outline-secondary"
+                            onClick={() => setShowGstInput(false)}
+                            disabled={gstLoading}
+                          >
+                            Cancel
+                          </Button>
+                        </div>
+                      )}
+                    </>
+                  )}
                 </li>
                 <li className="list-group-item d-flex">
                   <div className="w-50 fw-bold">Phone Number :</div>

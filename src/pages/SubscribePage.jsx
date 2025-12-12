@@ -335,7 +335,7 @@ const SubscribePage = () => {
                                             {option.duration}
                                           </h3>
                                           <h5>
-                                            ₹ {option.price.toLocaleString()}
+                                            ₹ {option.withoutgst.toLocaleString()}
                                           </h5>
                                         </label>
                                       </div>

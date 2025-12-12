@@ -156,6 +156,7 @@ const RegistrationForm = () => {
             companyName: '',
             designation: '',
             address: '',
+            gstin: '',
             pincode: '',
             city: '',
             state: '',
@@ -185,6 +186,7 @@ const RegistrationForm = () => {
                 contact_person_designation: data.designation,
                 company_address: data.address,
                 pincode: data.pincode,
+                gstin: data.gstin,
                 city: data.city,
                 state: data.state,
                 country: data.country,
@@ -500,6 +502,19 @@ const RegistrationForm = () => {
                                                             {errors.email.message}
                                                         </div>
                                                     )}
+                                                </Form.Group>
+                                            </Col>
+                                            <Col md={6}>
+                                                <Form.Group controlId="formGstin" className="mt-3">
+                                                    <Form.Label>GSTIN <span className='text-muted small' style={{ fontSize: '0.7rem', fontStyle: 'italic' }}> (Optional)</span></Form.Label>
+                                                    <Form.Control
+                                                        type="text"
+                                                        placeholder="Enter GSTIN"
+                                                        {...register('gstin', {
+                                                            required: false
+                                                        })}
+                                                        className='webinput'
+                                                    /> 
                                                 </Form.Group>
                                             </Col>
                                             <Col md={6}>
