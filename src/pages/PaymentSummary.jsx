@@ -330,8 +330,8 @@ const result = packages.reduce(
                   </>
                 )}
                 <div className="SummarryBoxList bg-light">
-                  <div className="leftSummBox fs-4 m-0">Total (excl. GST)</div>
-                  <div className="rightSummBox fw-bold fs-3 m-0 text-webColor">
+                  <div className="leftSummBox m-0">Total (excl. GST)</div>
+                  <div className="rightSummBox fw-bold m-0 text-webColor">
                     ₹ {formatAmount(finalTotal)}
                   </div>
                 </div>
@@ -340,8 +340,8 @@ const result = packages.reduce(
                   <div className="rightSummBox">₹ {formatAmount(finalTotal * 0.18)}</div>
                 </div>
                 <div className="SummarryBoxList bg-light">
-                  <div className="leftSummBox fw-bold">Total Payable (incl. GST)</div>
-                  <div className="rightSummBox fw-bold">₹ {formatAmount(finalTotal * 1.18)}</div>
+                  <div className="leftSummBox fw-bold fs">Total Payable (incl. GST)</div>
+                  <div className="rightSummBox fw-bold fs">₹ {formatAmount(finalTotal * 1.18)}</div>
                 </div>
                 {/* {discountAmount === 0 && (
                   <div className="SummarryBoxList">

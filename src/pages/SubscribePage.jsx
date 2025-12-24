@@ -6,6 +6,7 @@ import { useUser } from "../context/UserContext";
 import { useNotification } from "../context/NotificationContext";
 import API from "../api";
 import { Modal, Button } from "react-bootstrap";
+import SubscriptionPricingTable from "../components/SubscriptionPricingTable";
 
 const SubscribePage = () => {
   const navigate = useNavigate();
@@ -22,6 +23,68 @@ const SubscribePage = () => {
 
   const [hardSD, setHardSD] = useState([]);
   const [digitalSD, setDigitalSD] = useState([]);
+  const [activePricingTab, setActivePricingTab] = useState("digital");
+
+  const pricingTableData = {
+    digital: [
+      {
+        edition: "Mumbai",
+        frequency: "Monday to Friday",
+        plans: [
+          { duration: "1 Year", price: 3000, gstPrice: 3540 },
+          { duration: "2 Years", price: 5500, gstPrice: 6490 },
+        ],
+      },
+      {
+        edition: "Gujarat",
+        frequency: "Monday & Thursday",
+        plans: [
+          { duration: "1 Year", price: 2119, gstPrice: 2500 },
+          { duration: "2 Years", price: 2966, gstPrice: 3500 },
+        ],
+      },
+      {
+        edition: "Chennai",
+        frequency: "Monday to Friday",
+        plans: [
+          { duration: "1 Year", price: 2500, gstPrice: 2950 },
+          { duration: "2 Years", price: 4000, gstPrice: 4720 },
+        ],
+      },
+      {
+        edition: "New Delhi",
+        frequency: "Monday, Wednesday & Friday",
+        plans: [
+          { duration: "1 Year", price: 2500, gstPrice: 2950 },
+          { duration: "2 Years", price: 4000, gstPrice: 4720 },
+        ],
+      },
+      {
+        edition: "Kolkata",
+        frequency: "Monday, Wednesday & Friday",
+        plans: [
+          { duration: "1 Year", price: 1250, gstPrice: 1475 },
+          { duration: "2 Years", price: 2500, gstPrice: 2950 },
+        ],
+      },
+      {
+        edition: "Kochi",
+        frequency: "Monday & Thursday",
+        plans: [
+          { duration: "1 Year", price: 1000, gstPrice: 1180 },
+          { duration: "2 Years", price: 2000, gstPrice: 2360 },
+        ],
+      },
+      {
+        edition: "Tuticorin",
+        frequency: "Monday & Thursday",
+        plans: [
+          { duration: "1 Year", price: 1000, gstPrice: 1180 },
+          { duration: "2 Years", price: 2000, gstPrice: 2360 },
+        ],
+      },
+    ],
+  };
 
   useEffect(() => {
     const hasSeenModal = sessionStorage.getItem("hasSeenSubscribeModal");
@@ -349,6 +412,37 @@ const SubscribePage = () => {
                       })}
                     </div>
 
+                    {/* PRICING TABLE SECTION */}
+                    <div className="mt-5">
+                      <div className="webTittle mb-3">
+                        <i className="bi bi-chevron-right"></i> Subscription
+                        Pricing
+                      </div>
+
+                      {/* Pricing Tabs */}
+                      <div className="d-flex gap-3 mb-3">
+                        <button
+                          className={`btn ${
+                            activePricingTab === "digital"
+                              ? "btn-primary"
+                              : "btn-outline-primary"
+                          }`}
+                          onClick={() => setActivePricingTab("digital")}
+                        >
+                          Digital Copy
+                        </button>
+                      </div>
+
+                      {/* Pricing Table */}
+                      <SubscriptionPricingTable
+                        data={
+                          activePricingTab === "digital"
+                            ? pricingTableData.digital
+                            : pricingTableData.hard
+                        }
+                      />
+                    </div>
+
                     <div className="borderbg"></div>
 
                     {user ? (
@@ -409,6 +503,7 @@ const SubscribePage = () => {
                       out to the branch office.
                     </p>
                   </h4>
+                  {/* <SubscriptionPricingTable data={pricingTableData.hard} /> */}
                 </div>
               )}
             </div>

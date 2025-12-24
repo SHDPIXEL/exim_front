@@ -433,10 +433,15 @@ const Invoice = () => {
               {invoiceData?.discountInfo?.baseDiscountAmount > 0 && (
                 <div
                   className="total-row final"
-                  style={{ fontSize: "1.1rem", marginBottom: "0.5rem", color: "red" }}
+                  style={{
+                    fontSize: "1.1rem",
+                    marginBottom: "0.5rem",
+                    color: "red",
+                  }}
                 >
                   <span style={{ fontWeight: 500, color: "#000" }}>
-                    Discount ({discountPercent}%): - ₹{invoiceData.discountInfo.baseDiscountAmount}
+                    Discount ({discountPercent}%): - ₹
+                    {invoiceData.discountInfo.baseDiscountAmount}
                   </span>
                 </div>
               )}
@@ -493,7 +498,16 @@ const Invoice = () => {
                   textAlign: "left",
                 }}
               >
-                <p>www.exim.demo.shdpixel.com</p>
+                <p>
+                  <a
+                    href="https://eximin.net"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{ textDecoration: "none", color: "#0d6efd" }}
+                  >
+                    https://eximin.net
+                  </a>
+                </p>
               </td>
               <td
                 style={{

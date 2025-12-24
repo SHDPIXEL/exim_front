@@ -46,13 +46,15 @@ import ResetPasswordPage from './pages/ResetPassword.jsx';
 import { ToastContainer } from "react-toastify";
 import ReactGA from "react-ga4";
 import { AppProvider } from './context/AppContext.jsx';
+import TopAds from './components/TopAds.jsx';
 
 ReactGA.initialize("G-GF2XVZCZ5K");
 
-function Layout({ children }) {
+function Layout({ children, showTopAds = false }) {
   return (
     <>
       <MainHeader />
+      {showTopAds && <TopAds />}
       {children}
       <MainFooter />
     </>
@@ -75,40 +77,40 @@ function App() {
               autoClose={3000} />
             <ScrollToTop />
             <Routes>
-              <Route path="/" element={<Layout><Home /></Layout>} />
-              <Route path="/subscribePage" element={<Layout><SubscribePage /></Layout>} />
-              <Route path="/invoice/:invoiceId" element={<Layout><InvoicePage /></Layout>} />
-              <Route path="/newsDetails/:id" element={<Layout><NewsDetails /></Layout>} />
-              <Route path="/videoGallery" element={<Layout><VideoGalleryNews /></Layout>} />
-              <Route path="/videoGalleryDetails/:id" element={<Layout><VideGalleryDetails /></Layout>} />
-              <Route path="/events" element={<Layout><EventsPage /></Layout>} />
-              <Route path="/rates" element={<Layout><ExchangeRates /></Layout>} />
-              <Route path="/Customrates" element={<Layout><CustomRates /></Layout>} />
-              <Route path="/eximnews" element={<Layout><News /></Layout>} />
-              <Route path="/dailyeximnews" element={<Layout><DailyEximNews /></Layout>} />
-              <Route path="/appointments" element={<Layout><Appointments /></Layout>} />
-              <Route path="/EximIndia" element={<Layout><EximIndia /></Layout>} />
-              <Route path="/oureditions" element={<Layout><OurEditors /></Layout>} />
-              <Route path="/ourReaders" element={<Layout><OurReaders /></Layout>} />
-              <Route path="/Category" element={<Layout><Catergory /></Layout>} />
-              <Route path="/login" element={<Layout><Login /></Layout>} />
-              <Route path="/registrationPage" element={<Layout><RegistrationForm /></Layout>} />
-              <Route path="/Forgotpass" element={<Layout><ForgotPass /></Layout>} />
+              <Route path="/" element={<Layout showTopAds><Home /></Layout>} />
+              <Route path="/subscribePage" element={<Layout showTopAds><SubscribePage /></Layout>} />
+              <Route path="/invoice/:invoiceId" element={<Layout showTopAds><InvoicePage /></Layout>} />
+              <Route path="/newsDetails/:id" element={<Layout showTopAds><NewsDetails /></Layout>} />
+              <Route path="/videoGallery" element={<Layout showTopAds><VideoGalleryNews /></Layout>} />
+              <Route path="/videoGalleryDetails/:id" element={<Layout showTopAds><VideGalleryDetails /></Layout>} />
+              <Route path="/events" element={<Layout showTopAds><EventsPage /></Layout>} />
+              <Route path="/rates" element={<Layout showTopAds><ExchangeRates /></Layout>} />
+              <Route path="/Customrates" element={<Layout showTopAds><CustomRates /></Layout>} />
+              <Route path="/eximnews" element={<Layout showTopAds><News /></Layout>} />
+              <Route path="/dailyeximnews" element={<Layout showTopAds><DailyEximNews /></Layout>} />
+              <Route path="/appointments" element={<Layout showTopAds><Appointments /></Layout>} />
+              <Route path="/EximIndia" element={<Layout showTopAds><EximIndia /></Layout>} />
+              <Route path="/oureditions" element={<Layout showTopAds><OurEditors /></Layout>} />
+              <Route path="/ourReaders" element={<Layout showTopAds><OurReaders /></Layout>} />
+              <Route path="/Category" element={<Layout showTopAds><Catergory /></Layout>} />
+              <Route path="/login" element={<Layout showTopAds><Login /></Layout>} />
+              <Route path="/registrationPage" element={<Layout showTopAds><RegistrationForm /></Layout>} />
+              <Route path="/Forgotpass" element={<Layout showTopAds><ForgotPass /></Layout>} />
               <Route path="/paymentSummary" element={<ProtectedRoute><Layout><PaymentSummary /></Layout></ProtectedRoute>} />
-              <Route path="/paymentDone" element={<Layout><PaymentDone /></Layout>} />
+              <Route path="/paymentDone" element={<Layout showTopAds><PaymentDone /></Layout>} />
               <Route path="/dashboard" element={<ProtectedRoute><Layout><Dashboard /></Layout></ProtectedRoute>} />
               <Route path="/mydevice" element={<ProtectedRoute><Layout><MyDevice /></Layout></ProtectedRoute>} />
               <Route path="/paymentHistory" element={<ProtectedRoute><Layout><PaymentHistory /></Layout></ProtectedRoute>} />
               <Route path="/profile" element={<ProtectedRoute><Layout><ProfilePage /></Layout></ProtectedRoute>} />
               <Route path="/viewpage" element={<ProtectedRoute><Layout><ViewPage /></Layout></ProtectedRoute>} />
-              <Route path="/demo/viewpage" element={<Layout><ViewPage /></Layout>} />
-              <Route path="/contact" element={<Layout><ContactPage /></Layout>} />
-              <Route path="/privacypolicy" element={<Layout><PrivacyPolicy /></Layout>} />
-              <Route path="/termsandconditions" element={<Layout><TermsAndConditions /></Layout>} />
-              <Route path="/shippingAndDeliveryPolicy" element={<Layout><ShippingAndDeliveryPolicy /></Layout>} />
-              <Route path="/cancellationAndRefundPolicy" element={<Layout><CancellationAndRefundPolicy /></Layout>} />
-              <Route path='/download' element={<Layout><DownloadFiles /></Layout>} />
-              <Route path='/reset-password/:token' element={<Layout><ResetPasswordPage /></Layout>} /> 
+              <Route path="/demo/viewpage" element={<Layout showTopAds><ViewPage /></Layout>} />
+              <Route path="/contact" element={<Layout showTopAds><ContactPage /></Layout>} />
+              <Route path="/privacypolicy" element={<Layout showTopAds><PrivacyPolicy /></Layout>} />
+              <Route path="/termsandconditions" element={<Layout showTopAds><TermsAndConditions /></Layout>} />
+              <Route path="/shippingAndDeliveryPolicy" element={<Layout showTopAds><ShippingAndDeliveryPolicy /></Layout>} />
+              <Route path="/cancellationAndRefundPolicy" element={<Layout showTopAds><CancellationAndRefundPolicy /></Layout>} />
+              <Route path='/download' element={<Layout showTopAds><DownloadFiles /></Layout>} />
+              <Route path='/reset-password/:token' element={<Layout showTopAds><ResetPasswordPage /></Layout>} /> 
             </Routes>
           </AdProvider>
           </NotificationProvider>
