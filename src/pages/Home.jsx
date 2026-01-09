@@ -130,7 +130,7 @@ const Home = () => {
     script1.src = "https://www.googletagmanager.com/gtag/js?id=G-Y1L0N0LFM2";
     script1.async = true;
     document.head.appendChild(script1);
-  
+
     const script2 = document.createElement("script");
     script2.innerHTML = `
       window.dataLayer = window.dataLayer || [];
@@ -139,13 +139,12 @@ const Home = () => {
       gtag('config', 'G-Y1L0N0LFM2');
     `;
     document.head.appendChild(script2);
-  
+
     return () => {
       document.head.removeChild(script1);
       document.head.removeChild(script2);
     };
   }, []);
-  
 
   return (
     <>
@@ -172,6 +171,14 @@ const Home = () => {
                         onClick={() =>
                           navigate(`/newsDetails/${headlineItem._id}`)
                         }
+                        onContextMenu={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          window.open(
+                            `/newsDetails/${headlineItem._id}`,
+                            "_blank"
+                          );
+                        }}
                       >
                         <h3>{index + 1}</h3>
                         <h5>{headlineItem.headline}</h5>
@@ -844,11 +851,15 @@ const Home = () => {
 
 export default Home;
 
-
-{/* <div className="container">
-          <div className="row mb-4"> */}
-            {/* Left Swiper */}
-            {/* {topLeftMedia.length > 0 && (
+{
+  /* <div className="container">
+          <div className="row mb-4"> */
+}
+{
+  /* Left Swiper */
+}
+{
+  /* {topLeftMedia.length > 0 && (
               <div className="col-md-6 mt-2 mb-2">
                 <Swiper modules={[Autoplay]} autoplay={{ delay: 3000 }}>
                   {topLeftMedia.map((media, index) => (
@@ -891,10 +902,14 @@ export default Home;
                   ))}
                 </Swiper>
               </div>
-            )} */}
+            )} */
+}
 
-            {/* Right Swiper */}
-            {/* {topRightMedia.length > 0 && (
+{
+  /* Right Swiper */
+}
+{
+  /* {topRightMedia.length > 0 && (
               <div className="col-md-6 mt-2 mb-2">
                 <Swiper modules={[Autoplay]} autoplay={{ delay: 3000 }}>
                   {topRightMedia.map((media, index) => (
@@ -939,4 +954,5 @@ export default Home;
               </div>
             )}
           </div>
-        </div> */}
+        </div> */
+}

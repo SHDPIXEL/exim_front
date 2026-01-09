@@ -7,6 +7,7 @@ import { useNotification } from "../context/NotificationContext";
 import API from "../api";
 import { Modal, Button } from "react-bootstrap";
 import SubscriptionPricingTable from "../components/SubscriptionPricingTable";
+import { getDigitalPackages } from "../constants/pricing";
 
 const SubscribePage = () => {
   const navigate = useNavigate();
@@ -26,64 +27,22 @@ const SubscribePage = () => {
   const [activePricingTab, setActivePricingTab] = useState("digital");
 
   const pricingTableData = {
-    digital: [
-      {
-        edition: "Mumbai",
-        frequency: "Monday to Friday",
-        plans: [
-          { duration: "1 Year", price: 3000, gstPrice: 3540 },
-          { duration: "2 Years", price: 5500, gstPrice: 6490 },
-        ],
-      },
-      {
-        edition: "Gujarat",
-        frequency: "Monday & Thursday",
-        plans: [
-          { duration: "1 Year", price: 2119, gstPrice: 2500 },
-          { duration: "2 Years", price: 2966, gstPrice: 3500 },
-        ],
-      },
-      {
-        edition: "Chennai",
-        frequency: "Monday to Friday",
-        plans: [
-          { duration: "1 Year", price: 2500, gstPrice: 2950 },
-          { duration: "2 Years", price: 4000, gstPrice: 4720 },
-        ],
-      },
-      {
-        edition: "New Delhi",
-        frequency: "Monday, Wednesday & Friday",
-        plans: [
-          { duration: "1 Year", price: 2500, gstPrice: 2950 },
-          { duration: "2 Years", price: 4000, gstPrice: 4720 },
-        ],
-      },
-      {
-        edition: "Kolkata",
-        frequency: "Monday, Wednesday & Friday",
-        plans: [
-          { duration: "1 Year", price: 1250, gstPrice: 1475 },
-          { duration: "2 Years", price: 2500, gstPrice: 2950 },
-        ],
-      },
-      {
-        edition: "Kochi",
-        frequency: "Monday & Thursday",
-        plans: [
-          { duration: "1 Year", price: 1000, gstPrice: 1180 },
-          { duration: "2 Years", price: 2000, gstPrice: 2360 },
-        ],
-      },
-      {
-        edition: "Tuticorin",
-        frequency: "Monday & Thursday",
-        plans: [
-          { duration: "1 Year", price: 1000, gstPrice: 1180 },
-          { duration: "2 Years", price: 2000, gstPrice: 2360 },
-        ],
-      },
-    ],
+    digital: getDigitalPackages.map((pkg) => ({
+      edition: pkg.location,
+      frequency:
+        pkg.location === "Mumbai" || pkg.location === "Chennai"
+          ? "Monday to Friday"
+          : pkg.location === "Gujarat" ||
+            pkg.location === "Kochi" ||
+            pkg.location === "Tuticorin"
+          ? "Monday & Thursday"
+          : "Monday, Wednesday & Friday",
+      plans: pkg.options.map((opt) => ({
+        duration: opt.duration,
+        price: opt.withoutgst,
+        gstPrice: opt.price,
+      })),
+    })),
   };
 
   useEffect(() => {
@@ -131,14 +90,21 @@ const SubscribePage = () => {
     );
   };
 
-  const handlePackageChange = (location, duration, price, type = null, id) => {
+  const handlePackageChange = (
+    location,
+    duration,
+    price,
+    type = null,
+    id,
+    withoutgst = null
+  ) => {
     setSelectedPackages((prev) => {
       const filtered = prev.filter(
         (pkg) => !(pkg.location === location && pkg.type === type)
       );
 
       // Add the new one
-      return [...filtered, { location, duration, price, type, id }];
+      return [...filtered, { location, duration, price, type, id, withoutgst }];
     });
   };
 
@@ -379,15 +345,28 @@ const SubscribePage = () => {
                                                 option.duration &&
                                               selectedPkg.type === "digital"
                                           )}
-                                          onChange={() =>
+                                          onChange={() => {
+                                            const pkgConst =
+                                              getDigitalPackages.find(
+                                                (p) =>
+                                                  p.location.toLowerCase() ===
+                                                  pkg.location.toLowerCase()
+                                              );
+                                            const optConst =
+                                              pkgConst?.options.find(
+                                                (o) =>
+                                                  o.duration.toLowerCase() ===
+                                                  option.duration.toLowerCase()
+                                              );
                                             handlePackageChange(
                                               pkg.location,
                                               option.duration,
                                               option.price,
                                               "digital",
-                                              `${pkg.locationId}:${option.id}`
-                                            )
-                                          }
+                                              `${pkg.locationId}:${option.id}`,
+                                              optConst?.withoutgst
+                                            );
+                                          }}
                                           disabled={!canSubscribe}
                                         />
                                         <label

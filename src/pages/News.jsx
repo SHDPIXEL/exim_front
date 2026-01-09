@@ -181,6 +181,11 @@ const News = () => {
                   key={item._id}
                   className="righttopStory topleftimgcard newsArchive"
                   onClick={() => navigate(`/newsDetails/${item._id}`)}
+                  onContextMenu={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    window.open(`/newsDetails/${item._id}`, "_blank");
+                  }}
                 >
                   {/* {item.image && (
                                         <div className="imgside">
@@ -228,6 +233,11 @@ const News = () => {
                   <div
                     className="Headlinesingle"
                     onClick={() => navigate(`/newsDetails/${headlineItem._id}`)}
+                    onContextMenu={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      window.open(`/newsDetails/${headlineItem._id}`, "_blank");
+                    }}
                   >
                     <h3>{index + 1}</h3>
                     <h5>{headlineItem.headline}</h5>

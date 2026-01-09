@@ -3,6 +3,7 @@ import Tab from "react-bootstrap/Tab";
 import Tabs from "react-bootstrap/Tabs";
 import API from "../../api";
 import { useNavigate, Link } from "react-router-dom";
+import { getDigitalPackages } from "../../constants/pricing";
 
 const PaymentHistory = () => {
   const navigate = useNavigate();
@@ -90,6 +91,17 @@ const PaymentHistory = () => {
   }, []);
 
   const handleRenewClick = (payment) => {
+    // Find the latest pricing from constants
+    const locationData = getDigitalPackages.find(
+      (pkg) => pkg.location.toLowerCase() === payment.location.toLowerCase()
+    );
+    const option = locationData?.options.find(
+      (opt) => opt.duration.toLowerCase() === payment.duration.toLowerCase()
+    );
+
+    const updatedPrice = option ? option.price : parseInt(payment.amount);
+    const updatedWithoutGst = option ? option.withoutgst : updatedPrice / 1.18;
+
     navigate("/paymentSummary", {
       state: {
         subscriptionType: payment.type,
@@ -97,7 +109,8 @@ const PaymentHistory = () => {
           {
             location: payment.location,
             duration: payment.duration,
-            price: parseInt(payment.amount),
+            price: updatedPrice,
+            withoutgst: updatedWithoutGst,
             type: payment.type || null,
             id: payment.id || null,
           },
@@ -257,7 +270,23 @@ const PaymentHistory = () => {
                           <td>{payment.location}</td>
                           <td>{payment.duration}</td>
                           <td>{payment.type}</td>
-                          <td>{payment?.amount || "N/A"}</td>
+                          <td>
+                            {(() => {
+                              const locationData = getDigitalPackages.find(
+                                (pkg) =>
+                                  pkg.location.toLowerCase() ===
+                                  payment.location.toLowerCase()
+                              );
+                              const option = locationData?.options.find(
+                                (opt) =>
+                                  opt.duration.toLowerCase() ===
+                                  payment.duration.toLowerCase()
+                              );
+                              return option
+                                ? option.price
+                                : payment?.amount || "N/A";
+                            })()}
+                          </td>
                           <td>
                             {payment.renewalDate
                               ? (() => {
