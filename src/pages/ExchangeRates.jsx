@@ -37,7 +37,7 @@ const ExchangeRates = () => {
     } catch (error) {
       console.error(
         "Error fetching exchange data:",
-        error.response?.data || error.message
+        error.response?.data || error.message,
       );
     } finally {
       setIsFetching(false);
@@ -73,7 +73,7 @@ const ExchangeRates = () => {
         bill_buying_rates_for_exports,
       }) => {
         csvContent += `${currency},${tt_selling_rates_clean_remittance_outwards},${bill_selling_rates_for_imports},${tt_buying_rates_clean_remittance_inwards},${bill_buying_rates_for_exports}\n`;
-      }
+      },
     );
 
     const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
@@ -85,17 +85,19 @@ const ExchangeRates = () => {
       alert("No data available to download!");
       return;
     }
-  
+
     const filteredData = exchangeData.filter(
       ({ currency }) =>
-        !["Chinese Yuan", "Norwegian Kroner", "Qatari Riyal"].includes(currency)
+        !["Chinese Yuan", "Norwegian Kroner", "Qatari Riyal"].includes(
+          currency,
+        ),
     );
-  
+
     if (filteredData.length === 0) {
       alert("No downloadable data after excluding specified currencies!");
       return;
     }
-  
+
     const ws = XLSX.utils.json_to_sheet(
       filteredData.map(
         ({
@@ -110,20 +112,19 @@ const ExchangeRates = () => {
           "Bill Selling Rates": bill_selling_rates_for_imports,
           "TT Buying Rates": tt_buying_rates_clean_remittance_inwards,
           "Bill Buying Rates": bill_buying_rates_for_exports,
-        })
-      )
+        }),
+      ),
     );
-  
+
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, "Exchange Rates");
-  
+
     const excelBuffer = XLSX.write(wb, { bookType: "xlsx", type: "array" });
     const blob = new Blob([excelBuffer], {
       type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
     });
     saveAs(blob, `exchange_rates_${selectedDate || "latest"}.xlsx`);
   };
-  
 
   return (
     <div className="container mt-3">
@@ -148,8 +149,15 @@ const ExchangeRates = () => {
                 />
               </div>
             </div>
+            <div className="col-md-4 mt-1">
+              {exchangeData.length > 0 && exchangeData[0].notification_no && (
+                <h5 className="fw-bold">
+                  Ref Notification No: {exchangeData[0].notification_no}
+                </h5>
+              )}
+            </div>
             {exchangeData.length > 0 && (
-              <div className="col-md-7  mt-2 justify-content-md-end d-flex  justify-content-center">
+              <div className="col-md-3  mt-2 justify-content-md-end d-flex  justify-content-center">
                 <button
                   onClick={downloadExcel}
                   className="btnlink border-0 bg-transparent"
@@ -194,7 +202,7 @@ const ExchangeRates = () => {
                               "Chinese Yuan",
                               "Norwegian Kroner",
                               "Qatari Riyal",
-                            ].includes(item.currency)
+                            ].includes(item.currency),
                         )
                         .map((item) => (
                           <tr key={item._id}>
