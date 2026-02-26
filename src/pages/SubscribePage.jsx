@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate, useLocation, redirect } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import demo from "../assets/images/demo.jpg";
+import demo from "../assets/images/exim_inner_sub.png";
 import { useUser } from "../context/UserContext";
 import { useNotification } from "../context/NotificationContext";
 import API from "../api";

@@ -5,7 +5,7 @@ import logo from "../assets/images/image.png";
 import TopStorySlider from "./HomeBannerSlider/TopStorySlider";
 import Newsletter from "./Newsletter";
 import EximEventsSlider from "./HomeBannerSlider/EximEventSlider";
-import homenewpaper from "../assets/images/homenewpaper.png";
+import homenewpaper from "../assets/images/exim_home.png";
 import NewsFocus from "./HomeBannerSlider/NewsFocus";
 import NewCategories from "./HomeBannerSlider/NewCategories";
 import EximPolls from "./HomeBannerSlider/EximPolls";
