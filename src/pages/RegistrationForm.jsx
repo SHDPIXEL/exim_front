@@ -378,7 +378,7 @@ const RegistrationForm = () => {
     formState: { errors },
   } = useForm({
     defaultValues: {
-      fullName: "",
+      contact_person: "",
       email: "",
       mobile: "",
       password: "",
@@ -409,13 +409,14 @@ const RegistrationForm = () => {
 
       // API endpoint - replace with your actual backend endpoint ---- '/services/register'
       const response = await API.post("/services/register_website_user", {
-        name: data.fullName,
+        name: data.contact_person,
         email: data.email,
         mobile: data.mobile,
         password: data.password,
         confirm_password: data.confirmPassword,
         nature_business: data.businessNature,
         company_name: data.companyName,
+        contact_person: data.contact_person,
         contact_person_designation: data.designation,
         billing_address_1: data.billingAddress1,
         billing_address_2: data.billingAddress2,
@@ -634,18 +635,18 @@ const RegistrationForm = () => {
                           <Form.Control
                             type="text"
                             placeholder="Enter Contact Person name"
-                            {...register("fullName", {
+                            {...register("contact_person", {
                               required: "Contact person name is required",
                               pattern: {
                                 value: /^[A-Za-z\s]+$/,
                                 message: "Only letters and spaces allowed",
                               },
                             })}
-                            className={`webinput ${errors.fullName ? "is-invalid" : ""}`}
+                            className={`webinput ${errors.contact_person ? "is-invalid" : ""}`}
                           />
-                          {errors.fullName && (
+                          {errors.contact_person && (
                             <div className="invalid-feedback">
-                              {errors.fullName.message}
+                              {errors.contact_person.message}
                             </div>
                           )}
                         </Form.Group>
